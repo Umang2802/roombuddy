@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router} from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import "./App.css";
-import Footer from "./Components/Footer/Footer";
 import Home from "./Pages/Home"
 
 const App = () => {
@@ -12,7 +11,6 @@ const App = () => {
         <Navbar />
       </Router>
       <Home />
-      <Footer />
     </div>
   );
 };
