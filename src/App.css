@@ -2,5 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
+}
+:root {
+  --blue: #6177d4;
+  --darkfont: #323232;
+  --lighterfont: #111827;
+  --lightestfont: #8c8c8c;
+  --inter: "Inter";
+  --poppins: "Poppins";
 }
