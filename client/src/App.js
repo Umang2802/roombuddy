@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Navbar from "./Components/Navbar/Navbar";
 import "./App.css";
 import Home from "./Pages/Home";
 import Signup from "./Pages/Signup";
@@ -15,7 +14,6 @@ import RoomDetailsForm from "./Pages/RoomDetailsForm";
 const App = () => {
   return (
     <div className="App">
-      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} exact />
         <Route path="/login" element={<Login />} exact />
