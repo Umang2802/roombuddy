@@ -1,6 +1,6 @@
 import { MenuItems } from "./MenuItems";
-import { Link } from "react-router-dom";
-import * as React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,33 +14,42 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-//const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 const Navbar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  // const [anchorElUser, setAnchorElUser] = React.useState(null);
-  // const [auth, setAuth] = React.useState(false);
+  const settings = [
+    { name: "Profile", link: "/profile" },
+    { name: "Dashboard", link: "/dashboard" },
+    { name: "Logout", link: "/logout" },
+  ];
+  const navigate = useNavigate();
+  const [show, setShow] = useState(true);
+  const [uname, setUname] = useState();
 
-  // const handleChange = () => {
-  //   if (auth === false) {
-  //     setAuth(true);
-  //   } else setAuth(false);
-  // };
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  // const handleOpenUserMenu = (event) => {
-  //   setAnchorElUser(event.currentTarget);
-  // };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  // const handleCloseUserMenu = () => {
-  //   setAnchorElUser(null);
-  // };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    if (user) {
+      setShow(false);
+      setUname(user.name);
+    }
+  }, [show]);
 
   return (
     <AppBar
@@ -49,14 +58,14 @@ const Navbar = () => {
     >
       <Container maxWidth="xl" sx={{}}>
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }}}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              sx={{color: "black"}}
             >
               <MenuIcon />
             </IconButton>
@@ -121,8 +130,10 @@ const Navbar = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0,}}>
-            <Button sx={{
+          <Box sx={{ flexGrow: 0 }}>
+            {show ? (
+              <Button
+                sx={{
                   my: 5,
                   mx: 3,
                   display: "block",
@@ -130,34 +141,63 @@ const Navbar = () => {
                   fontSize: 17,
                   color: "#434343",
                   fontFamily: "Inter, sans-serif",
-                }}>LogIn/SignUp</Button>
-                  {/* <Tooltip title="Profile">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar alt="User">UM</Avatar>
-                    </IconButton>
-                  </Tooltip>
-                  <Menu
-                    sx={{ mt: "45px" }}
-                    id="menu-appbar"
-                    anchorEl={anchorElUser}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    open={Boolean(anchorElUser)}
-                    onClose={handleCloseUserMenu}
-                  >
-                    {settings.map((setting) => (
-                      <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))}
-                  </Menu> */}
+                }}
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Login/Signup
+              </Button>
+            ) : (
+              <>
+                <Tooltip title="Profile">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Typography
+                      sx={{
+                        mx: 1,
+                        display: "block",
+                        fontWeight: "bold",
+                        fontSize: 17,
+                        color: "#434343",
+                        fontFamily: "Inter, sans-serif",
+                      }}
+                    >
+                      {uname}
+                    </Typography>
+                    <Avatar alt="User"></Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                      <Typography
+                        textAlign="center"
+                        component={Link}
+                        to={setting.link}
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        {setting.name}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>

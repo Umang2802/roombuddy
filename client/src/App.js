@@ -1,20 +1,28 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import "./App.css";
 import Home from "./Pages/Home";
-import ChatApp from "./Components/Chat/App";
+import ChatApp from "./Pages/Chat";
+import Login from "./Pages/Login";
+import Logout from "./Pages/Logout";
+import PostRoom from "./Pages/PostRoom";
+import RoomDetailsForm from "./Pages/RoomDetailsForm";
 
 const App = () => {
   return (
     <div className="App">
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<ChatApp />} />
-        </Routes>
-      </Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} exact />
+        <Route path="/login" element={<Login />} exact />
+        <Route path="/logout" element={<Logout />} exact />
+        <Route path="/profile" element={<Login />} />
+        <Route path="/dashboard" element={<Login />} />
+        <Route path="/chats" element={<ChatApp />} />
+        <Route path="/room" element={<PostRoom />} />
+        <Route path="/roomDetailsForm" element={<RoomDetailsForm />} />
+      </Routes>
     </div>
   );
 };

@@ -1,21 +1,18 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { width } from "@mui/system";
 import logo from "../Assets/logo.png";
 import bck from "../Assets/loginbackgnd.png";
+import { useNavigate } from "react-router";
+import { useState } from "react";
+import axios from "axios";
+
 const useStyles = makeStyles((theme) => ({
   maindiv: {
     display: "grid",
@@ -63,17 +60,33 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
-
 export default function Login() {
+  const navigate = useNavigate();
   const classes = useStyles();
-  const handleSubmit = (event) => {
+
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      "/api/user/login",
+      {
+        email,
+        password,
+      },
+      config
+    );
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+    navigate("/");
   };
 
   return (
@@ -119,6 +132,8 @@ export default function Login() {
                 autoComplete="email"
                 autoFocus
                 InputLabelProps={{ style: { fontSize: 15 } }}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -129,6 +144,8 @@ export default function Login() {
                 name="email"
                 autoComplete="email"
                 InputLabelProps={{ style: { fontSize: 15 } }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -140,6 +157,8 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
                 InputLabelProps={{ style: { fontSize: 15 } }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <Button
@@ -210,6 +229,5 @@ export default function Login() {
       </Grid>
       <Copyright sx={{ mt: 3, mb: 3 }} />
     </div>
-    // </Container>
   );
 }
