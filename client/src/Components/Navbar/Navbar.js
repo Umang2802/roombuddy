@@ -13,6 +13,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Logo from "../../Assets/logo.svg"
 
 const Navbar = () => {
   const settings = [
@@ -56,16 +57,24 @@ const Navbar = () => {
       style={{ background: "transparent", boxShadow: "none" }}
       position="static"
     >
-      <Container maxWidth="xl" sx={{}}>
+      <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }}}>
+          <Box
+            sx={{
+              ml: 2,
+              display: { xs: "none", md: "flex" },
+            }}
+          >
+            <img src={Logo} alt="img" loading="lazy" />
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, my: 3 }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              sx={{color: "black"}}
+              sx={{ color: "black" }}
             >
               <MenuIcon />
             </IconButton>
@@ -88,7 +97,7 @@ const Navbar = () => {
               }}
             >
               {MenuItems.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
                     <Link
                       to={page.link}
@@ -104,6 +113,16 @@ const Navbar = () => {
           </Box>
           <Box
             sx={{
+              mr: 1,
+              display: { xs: "flex", md: "none" },
+              flexGrow: 1,
+            }}
+          >
+            <img src={Logo} alt="img" loading="lazy" />
+          </Box>
+
+          <Box
+            sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
               justifyContent: "flex-end",
@@ -111,7 +130,7 @@ const Navbar = () => {
           >
             {MenuItems.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{
                   my: 5,

@@ -1,7 +1,7 @@
 import React from "react";
 import Paper from "@mui/material/Paper";
 import Singlechat from "./Singlechat";
-import { ChatState } from "../Context/ChatProvider";
+import { ChatState } from "../../Context/Provider";
 
 const Chatbox = ({ fetchAgain, setFetchAgain }) => {
   const {selectedChat } = ChatState();

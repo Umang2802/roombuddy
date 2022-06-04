@@ -1,9 +1,9 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Chatbox from "../Components/Chatbox";
-import Allchats from "../Components/Allchats";
-import { ChatState } from "../Context/ChatProvider";
+import Chatbox from "../Components/Chat/Chatbox";
+import Allchats from "../Components/Chat/Allchats";
+import { ChatState } from "../Context/Provider";
 import { useState } from "react";
 
 const Chat = () => {
