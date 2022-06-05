@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -13,6 +13,18 @@ import RoomImage from "../Assets/room.jpg";
 import Map from "../Assets/map.jpg";
 
 const SingleRoom = () => {
+const [name,setName] = useState();
+const [desc, setDesc] = useState();
+const [bhk, setBhk] = useState();
+const [bath, setBath] = useState();
+const [type, setType] = useState();
+const [tenantNo, setTenantNo] = useState();
+
+const items = [];
+  for (let i=1;i<=tenantNo;i++) {
+    items.push(<h4>TENANT {i} NAME: </h4>);
+  }
+
   return (
     <>
       <Navbar />
@@ -26,13 +38,8 @@ const SingleRoom = () => {
               alt="room"
             />
           </Card>
-          <Card elevation={0}>
-            <CardMedia
-              component="img"
-              height="250"
-              image={Map}
-              alt="map"
-            />
+          <Card elevation={0} sx={{ display: { xs: "none", md: "initial" } }}>
+            <CardMedia component="img" height="250" image={Map} alt="map" />
             <CardContent
               sx={{
                 display: "flex",
@@ -48,17 +55,26 @@ const SingleRoom = () => {
         </Box>
         <Box>
           <Typography variant="h4" sx={{ py: 4 }}>
-            Spacious rooms for rent with no deposit
+            Spacious rooms for rent with no deposit {name}
           </Typography>
-          <Button variant="contained">Rent: &nbsp;$22</Button>
+          <Button variant="contained" sx={{ cursor: "default" }}>
+            Rent: &nbsp;$22
+          </Button>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <Button variant="contained">Predicted rent: &nbsp;$21</Button>
+          <Button variant="contained" sx={{ cursor: "default" }}>
+            Predicted rent: &nbsp;$21
+          </Button>
         </Box>
         <Box>
-          <Typography variant="h6" sx={{ py: 4, fontWeight: "bold" }}> 
+          <Typography variant="h6" sx={{ pt: 4, fontWeight: "bold" }}>
             Property details
           </Typography>
-
+          <Typography variant="body1" sx={{ py: 1}}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam,
+            purus sit amet luctus venenatis, lectus magna fringilla urna,
+            porttitor rhoncus dolor purus non enim praesent elementum facilisis
+            leo, vel {desc}
+          </Typography>
         </Box>
       </Container>
     </>

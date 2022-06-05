@@ -13,50 +13,10 @@ import React, { useEffect, useState } from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import Navbar from "../Components/Navbar/Navbar";
-
-const bathroom = [
-  {
-    value: "1",
-  },
-  {
-    value: "2",
-  },
-  {
-    value: "3",
-  },
-  {
-    value: "4",
-  },
-  {
-    value: "5",
-  },
-  {
-    value: "6",
-  },
-];
-
-const bhks = [
-  {
-    value: "1",
-  },
-  {
-    value: "2",
-  },
-  {
-    value: "3",
-  },
-  {
-    value: "4",
-  },
-  {
-    value: "5",
-  },
-  {
-    value: "6",
-  },
-];
 
 const types = [
   {
@@ -67,6 +27,72 @@ const types = [
   },
   {
     value: "Bungalow",
+  },
+];
+
+const rule = [
+  {
+    id: 0,
+    value: "SMOKING",
+    ticked: false,
+    cancelled: false,
+  },
+  {
+    id: 1,
+    value: "ALCOHOL",
+    ticked: false,
+    cancelled: false,
+  },
+  {
+    id: 2,
+    value: "PETS",
+    ticked: false,
+    cancelled: false,
+  },
+  {
+    id: 3,
+    value: "VEGETARAIN",
+    ticked: false,
+    cancelled: false,
+  },
+];
+
+const amenity = [
+  {
+    id: 0,
+    variant: "outlined",
+    onClick: false,
+    value: "AC",
+  },
+  {
+    id: 1,
+    variant: "outlined",
+    onClick: false,
+    value: "Pool",
+  },
+  {
+    id: 2,
+    variant: "outlined",
+    onClick: false,
+    value: "Dining Area",
+  },
+  {
+    id: 3,
+    variant: "outlined",
+    onClick: false,
+    value: "Parking Area",
+  },
+  {
+    id: 4,
+    variant: "outlined",
+    onClick: false,
+    value: "Garden",
+  },
+  {
+    id: 5,
+    variant: "outlined",
+    onClick: false,
+    value: "Laundry",
   },
 ];
 
@@ -81,21 +107,22 @@ const fileToDataUri = (file) =>
 
 const RoomDetailsForm = () => {
   const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
   const [address, setAddress] = useState("");
   const [bath, setBath] = useState(1);
   const [bhk, setBhk] = useState(1);
   const [type, setType] = useState("Flat");
-  const [smoking, setSmoking] = useState("true");
+  const [rules, setRules] = useState(rule);
   const [pics, setPics] = useState([]);
   const [rent, setRent] = useState("0");
-  const [predictedRent, setPredictedRent] = useState("0");
-  const [tenantNo, setTenantNo] = useState(1);
-  const [selected, setSelected] = useState(false);
-  const [tenantDetails, setTenantDetails] = useState([
-    {tenantName: "",
-    tenantBio: "",}
-  ]);
-  const [desc, setDesc] = useState("");
+  const [amenities, setAmenities] = useState(amenity);
+   const [tenantNo, setTenantNo] = useState(1);
+   const [predictedRent, setPredictedRent] = useState("0");
+   const [tName, setTName] = useState("");
+   const [tBio, setTBio] = useState("");
+   const [tenantDetails, setTenantDetails] = useState([
+     { tenantName: " ", tenantBio: " " },
+   ]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -105,6 +132,52 @@ const RoomDetailsForm = () => {
     display: "none",
   });
 
+  const bhkOptions = []
+  for (let i = 1; i <= tenantNo; i++) {
+    bhkOptions.push(
+      <MenuItem key={i} value={i}>
+        {i}
+      </MenuItem>
+    );
+  }
+  
+  const bathOptions = [];
+  for (let i = 1; i <= tenantNo; i++) {
+    bathOptions.push(
+      <MenuItem key={i} value={i}>
+        {i}
+      </MenuItem>
+    );
+  }
+
+  const tickedRulesHandler = (item) => {
+    setRules(
+      rules.map((rule) =>
+        rule.id === item.id
+          ? {
+              ...rule,
+              ticked: true,
+              cancelled: false,
+            }
+          : { ...rule }
+      )
+    );
+  };
+
+  const cancelledRulesHandler = (item) => {
+    setRules(
+      rules.map((rule) =>
+        rule.id === item.id
+          ? {
+              ...rule,
+              ticked: false,
+              cancelled: true,
+            }
+          : { ...rule }
+      )
+    );
+  };
+
   const picsInputHandler = (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
       fileToDataUri(e.target.files[i]).then((dataUri) => {
@@ -113,29 +186,74 @@ const RoomDetailsForm = () => {
     }
   };
 
-  const items = [];
-  for (let i=1;i<=tenantNo;i++) {
-    items.push(<h4>TENANT {i} NAME: </h4>);
-    items.push(
+  const coverImageChangeHandler = (event) => {
+    fileToDataUri(event.target.files[0]).then((dataUri) => {
+      const newArray = pics.map((v, i) => {
+        if (i === 0) return dataUri;
+        return v;
+      });
+      setPics(newArray);
+    });
+  };
+
+    const amenityClickHandler = (item) => {
+      setAmenities(
+        amenities.map((amenity) =>
+          amenity.id === item.id
+            ? amenity.onClick === true ? {
+                ...amenity,
+                variant: "outlined",
+                onClick: false,
+              } : {
+                ...amenity,
+                variant: "contained",
+                onClick: true,
+              }
+            : { ...amenity }
+        )
+      );
+    };
+
+  // const tenants = () => {
+  //   setTenantDetails((prevTenant) => [
+  //     ...prevTenant,
+  //     {
+  //       tenantName: tName,
+  //       tenantBio: tBio,
+  //     },
+  //   ]);
+  // };
+
+  // const tenant = [{ tName: " ", tBio: " " }];
+
+  const tenantFields = [];
+  for (let i = 1; i <= tenantNo; i++) {
+    tenantFields.push(<h4>TENANT {i} NAME: </h4>);
+    tenantFields.push(
       <TextField
         variant="filled"
         required
         name="tenant"
         type="text"
         InputLabelProps={{ style: { fontSize: 12 } }}
-        // value={tenantDetails[i].tenantName}
-        // onChange={(e) => setTenantDetails.tenantName(e.target.value)}
+        //value={tenantDetails.tenantName}
+        //onChange={(e) => {
+        //  setTName(e.target.value);
+        //}}
         sx={{ mb: 3, p: 0, width: "30%" }}
         id="outlined-size-small"
       />
     );
-    items.push(<h4>TENANT {i} BIO: </h4>);
-    items.push(
+    tenantFields.push(<h4>TENANT {i} BIO: </h4>);
+    tenantFields.push(
       <TextField
         id="filled-multiline-static"
         multiline
-        // value={tenantDetails[i].tenantBio}
-        // onChange={(e) => setTenantDetails.tenantBio(e.target.value)}
+        //value={tenantDetails.tenantBio}
+        // onChange={(e) => {
+        //             setTBio(e.target.value);
+        //             tenants();
+        // }}
         rows={3}
         variant="filled"
         sx={{ mb: 4, p: 0, width: "55%" }}
@@ -144,7 +262,9 @@ const RoomDetailsForm = () => {
   }
 
   useEffect(() => {
-    console.log(tenantDetails);
+    // console.log(`Tname: ${tName}`);
+    // console.log(`TBio: ${tBio}`);
+    // console.log(tenantDetails)
   });
 
   return (
@@ -246,11 +366,7 @@ const RoomDetailsForm = () => {
                   sx={{ mb: 4, mr: 7 }}
                   size="small"
                 >
-                  {bhks.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value}
-                    </MenuItem>
-                  ))}
+                  {bhkOptions}
                 </TextField>
               </Box>
               <Box>
@@ -264,11 +380,7 @@ const RoomDetailsForm = () => {
                   sx={{ mb: 4, mr: 11 }}
                   size="small"
                 >
-                  {bathroom.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value}
-                    </MenuItem>
-                  ))}
+                  {bathOptions}
                 </TextField>
               </Box>
               <Box>
@@ -291,6 +403,8 @@ const RoomDetailsForm = () => {
               </Box>
             </Box>
           </Box>
+
+          {/* PROPERTY RULES */}
           <Box>
             <Box
               maxWidth="lg"
@@ -307,84 +421,49 @@ const RoomDetailsForm = () => {
             >
               PROPERTY RULES
             </Box>
-            <Box sx={{ display: "flex" }}>
-              <ToggleButtonGroup
-                color="primary"
-                size="small"
-                value={smoking}
-                exclusive
-                onChange={(e) => setSmoking(e.target.value)}
-                width={150}
-              >
-                <center>
-                  <h4>SMOKING</h4>
-
-                  <ToggleButton value="true" sx={{ border: "none" }}>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </ToggleButton>
-                  <ToggleButton value="false" sx={{ border: "none" }}>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </ToggleButton>
-                </center>
-              </ToggleButtonGroup>
-              <ToggleButtonGroup
-                size="small"
-                value={smoking}
-                exclusive
-                // onChange={(e) => setSmoking(e.target.value)}
-                aria-label="text alignment"
-                width={150}
-              >
-                <center>
-                  <h4>ALCOHOL</h4>
-                  <ToggleButton value="yes" sx={{ border: "none" }}>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </ToggleButton>
-                  <ToggleButton value="no" sx={{ border: "none" }}>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </ToggleButton>
-                </center>
-              </ToggleButtonGroup>
-              <ToggleButtonGroup
-                size="small"
-                value={smoking}
-                exclusive
-                //onChange={(e) => setSmoking(e.target.value)}
-                aria-label="text alignment"
-                width={150}
-              >
-                <center>
-                  <h4>PETS</h4>
-
-                  <ToggleButton value="yes" sx={{ border: "none" }}>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </ToggleButton>
-                  <ToggleButton value="no" sx={{ border: "none" }}>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </ToggleButton>
-                </center>
-              </ToggleButtonGroup>
-              <ToggleButtonGroup
-                size="small"
-                value={smoking}
-                exclusive
-                onChange={(e) => setSmoking(e.target.value)}
-                aria-label="text alignment"
-                width={150}
-              >
-                <center>
-                  <h4>VEGETARIAN</h4>
-
-                  <ToggleButton value="yes" sx={{ border: "none" }}>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </ToggleButton>
-                  <ToggleButton value="no" sx={{ border: "none" }}>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </ToggleButton>
-                </center>
-              </ToggleButtonGroup>
+            <Box sx={{ display: "flex" }} gap={4}>
+              {rules.map((item) => (
+                <ToggleButtonGroup
+                  color="primary"
+                  size="small"
+                  exclusive
+                  width={150}
+                >
+                  <center>
+                    <h4>{item.value}</h4>
+                    <ToggleButton
+                      value="true"
+                      sx={{ border: "none" }}
+                      onClick={() => {
+                        tickedRulesHandler(item);
+                      }}
+                    >
+                      {item.ticked ? (
+                        <CheckCircleRoundedIcon sx={{ color: "green" }} />
+                      ) : (
+                        <CheckCircleOutlineRoundedIcon />
+                      )}
+                    </ToggleButton>
+                    <ToggleButton
+                      value="false"
+                      sx={{ border: "none" }}
+                      onClick={() => {
+                        cancelledRulesHandler(item);
+                      }}
+                    >
+                      {item.cancelled ? (
+                        <CancelRoundedIcon sx={{ color: "red" }} />
+                      ) : (
+                        <CancelOutlinedIcon />
+                      )}
+                    </ToggleButton>
+                  </center>
+                </ToggleButtonGroup>
+              ))}
             </Box>
           </Box>
+
+          {/* TENANT DETAILS */}
           <Box>
             <Box
               maxWidth="lg"
@@ -413,9 +492,10 @@ const RoomDetailsForm = () => {
               sx={{ mb: 3, p: 0, width: "8%" }}
               id="outlined-size-small"
             />
-            <Box>{items}</Box>
+            <Box>{tenantFields}</Box>
           </Box>
 
+          {/* AMENITIES */}
           <Box>
             <Box
               maxWidth="lg"
@@ -432,23 +512,22 @@ const RoomDetailsForm = () => {
             >
               AMENITIES
             </Box>
-            <Button
-              variant={selected ? "contained" : "outlined"}
-              onClick={(e) => {
-                setSelected(true);
-              }}
-            >
-              Contained
-            </Button>
-            <Button
-              variant={selected ? "contained" : "outlined"}
-              onClick={(e) => {
-                setSelected(true);
-              }}
-            >
-              Contained
-            </Button>
+            <Box sx={{ display: "flex" }} gap={2}>
+              {amenities.map((item) => (
+                <Button
+                  key={item.id}
+                  variant={item.variant}
+                  onClick={() => {
+                    amenityClickHandler(item);
+                  }}
+                >
+                  {item.value}
+                </Button>
+              ))}
+            </Box>
           </Box>
+
+          {/* PREFERENCES */}
           <Box>
             <Box
               maxWidth="lg"
@@ -466,6 +545,8 @@ const RoomDetailsForm = () => {
               PREFERENCES
             </Box>
           </Box>
+
+          {/* Property Images */}
           <Box>
             <Box
               maxWidth="lg"
@@ -482,20 +563,30 @@ const RoomDetailsForm = () => {
             >
               PROPERTY IMAGES
             </Box>
-            <ImageList
+            <Box
               sx={{
-                width: "80%",
-                display: pics.length === 0 ? "none" : "grid",
+                display: pics.length === 0 ? "none" : "initial",
               }}
-              cols={3}
-              gap={14}
             >
-              {pics.map((item) => (
-                <ImageListItem key={item}>
-                  <img src={item} srcSet={item} alt={item} loading="lazy" />
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                Cover Image
+              </Typography>
+              <ImageList
+                sx={{
+                  width: "65%",
+                  display: "grid",
+                }}
+              >
+                <ImageListItem key={pics[0]}>
+                  <img
+                    src={pics[0]}
+                    srcSet={pics[0]}
+                    alt={pics[0]}
+                    loading="lazy"
+                  />
                 </ImageListItem>
-              ))}
-            </ImageList>
+              </ImageList>
+            </Box>
 
             {pics.length === 0 ? (
               <label htmlFor="contained-button-image">
@@ -511,16 +602,48 @@ const RoomDetailsForm = () => {
                   }}
                 />
                 <Button variant="contained" component="span">
-                  Add Cover Images
+                  Add Cover Image
                 </Button>
               </label>
             ) : (
               <>
                 <br />
-                <label htmlFor="contained-button-image">
+                <label htmlFor="contained-button-coverImage">
                   <Input
+                    name="coverImage"
                     accept="image/*"
-                    id="contained-button-image"
+                    id="contained-button-coverImage"
+                    multiple
+                    type="file"
+                    onChange={coverImageChangeHandler}
+                  />
+                  <Button variant="contained" component="span">
+                    Change Cover Image
+                  </Button>
+                </label>
+                <br />
+                <br />
+                <br />
+                <ImageList
+                  sx={{
+                    width: "80%",
+                    display: pics.length === 0 ? "none" : "grid",
+                  }}
+                  cols={3}
+                  gap={14}
+                >
+                  {pics.map((item) => (
+                    <ImageListItem key={item}>
+                      <img src={item} srcSet={item} alt={item} loading="lazy" />
+                    </ImageListItem>
+                  ))}
+                </ImageList>
+                <br />
+                <label htmlFor="contained-button-moreImage">
+                  <Input
+                    name="moreImages"
+                    accept="image/*"
+                    id="contained-button-moreImage"
                     multiple
                     type="file"
                     onChange={picsInputHandler}
@@ -532,6 +655,8 @@ const RoomDetailsForm = () => {
               </>
             )}
           </Box>
+
+          {/* Property Rent */}
           <Box>
             <Box
               maxWidth="lg"
