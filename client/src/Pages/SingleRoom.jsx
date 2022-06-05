@@ -57,11 +57,17 @@ const items = [];
           <Typography variant="h4" sx={{ py: 4 }}>
             Spacious rooms for rent with no deposit {name}
           </Typography>
-          <Button variant="contained" sx={{ cursor: "default" }}>
+          <Button
+            variant="contained"
+            sx={{ cursor: "default", bgcolor: "#6177D4" }}
+          >
             Rent: &nbsp;$22
           </Button>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <Button variant="contained" sx={{ cursor: "default" }}>
+          <Button
+            variant="contained"
+            sx={{ cursor: "default", bgcolor: "#6177D4" }}
+          >
             Predicted rent: &nbsp;$21
           </Button>
         </Box>
@@ -69,7 +75,7 @@ const items = [];
           <Typography variant="h6" sx={{ pt: 4, fontWeight: "bold" }}>
             Property details
           </Typography>
-          <Typography variant="body1" sx={{ py: 1}}>
+          <Typography variant="body1" sx={{ py: 1 }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam,
             purus sit amet luctus venenatis, lectus magna fringilla urna,
             porttitor rhoncus dolor purus non enim praesent elementum facilisis

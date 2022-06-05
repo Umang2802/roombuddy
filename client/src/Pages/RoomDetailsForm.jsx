@@ -1,21 +1,23 @@
 import {
   Button,
   Container,
+  IconButton,
   ImageList,
   ImageListItem,
-  Input,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
+import Bar from "../Components/Bar";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Navbar from "../Components/Navbar/Navbar";
 
 const types = [
@@ -116,23 +118,19 @@ const RoomDetailsForm = () => {
   const [pics, setPics] = useState([]);
   const [rent, setRent] = useState("0");
   const [amenities, setAmenities] = useState(amenity);
-   const [tenantNo, setTenantNo] = useState(1);
-   const [predictedRent, setPredictedRent] = useState("0");
-   const [tName, setTName] = useState("");
-   const [tBio, setTBio] = useState("");
-   const [tenantDetails, setTenantDetails] = useState([
-     { tenantName: " ", tenantBio: " " },
-   ]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  };
+  const [tenantNo, setTenantNo] = useState(1);
+  const [tName, setTName] = useState("");
+  const [tBio, setTBio] = useState("");
+  const [tenantDetails, setTenantDetails] = useState([]);
+  const [predictedRent, setPredictedRent] = useState("0");
+  const [preferences, setPreferences] = useState([]);
+  const [preferenceItem, setPreferenceItem] = useState("");
 
   const Input = styled("input")({
     display: "none",
   });
 
-  const bhkOptions = []
+  const bhkOptions = [];
   for (let i = 1; i <= tenantNo; i++) {
     bhkOptions.push(
       <MenuItem key={i} value={i}>
@@ -140,7 +138,7 @@ const RoomDetailsForm = () => {
       </MenuItem>
     );
   }
-  
+
   const bathOptions = [];
   for (let i = 1; i <= tenantNo; i++) {
     bathOptions.push(
@@ -188,43 +186,44 @@ const RoomDetailsForm = () => {
 
   const coverImageChangeHandler = (event) => {
     fileToDataUri(event.target.files[0]).then((dataUri) => {
-      const newArray = pics.map((v, i) => {
-        if (i === 0) return dataUri;
-        return v;
-      });
-      setPics(newArray);
+      setPics(
+        pics.map((v, i) => {
+          if (i === 0) return dataUri;
+          return v;
+        })
+      );
     });
   };
 
-    const amenityClickHandler = (item) => {
-      setAmenities(
-        amenities.map((amenity) =>
-          amenity.id === item.id
-            ? amenity.onClick === true ? {
+  const amenityClickHandler = (item) => {
+    setAmenities(
+      amenities.map((amenity) =>
+        amenity.id === item.id
+          ? amenity.onClick === true
+            ? {
                 ...amenity,
                 variant: "outlined",
                 onClick: false,
-              } : {
+              }
+            : {
                 ...amenity,
                 variant: "contained",
                 onClick: true,
               }
-            : { ...amenity }
-        )
-      );
-    };
+          : { ...amenity }
+      )
+    );
+  };
 
-  // const tenants = () => {
-  //   setTenantDetails((prevTenant) => [
-  //     ...prevTenant,
-  //     {
-  //       tenantName: tName,
-  //       tenantBio: tBio,
-  //     },
-  //   ]);
-  // };
-
-  // const tenant = [{ tName: " ", tBio: " " }];
+  const tenantHandler = () => {
+    setTenantDetails((prevTenant) => [
+      ...prevTenant,
+      {
+        tenantName: tName,
+        tenantBio: tBio,
+      },
+    ]);
+  };
 
   const tenantFields = [];
   for (let i = 1; i <= tenantNo; i++) {
@@ -236,10 +235,9 @@ const RoomDetailsForm = () => {
         name="tenant"
         type="text"
         InputLabelProps={{ style: { fontSize: 12 } }}
-        //value={tenantDetails.tenantName}
-        //onChange={(e) => {
-        //  setTName(e.target.value);
-        //}}
+        onChange={(e) => {
+          setTName(e.target.value);
+        }}
         sx={{ mb: 3, p: 0, width: "30%" }}
         id="outlined-size-small"
       />
@@ -249,22 +247,42 @@ const RoomDetailsForm = () => {
       <TextField
         id="filled-multiline-static"
         multiline
-        //value={tenantDetails.tenantBio}
-        // onChange={(e) => {
-        //             setTBio(e.target.value);
-        //             tenants();
-        // }}
+        required
+        onChange={(e) => {
+          setTBio(e.target.value);
+        }}
         rows={3}
         variant="filled"
-        sx={{ mb: 4, p: 0, width: "55%" }}
+        sx={{ mb: 2, p: 0, width: "55%" }}
       />
+    );
+    tenantFields.push(<br />);
+    tenantFields.push(
+      <Button
+        sx={{ mb: 4 }}
+        variant="contained"
+        onClick={() => tenantHandler()}
+      >
+        Add
+      </Button>
     );
   }
 
+  const preferencesHandler = () => {
+    setPreferences((preference) => [...preference, preferenceItem]);
+    setPreferenceItem("");
+  };
+
+  const deletePreferencesHandler = (item) => {
+    setPreferences(preferences.filter((preference) => preference !== item));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
   useEffect(() => {
-    // console.log(`Tname: ${tName}`);
-    // console.log(`TBio: ${tBio}`);
-    // console.log(tenantDetails)
+    console.log(preferences);
   });
 
   return (
@@ -280,21 +298,7 @@ const RoomDetailsForm = () => {
             couple of minutes.
           </Typography>
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              PROPERTY ADDRESS
-            </Box>
+            <Bar props="PROPERTY ADDRESS" />
             <Typography sx={{ fontSize: 16, mb: 1 }}>PROPERTY NAME</Typography>
             <TextField
               variant="filled"
@@ -324,21 +328,7 @@ const RoomDetailsForm = () => {
             />
           </Box>
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              PROPERTY DETAILS
-            </Box>
+            <Bar props="PROPERTY DETAILS" />
             <Typography sx={{ fontSize: 16, mb: 1 }}>
               PROPERTY DESCRIPTION
             </Typography>
@@ -406,21 +396,7 @@ const RoomDetailsForm = () => {
 
           {/* PROPERTY RULES */}
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              PROPERTY RULES
-            </Box>
+            <Bar props="PROPERTY RULES" />
             <Box sx={{ display: "flex" }} gap={4}>
               {rules.map((item) => (
                 <ToggleButtonGroup
@@ -465,21 +441,7 @@ const RoomDetailsForm = () => {
 
           {/* TENANT DETAILS */}
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              TENANT DETAILS
-            </Box>
+            <Bar props="AMENITIES" />
             <h4>NO OF TENANTS: </h4>
             <TextField
               variant="filled"
@@ -497,21 +459,7 @@ const RoomDetailsForm = () => {
 
           {/* AMENITIES */}
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              AMENITIES
-            </Box>
+            <Bar props="AMENITIES" />
             <Box sx={{ display: "flex" }} gap={2}>
               {amenities.map((item) => (
                 <Button
@@ -529,40 +477,43 @@ const RoomDetailsForm = () => {
 
           {/* PREFERENCES */}
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              PREFERENCES
+            <Bar props="PREFERENCES" />
+            <Box>
+              <TextField
+                variant="filled"
+                required
+                name="preferences"
+                type="text"
+                value={preferenceItem}
+                onChange={(e) => setPreferenceItem(e.target.value)}
+                sx={{ mb: 3, p: 0, mr: 2, width: "20%" }}
+                id="outlined-size-small"
+                size="small"
+              />
+              <Button variant="contained" onClick={() => preferencesHandler()}>
+                ADD
+              </Button>
+            </Box>
+            <Box>
+              {preferences.map((item) => (
+                <Box sx={{ width: "30%" }}>
+                  {item}
+                  <IconButton
+                    aria-label="delete"
+                    size="large"
+                    onClick={() => deletePreferencesHandler(item)}
+                    color="error"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              ))}
             </Box>
           </Box>
 
           {/* Property Images */}
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              PROPERTY IMAGES
-            </Box>
+            <Bar props="PROPERTY IMAGES" />
             <Box
               sx={{
                 display: pics.length === 0 ? "none" : "initial",
@@ -658,21 +609,7 @@ const RoomDetailsForm = () => {
 
           {/* Property Rent */}
           <Box>
-            <Box
-              maxWidth="lg"
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                p: 1,
-                fontWeight: "bold",
-                borderRadius: "4px",
-                my: 3,
-                pl: 2,
-                width: "80%",
-              }}
-            >
-              PROPERTY RENT
-            </Box>
+            <Bar props="PROPERTY RENT" />
             <h4>RENT PRICE: </h4>
             <TextField
               variant="filled"
@@ -692,6 +629,7 @@ const RoomDetailsForm = () => {
           variant="contained"
           color="success"
           component="span"
+          onClick={handleSubmit}
         >
           Submit
         </Button>
