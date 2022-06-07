@@ -2,7 +2,7 @@ import React from "react";
 import "./index.css";
 import App from "./App";
 import { createRoot } from "react-dom/client";
-import ChatProvider from "./Context/ChatProvider";
+import ChatProvider from "./Context/Provider";
 import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 const rootElement = document.getElementById("root");
@@ -16,6 +16,5 @@ root.render(
         </GoogleOAuthProvider>
       </ChatProvider>
     </BrowserRouter>
-    ,
   </React.StrictMode>
 );

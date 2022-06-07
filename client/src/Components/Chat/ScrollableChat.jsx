@@ -1,6 +1,6 @@
 import ScrollableFeed from "react-scrollable-feed";
-import { isSameSenderMargin, isSameUser } from "../config/ChatLogics";
-import { ChatState } from "../Context/ChatProvider";
+import { isSameSenderMargin, isSameUser } from "../../Config/ChatLogics";
+import { ChatState } from "../../Context/Provider";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();

@@ -10,8 +10,11 @@ import Login from "./Pages/Login";
 import Logout from "./Pages/Logout";
 import PostRoom from "./Pages/PostRoom";
 import RoomDetailsForm from "./Pages/RoomDetailsForm";
+import SingleRoom from "./Pages/SingleRoom";
+import ProfileDetailsForm from "./Pages/ProfileDetailsForm";
 import { Provider } from "react-redux";
 import store from "./State/store";
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -26,6 +29,12 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/roompage" element={<Roompage />} />
           <Route path="/postform" element={<Postform />} />
+          <Route path="/rooms" element={<SingleRoom />} exact />
+          <Route
+            path="/profileDetailsForm"
+            element={<ProfileDetailsForm />}
+            exact
+          />
         </Routes>
       </div>
     </Provider>

@@ -1,24 +1,25 @@
-import { Box, Button, Container } from "@mui/material";
 import React from "react";
+import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import "./styles.css";
-import { getSender } from "../config/ChatLogics";
+import { getSender } from "../../Config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import Lottie from "react-lottie";
-import animationData from "../animations/typing.json";
+import animationData from "../../Animations/typing.json";
 import io from "socket.io-client";
-import { ChatState } from "../Context/ChatProvider";
+import { ChatState } from "../../Context/Provider";
 import CircularProgress from "@mui/material/CircularProgress";
 import { TextField } from "@material-ui/core";
-import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Button, Container, IconButton } from "@mui/material";
 
 const ENDPOINT = "http://localhost:5000"; // "https://roombuddy.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
-const PostChat = ({setShowChat}) => {
+const Singlechat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -34,12 +35,8 @@ const PostChat = ({setShowChat}) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const {
-    selectedChat,
-    user,
-    notification,
-    setNotification,
-  } = ChatState();
+  const { selectedChat, setSelectedChat, user, notification, setNotification } =
+    ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -75,6 +72,12 @@ const PostChat = ({setShowChat}) => {
           },
         };
         setNewMessage("");
+
+        console.log(selectedChat);
+        console.log(newMessage);
+        console.log(user.token);
+        console.log(config);
+
         const { data } = await axios.post(
           "/api/message",
           {
@@ -83,6 +86,7 @@ const PostChat = ({setShowChat}) => {
           },
           config
         );
+
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {}
@@ -114,6 +118,7 @@ const PostChat = ({setShowChat}) => {
       ) {
         if (!notification.includes(newMessageRecieved)) {
           setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
         }
       } else {
         setMessages([...messages, newMessageRecieved]);
@@ -144,96 +149,110 @@ const PostChat = ({setShowChat}) => {
 
   return (
     <>
-      <Container maxWidth="lg">
+      {selectedChat ? (
+        <>
+          <Container
+            sx={{
+              display: "flex",
+              justifyContent: { xs: "space-between" },
+
+              fontSize: { xs: "25px", md: "30px" },
+              p: "0px",
+              pb: "10px",
+            }}
+          >
+            <IconButton
+              sx={{
+                display: { xs: "flex", md: "none" },
+                px: "12px",
+                py: 0,
+                color: "black",
+                bgcolor: "#cfe8fc",
+                borderRadius: "5px",
+              }}
+              onClick={() => setSelectedChat("")}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography
+              sx={{
+                flexGrow: 1,
+                alignItems: "center",
+                fontSize: { xs: "25px", md: "30px" },
+                pl: 2,
+              }}
+            >
+              {messages && <> {getSender(user, selectedChat.users)}</>}
+            </Typography>
+          </Container>
+          <Paper
+            elevation={0}
+            sx={{
+              bgcolor: "#e7e7e7",
+              height: "92%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              p: 3,
+              borderRadius: "5px",
+              overflowY: "hidden",
+            }}
+          >
+            {loading ? (
+              <CircularProgress
+                sx={{
+                  alignSelf: "center",
+                  margin: "auto",
+                }}
+              />
+            ) : (
+              <div className="messages">
+                <ScrollableChat messages={messages} />
+              </div>
+            )}
+            <Box onKeyDown={sendMessage} id="first-name" isRequired>
+              {istyping ? (
+                <div>
+                  <Lottie
+                    options={defaultOptions}
+                    // height={50}
+                    width={70}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <TextField
+                fullWidth
+                placeholder="Enter a message.."
+                value={newMessage}
+                onChange={typingHandler}
+                sx={{
+                  bgcolor: "#E0E0E0",
+                }}
+                autoFocus
+                margin="dense"
+              />
+            </Box>
+          </Paper>
+        </>
+      ) : (
+        // to get socket.io on same page
         <Box
           sx={{
             display: "flex",
-            flexWrap: "wrap",
-            bgcolor: "#cfe8fc",
-            height: "80vh",
-            p: 2,
-            borderRadius: "5px",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
           }}
         >
-          {selectedChat ? (
-            <>
-              <Container
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  color: "black",
-                }}
-              >
-                <Typography variant="h5" gutterBottom component="div">
-                  {messages && <> {getSender(user, selectedChat.users)}</>}
-                </Typography>
-                <Button
-                  sx={{ color: "black" }}
-                  onClick={() => setShowChat(false)}
-                >
-                  <CloseIcon />
-                </Button>
-              </Container>
-              <Paper
-                elevation={0}
-                sx={{
-                  bgcolor: "#e7e7e7",
-                  height: "92%",
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  p: 3,
-                  borderRadius: "5px",
-                }}
-              >
-                {loading ? (
-                  <CircularProgress
-                    sx={{
-                      alignSelf: "center",
-                      margin: "auto",
-                    }}
-                  />
-                ) : (
-                  <div className="messages">
-                    <ScrollableChat messages={messages} />
-                  </div>
-                )}
-
-                <Box onKeyPress={sendMessage} id="first-name" isRequired>
-                  {istyping ? (
-                    <div>
-                      <Lottie
-                        options={defaultOptions}
-                        // height={50}
-                        width={70}
-                        style={{ marginBottom: 15, marginLeft: 0 }}
-                      />
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                  <TextField
-                    fullWidth
-                    placeholder="Enter a message.."
-                    value={newMessage}
-                    onChange={typingHandler}
-                    sx={{
-                      bgcolor: "#E0E0E0",
-                    }}
-                    autoFocus
-                    margin="dense"
-                  />
-                </Box>
-              </Paper>
-            </>
-          ) : (
-            <></>
-          )}
+          <Typography>Click on a user to start chatting</Typography>
         </Box>
-      </Container>
+      )}
     </>
   );
 };
 
-export default PostChat;
+export default Singlechat;

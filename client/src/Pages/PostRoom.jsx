@@ -1,8 +1,8 @@
 import { Backdrop, Button} from "@mui/material";
 import axios from "axios";
 import { useEffect, useState} from "react";
-import PostChat from "../Components/PostChat";
-import { ChatState } from "../Context/ChatProvider";
+import PostChat from "../Components/Chat/PostChat";
+import { ChatState } from "../Context/Provider";
 
 const PostRoom = () => {
   const {
