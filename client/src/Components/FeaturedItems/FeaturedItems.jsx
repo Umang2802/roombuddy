@@ -1,24 +1,22 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
+
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { CardActionArea } from "@mui/material";
 const FeatItems = (props) => {
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          "& > :not(style)": {
-            m: 1,
-            width: 128,
-            height: 128,
-          },
-        }}
-      >
-        <img src={props.image} alt="image" />
-        <Paper elevation={3} />
-      </Box>
-    </>
+    <Card sx={{ maxWidth: 250 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="250"
+          image={props.image}
+          alt="green iguana"
+        />
+      </CardActionArea>
+    </Card>
   );
 };
 
