@@ -62,37 +62,37 @@ const rule = [
 const amenity = [
   {
     id: 0,
-    variant: "outlined",
+    variant: "",
     onClick: false,
     value: "AC",
   },
   {
     id: 1,
-    variant: "outlined",
+    variant: "",
     onClick: false,
     value: "Pool",
   },
   {
     id: 2,
-    variant: "outlined",
+    variant: "",
     onClick: false,
     value: "Dining Area",
   },
   {
     id: 3,
-    variant: "outlined",
+    variant: "",
     onClick: false,
     value: "Parking Area",
   },
   {
     id: 4,
-    variant: "outlined",
+    variant: "",
     onClick: false,
     value: "Garden",
   },
   {
     id: 5,
-    variant: "outlined",
+    variant: "",
     onClick: false,
     value: "Laundry",
   },
@@ -131,7 +131,7 @@ const RoomDetailsForm = () => {
   });
 
   const bhkOptions = [];
-  for (let i = 1; i <= tenantNo; i++) {
+  for (let i = 1; i <= 6; i++) {
     bhkOptions.push(
       <MenuItem key={i} value={i}>
         {i}
@@ -140,7 +140,7 @@ const RoomDetailsForm = () => {
   }
 
   const bathOptions = [];
-  for (let i = 1; i <= tenantNo; i++) {
+  for (let i = 1; i <= 6; i++) {
     bathOptions.push(
       <MenuItem key={i} value={i}>
         {i}
@@ -202,12 +202,12 @@ const RoomDetailsForm = () => {
           ? amenity.onClick === true
             ? {
                 ...amenity,
-                variant: "outlined",
+                variant: "",
                 onClick: false,
               }
             : {
                 ...amenity,
-                variant: "contained",
+                variant: "outlined",
                 onClick: true,
               }
           : { ...amenity }
@@ -240,6 +240,7 @@ const RoomDetailsForm = () => {
         }}
         sx={{ mb: 3, p: 0, width: "30%" }}
         id="outlined-size-small"
+        size="small"
       />
     );
     tenantFields.push(<h4>TENANT {i} BIO: </h4>);
@@ -254,6 +255,7 @@ const RoomDetailsForm = () => {
         rows={3}
         variant="filled"
         sx={{ mb: 2, p: 0, width: "55%" }}
+        size="small"
       />
     );
     tenantFields.push(<br />);
@@ -291,7 +293,7 @@ const RoomDetailsForm = () => {
       <Container maxWidth="lg" sx={{ p: 4 }}>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <Typography variant="h4" sx={{ fontWeight: "bold", py: 1 }}>
-            Post Details
+            Room Details
           </Typography>
           <Typography sx={{ fontSize: 16 }}>
             Choose the options which match your personality. It will take a
@@ -342,6 +344,7 @@ const RoomDetailsForm = () => {
               }}
               variant="filled"
               sx={{ mb: 4, p: 0, width: "55%" }}
+              size="small"
             />
             <br />
             <Box sx={{ display: "flex" }}>
@@ -453,6 +456,7 @@ const RoomDetailsForm = () => {
               onChange={(e) => setTenantNo(e.target.value)}
               sx={{ mb: 3, p: 0, width: "8%" }}
               id="outlined-size-small"
+              size="small"
             />
             <Box>{tenantFields}</Box>
           </Box>
@@ -468,6 +472,7 @@ const RoomDetailsForm = () => {
                   onClick={() => {
                     amenityClickHandler(item);
                   }}
+                  sx={{ border: "1px solid" }}
                 >
                   {item.value}
                 </Button>
@@ -583,11 +588,22 @@ const RoomDetailsForm = () => {
                   cols={3}
                   gap={14}
                 >
-                  {pics.map((item) => (
-                    <ImageListItem key={item}>
-                      <img src={item} srcSet={item} alt={item} loading="lazy" />
-                    </ImageListItem>
-                  ))}
+                  {pics.map((item, i) => {
+                    return (
+                      <>
+                        {i != 0 && (
+                          <ImageListItem key={item}>
+                            <img
+                              src={item}
+                              srcSet={item}
+                              alt={item}
+                              loading="lazy"
+                            />
+                          </ImageListItem>
+                        )}
+                      </>
+                    );
+                  })}
                 </ImageList>
                 <br />
                 <label htmlFor="contained-button-moreImage">
@@ -621,6 +637,7 @@ const RoomDetailsForm = () => {
               onChange={(e) => setRent(e.target.value)}
               sx={{ mb: 3, p: 0, width: "10%" }}
               id="outlined-size-small"
+              size="small"
             />
           </Box>
         </Box>
