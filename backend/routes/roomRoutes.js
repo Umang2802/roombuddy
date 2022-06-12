@@ -3,7 +3,7 @@ const express = require('express');
 const { verify } = require('jsonwebtoken');
 const router = express.Router();
 const rooms = require('../controllers/roomController');
-const {  verifyToken } = require('../middleware');
+const { verifyToken, validateRoom} = require('../middleware');
 
 /* const multer = require('multer'); */
 /* const { storage } = require('../cloudinary/index');
@@ -11,7 +11,7 @@ const upload = multer({ storage }); */
 
 router.get('/', verifyToken ,rooms.index);
 router.get('/:id', verifyToken ,rooms.showRoom);
-router.post('/', verifyToken , rooms.createRoom);
+router.post('/', verifyToken, validateRoom, rooms.createRoom);
 
 /* router.post('/', upload.array('images'), (req, res) => {
     console.log(req.body, req.files);

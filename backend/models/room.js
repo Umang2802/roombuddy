@@ -2,56 +2,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const roomSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    address: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    }, 
-    bhk: {
-        type: Number,
-        required: true
-    }, 
-    bathroom: {
-        type: Number,
-        required: true
-    }, 
-    propertyType: {
-        type: String,
-        required: true
-    },
-    smoking:{
-        type: Boolean,
-        required: true
-    },   
-    alcohol: {
-        type: Boolean,
-        required: true
-    },   
-    pets:{
-        type: Boolean,
-        required: true
-    },  
-    vegetarian:{
-        type: Boolean,
-        required: true
-    },
-    noOfTenants: {
-        type: Number,
-        required: true
-    }, 
+    name: String,
+    address: String,  
+    description: String,
+    bhk: Number,   
+    bathroom: Number,   
+    propertyType:  String, 
+    smoking: Boolean, 
+    alcohol: Boolean, 
+    pets: Boolean,
+    vegetarian:Boolean,  
+    noOfTenants: Number,
     amenities:[String],
     preferences:[String],
-    rentPrice: {
-        type: Number,
-        required: true
-    }, 
+    rentPrice: Number,
     images: [
         {
             url: String,
