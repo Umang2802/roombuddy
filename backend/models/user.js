@@ -15,7 +15,9 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-
+    imageURL: String,
+    bio: String,
+    type: String
 });
 
 userSchema.pre("save", function (next) {
