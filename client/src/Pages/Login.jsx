@@ -76,14 +76,17 @@ export default function Login() {
         "Content-type": "application/json",
       },
     };
-    const { data } = await axios.post(
-      "/login",
-      {
-        email,
-        password,
-      },
-      config
-    );
+    const { data } = await axios
+      .post(
+        "/login",
+        {
+          email: email,
+          password: password,
+          type: "normallogin",
+        },
+        config
+      )
+      .then((res) => console.log(res));
 
     localStorage.setItem("token", JSON.stringify(data));
     navigate("/");

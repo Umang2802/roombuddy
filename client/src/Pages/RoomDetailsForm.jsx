@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Navbar from "../Components/Navbar/Navbar";
 import { postRoom } from "../Services";
 import * as actionCreator from "../State/Actions/postroomAction";
+import { useDispatch } from "react-redux";
 const types = [
   {
     value: "Flat",
@@ -109,6 +110,7 @@ const fileToDataUri = (file) =>
   });
 
 const RoomDetailsForm = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [address, setAddress] = useState("");
@@ -307,7 +309,7 @@ const RoomDetailsForm = () => {
       images: pics,
       tenantDetails: tenantDetails,
     };
-    dispatch(actionCreator.postRoom(roomdata));
+    dispatch(actionCreator.postRoomAction(roomdata));
   };
 
   // useEffect(() => {

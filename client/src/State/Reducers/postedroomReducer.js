@@ -2,6 +2,8 @@ const initialState = {
   user_id: localStorage.getItem("user_id"),
   token: localStorage.getItem("token"),
   username: localStorage.getItem("username"),
+  type: "",
+  bio: "",
 };
 const authReducer = (state = initialState, actions) => {
   const { type, payload } = actions;
@@ -15,6 +17,8 @@ const authReducer = (state = initialState, actions) => {
         token: payload.token,
         username: payload.username,
         user_id: payload._id,
+        type: payload.type,
+        bio: payload.bio,
       };
     // case "SIGNUP_FAIL":
     //   return {

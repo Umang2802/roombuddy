@@ -1,5 +1,5 @@
 import { postRoom } from "../../Services";
-export const postRoom = (params) => (dispatch) => {
+export const postRoomAction = (params) => (dispatch) => {
   const usertoken = JSON.parse(localStorage.getItem("userInfo"));
   const config = {
     headers: {

@@ -88,14 +88,18 @@ const validationSchema = yup.object({
 });
 const Signup = () => {
   const dispatch = useDispatch();
-  const [username, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
   const googleSuccess = async (res) => {
     const userdata = jwt(res.credential);
-    setName(userdata.name);
-    setEmail(userdata.email);
-    await console.log("success");
+    console.log(userdata);
+    const params = {
+      name: userdata.name,
+      email: userdata.email,
+      imageURL: userdata.picture,
+      bio: "",
+      type: "googlelogin",
+    };
+    dispatch(actionCreator.signUpAction(params));
   };
 
   const googleFailure = async (error) => {
@@ -107,10 +111,14 @@ const Signup = () => {
       username: "",
       email: "",
       password: "",
+      imageURL: "",
+      bio: "",
+      type: "normallogin",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      dispatch(actionCreator.signUp(values));
+      console.log(values);
+      dispatch(actionCreator.signUpAction(values));
     },
   });
 

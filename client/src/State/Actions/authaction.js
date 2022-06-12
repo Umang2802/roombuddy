@@ -1,5 +1,5 @@
 import { signUp } from "../../Services";
-export const signUp = (params) => (dispatch) => {
+export const signUpAction = (params) => (dispatch) => {
   signUp(params)
     .then((res) => {
       localStorage.setItem("token", JSON.stringify(res));
