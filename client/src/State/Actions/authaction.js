@@ -1,16 +1,17 @@
 import { signUp } from "../../Services";
-export const login = (params) => (dispatch) => {
+export const signUp = (params) => (dispatch) => {
   signUp(params)
     .then((res) => {
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", JSON.stringify(res));
+      console.log(res.data);
       dispatch({
-        type: "LOGIN_SUCCESS",
+        type: "SIGNUP_SUCCESS",
         payload: res.data,
       });
     })
     .catch((err) =>
       dispatch({
-        type: "LOGIN_FAIL",
+        type: "SIGNUP_FAIL",
         payload: err.response.data,
       })
     );

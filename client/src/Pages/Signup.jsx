@@ -23,6 +23,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/authaction";
 import { GoogleLogin } from "@react-oauth/google";
+import jwt from "jwt-decode";
 const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   maindiv: {
@@ -88,11 +89,13 @@ const validationSchema = yup.object({
 const Signup = () => {
   const dispatch = useDispatch();
   const [username, setName] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const googleSuccess = async (res) => {
-    console.log(res);
-    console.log("sucess");
+    const userdata = jwt(res.credential);
+    setName(userdata.name);
+    setEmail(userdata.email);
+    await console.log("success");
   };
 
   const googleFailure = async (error) => {
@@ -107,8 +110,7 @@ const Signup = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      dispatch(actionCreator.login(values));
-      // localStorage.setItem("username", JSON.stringify(data));
+      dispatch(actionCreator.signUp(values));
     },
   });
 

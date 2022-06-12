@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
-import { getSender } from "../../Config/ChatLogics";
+import { getSender } from "../../Config/config/ChatLogics";
 import { useEffect, useState } from "react";
 import ChatLoading from "./ChatLoading";
 import { ChatState } from "../../Context/Provider";

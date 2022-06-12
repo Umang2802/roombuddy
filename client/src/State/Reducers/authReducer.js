@@ -6,7 +6,7 @@ const initialState = {
 const authReducer = (state = initialState, actions) => {
   const { type, payload } = actions;
   switch (type) {
-    case "LOGIN_SUCCESS":
+    case "SIGNUP_SUCCESS":
       localStorage.setItem("token", payload.token);
       localStorage.setItem("user_id", payload._id);
       localStorage.setItem("username", payload.username);
@@ -16,7 +16,7 @@ const authReducer = (state = initialState, actions) => {
         username: payload.username,
         user_id: payload._id,
       };
-    // case "LOGIN_FAIL":
+    // case "SIGNUP_FAIL":
     //   return {
     //     ...state,
     //     errors: payload,
