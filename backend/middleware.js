@@ -3,7 +3,7 @@ const { userProfileSchema } = require('./schemas');
 const Room = require('./models/room');
 
 
-modules.export.validateRoom = (req, res, next) => {
+module.exports.validateRoom = (req, res, next) => {
     const {name, address, description, bhk, bathroom, propertyType, smoking, alcohol, pets, vegetarian, noOfTenants, amenities, preferences, rentPrice} = req.body;
 
     const { error } = roomSchema.validate({name, address, description, bhk, bathroom, propertyType, smoking, alcohol, pets, vegetarian, noOfTenants, amenities, preferences, rentPrice});
