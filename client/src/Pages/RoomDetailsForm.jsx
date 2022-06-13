@@ -129,8 +129,6 @@ const RoomDetailsForm = () => {
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
 
-  const dispatch = useDispatch();
-
   const Input = styled("input")({
     display: "none",
   });
