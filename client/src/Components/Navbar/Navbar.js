@@ -13,7 +13,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import Logo from "../../Assets/logo.svg"
+import Logo from "../../Assets/logo.svg";
 
 const Navbar = () => {
   const settings = [
@@ -54,7 +54,7 @@ const Navbar = () => {
 
   return (
     <AppBar
-      style={{ background: "transparent", boxShadow: "none" }}
+      style={{ background: "#EEF2FF", boxShadow: "none" }}
       position="static"
     >
       <Container maxWidth="xl">
@@ -65,7 +65,7 @@ const Navbar = () => {
               display: { xs: "none", md: "flex" },
             }}
           >
-            <img src={Logo} alt="img" loading="lazy" />
+            <img src={Logo} alt="img" loading="lazy" width="80%" />
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, my: 3 }}>
             <IconButton
@@ -101,7 +101,11 @@ const Navbar = () => {
                   <Typography textAlign="center">
                     <Link
                       to={page.link}
-                      style={{ textDecoration: "none", color: "black" }}
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                        fontFamily: "Inter, sans-serif",
+                      }}
                     >
                       {" "}
                       {page.name}{" "}
@@ -128,17 +132,17 @@ const Navbar = () => {
               justifyContent: "flex-end",
             }}
           >
-            {MenuItems.map((page) => (
+            {MenuItems.map((page, index) => (
               <Button
-                key={page.name}
+                key={index}
                 onClick={handleCloseNavMenu}
                 sx={{
-                  my: 5,
+                  my: 2,
                   mx: 3,
                   display: "block",
-                  fontWeight: "bold",
-                  fontSize: 17,
+                  fontSize: 16,
                   color: "#434343",
+                  textTransform: "capitalize",
                   fontFamily: "Inter, sans-serif",
                 }}
                 component={Link}
@@ -153,11 +157,10 @@ const Navbar = () => {
             {show ? (
               <Button
                 sx={{
-                  my: 5,
+                  my: 2,
                   mx: 3,
                   display: "block",
-                  fontWeight: "bold",
-                  fontSize: 17,
+                  fontSize: 15,
                   color: "#434343",
                   fontFamily: "Inter, sans-serif",
                 }}
@@ -169,23 +172,27 @@ const Navbar = () => {
               </Button>
             ) : (
               <>
-                <Tooltip title="Profile">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Typography
-                      sx={{
-                        mx: 1,
-                        display: "block",
-                        fontWeight: "bold",
-                        fontSize: 17,
-                        color: "#434343",
-                        fontFamily: "Inter, sans-serif",
-                      }}
-                    >
-                      {uname}
-                    </Typography>
-                    <Avatar alt="User"></Avatar>
-                  </IconButton>
-                </Tooltip>
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, borderRadius: "4px" }}
+                >
+                  <Typography
+                    sx={{
+                      mx: 1,
+                      display: "block",
+                      fontSize: 16,
+                      color: "#434343",
+                      textTransform: "capitalize",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                  >
+                    {uname}
+                  </Typography>
+                  <Avatar
+                    sx={{ fontSize: "10", width: 24, height: 24 }}
+                    alt="User"
+                  ></Avatar>
+                </IconButton>
                 <Menu
                   sx={{ mt: "45px" }}
                   id="menu-appbar"
@@ -208,7 +215,11 @@ const Navbar = () => {
                         textAlign="center"
                         component={Link}
                         to={setting.link}
-                        style={{ textDecoration: "none", color: "black" }}
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                          fontFamily: "Inter, sans-serif",
+                        }}
                       >
                         {setting.name}
                       </Typography>

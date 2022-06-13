@@ -27,7 +27,11 @@ const App = () => {
         <Route path="/roompage" element={<Roompage />} />
         <Route path="/postform" element={<Postform />} />
         <Route path="/rooms" element={<SingleRoom />} exact />
-        <Route path="/profileDetailsForm" element={<ProfileDetailsForm/>} exact />
+        <Route
+          path="/profileDetailsForm"
+          element={<ProfileDetailsForm />}
+          exact
+        />
       </Routes>
     </div>
   );
