@@ -74,7 +74,7 @@ useEffect(() => {
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={showChat}
           >
-            <PostChat setShowChat={setShowChat}/>
+            <PostChat setShowChat={setShowChat} />
           </Backdrop>
         </div>
       ) : (

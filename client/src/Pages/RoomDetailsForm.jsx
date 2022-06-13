@@ -129,6 +129,8 @@ const RoomDetailsForm = () => {
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
 
+  const dispatch = useDispatch();
+
   const Input = styled("input")({
     display: "none",
   });
@@ -274,8 +276,12 @@ const RoomDetailsForm = () => {
   }
 
   const preferencesHandler = () => {
-    setPreferences((preference) => [...preference, preferenceItem]);
-    setPreferenceItem("");
+    if (preferenceItem === "" || preferenceItem === " ") {
+      alert("Enter your Preferences");
+    } else {
+      setPreferences((preference) => [...preference, preferenceItem]);
+      setPreferenceItem("");
+    }
   };
 
   const deletePreferencesHandler = (item) => {
@@ -336,24 +342,25 @@ const RoomDetailsForm = () => {
           </Typography>
           <Box>
             <Bar props="PROPERTY ADDRESS" />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>PROPERTY NAME</Typography>
+
             <TextField
-              variant="filled"
-              required
+              variant="outlined"
               name="name"
               type="text"
-              InputLabelProps={{ style: { fontSize: 12 } }}
+              label="Property Name"
+              required
+              // InputProps={{ style: { padding:0 } }}
+              // InputLabelProps={{ style: { padding: 0 } }}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "30%" }}
+              sx={{ mb: 3, p: 0, width: "30%", bgcolor: "" }}
               id="outlined-size-small"
               size="small"
             />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>
-              PROPERTY ADDRESS
-            </Typography>
+            <br />
             <TextField
-              variant="filled"
+              variant="outlined"
+              label="Property Address"
               required
               name="address"
               type="text"
@@ -626,7 +633,7 @@ const RoomDetailsForm = () => {
                   {pics.map((item, i) => {
                     return (
                       <>
-                        {i != 0 && (
+                        {i !== 0 && (
                           <ImageListItem key={item}>
                             <img
                               src={item}
