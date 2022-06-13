@@ -77,7 +77,7 @@ export default function Login() {
       },
     };
     const { data } = await axios.post(
-      "/api/user/login",
+      "/login",
       {
         email,
         password,
@@ -85,7 +85,7 @@ export default function Login() {
       config
     );
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("token", JSON.stringify(data));
     navigate("/");
   };
 

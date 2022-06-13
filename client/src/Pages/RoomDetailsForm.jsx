@@ -19,7 +19,9 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Navbar from "../Components/Navbar/Navbar";
-
+import { postRoom } from "../Services";
+import * as actionCreator from "../State/Actions/postroomAction";
+import {useDispatch} from "react";
 const types = [
   {
     value: "Flat",
@@ -126,6 +128,8 @@ const RoomDetailsForm = () => {
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
 
+  const dispatch = useDispatch();
+
   const Input = styled("input")({
     display: "none",
   });
@@ -219,8 +223,8 @@ const RoomDetailsForm = () => {
     setTenantDetails((prevTenant) => [
       ...prevTenant,
       {
-        tenantName: tName,
-        tenantBio: tBio,
+        name: tName,
+        bio: tBio,
       },
     ]);
   };
@@ -284,18 +288,51 @@ const RoomDetailsForm = () => {
   };
 
   const handleSubmit = (event) => {
+    
+    const amenitydata = [];
     event.preventDefault();
+    for (let i = 0; i < amenities.length; i++) {
+      if (amenities[i].onClick == true) {
+        amenitydata.push(amenities[i].value);
+      }
+    }
+
+    const roomdata = {
+      name: name,
+      address: address,
+      description: desc,
+      bhk: bhk,
+      bathroom: bath,
+      propertyType: type,
+      smoking: rule[0].ticked,
+      alcohol: rule[1].ticked,
+      pets: rule[2].ticked,
+      vegetarian: rule[3].ticked,
+      noOfTenants: tenantNo,
+      amenities: amenitydata,
+      preferences: preferences,
+      rentPrice: rent,
+      images: pics,
+      tenantDetails: tenantDetails,
+    };
+    dispatch(actionCreator.postRoom(roomdata));
   };
 
-  useEffect(() => {
-    console.log(tenantDetails);
-  });
+  // useEffect(() => {
+  //   console.log(preferences);
+  // });
 
   return (
     <>
       <Navbar />
       <Container maxWidth="lg" sx={{ p: 4 }}>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          encType="multipart/form-data"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{ mt: 1 }}
+        >
           <Typography variant="h4" sx={{ fontWeight: "bold", py: 1 }}>
             Room Details
           </Typography>

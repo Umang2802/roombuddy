@@ -12,28 +12,32 @@ import PostRoom from "./Pages/PostRoom";
 import RoomDetailsForm from "./Pages/RoomDetailsForm";
 import SingleRoom from "./Pages/SingleRoom";
 import ProfileDetailsForm from "./Pages/ProfileDetailsForm";
+import { Provider } from "react-redux";
+import store from "./State/store";
 
 const App = () => {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} exact />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/chats" element={<ChatApp />} />
-        <Route path="/room" element={<PostRoom />} exact />
-        <Route path="/roomDetailsForm" element={<RoomDetailsForm />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/roompage" element={<Roompage />} />
-        <Route path="/postform" element={<Postform />} />
-        <Route path="/rooms" element={<SingleRoom />} exact />
-        <Route
-          path="/profileDetailsForm"
-          element={<ProfileDetailsForm />}
-          exact
-        />
-      </Routes>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} exact />
+          <Route path="/login" element={<Login />} exact />
+          <Route path="/logout" element={<Logout />} exact />
+          <Route path="/chats" element={<ChatApp />} />
+          <Route path="/room" element={<PostRoom />} />
+          <Route path="/roomDetailsForm" element={<RoomDetailsForm />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/roompage" element={<Roompage />} />
+          <Route path="/postform" element={<Postform />} />
+          <Route path="/rooms" element={<SingleRoom />} exact />
+          <Route
+            path="/profileDetailsForm"
+            element={<ProfileDetailsForm />}
+            exact
+          />
+        </Routes>
+      </div>
+    </Provider>
   );
 };
 

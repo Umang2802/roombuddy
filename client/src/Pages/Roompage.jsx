@@ -6,6 +6,11 @@ const Roompage = () => {
     <>
       <Navbar></Navbar>
       <Roomcard></Roomcard>
+      <Roomcard></Roomcard>
+      <Roomcard></Roomcard>
+      <Roomcard></Roomcard>
+      <Roomcard></Roomcard>
+      <Roomcard></Roomcard>
     </>
   );
 };

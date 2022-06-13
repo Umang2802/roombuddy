@@ -19,6 +19,12 @@ import bck from "../Assets/loginbackgnd.png";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import * as actionCreator from "../State/Actions/authaction";
+import { GoogleLogin } from "@react-oauth/google";
+import jwt from "jwt-decode";
+const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   maindiv: {
     display: "grid",
@@ -66,7 +72,6 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
 const validationSchema = yup.object({
   username: yup
     .string("Enter your username")
@@ -82,6 +87,21 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 const Signup = () => {
+  const dispatch = useDispatch();
+  const [username, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const googleSuccess = async (res) => {
+    const userdata = jwt(res.credential);
+    setName(userdata.name);
+    setEmail(userdata.email);
+    await console.log("success");
+  };
+
+  const googleFailure = async (error) => {
+    await console.log(error);
+    await console.log("failed");
+  };
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -90,15 +110,51 @@ const Signup = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values.email);
-      console.log(values.password);
-      console.log(values.username);
+      dispatch(actionCreator.signUp(values));
     },
   });
-  const [username, setName] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
 
+  const tokentest = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("username"));
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken.token}`,
+        },
+      };
+      axios
+        .get("/rooms/6294e688889a2eb621b20cb8", config)
+        .then((res) => {
+          console.log("response", res);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const roomsdetails = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("username"));
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken.token}`,
+        },
+      };
+      const { data } = await axios.get("/rooms", config);
+
+      console.log(data);
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const classes = useStyles();
 
   return (
@@ -199,15 +255,15 @@ const Signup = () => {
               </Button>
             </Box>
             <Typography>or</Typography>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, textTransform: "none", fontSize: "1rem" }}
-              className={classes.loginsubmit}
-            >
-              Sign up using Google
-            </Button>
+
+            <GoogleLogin
+              buttonText="Log in with Google"
+              onSuccess={googleSuccess}
+              onFailure={googleFailure}
+              cookiePolicy="single_host_origin"
+              size="large"
+              width="300"
+            />
           </Box>
         </Grid>
         <Grid
@@ -235,6 +291,7 @@ const Signup = () => {
               type="submit"
               fullWidth
               variant="contained"
+              onClick={roomsdetails}
               sx={{
                 mt: 3,
                 mb: 2,

@@ -3,7 +3,7 @@ import React from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import "./styles.css";
-import { getSender } from "../../Config/ChatLogics";
+import { getSender } from "../../Config/config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const ENDPOINT = "http://localhost:5000"; // "https://roombuddy.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
-const PostChat = ({setShowChat}) => {
+const PostChat = ({ setShowChat }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -34,12 +34,7 @@ const PostChat = ({setShowChat}) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const {
-    selectedChat,
-    user,
-    notification,
-    setNotification,
-  } = ChatState();
+  const { selectedChat, user, notification, setNotification } = ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
