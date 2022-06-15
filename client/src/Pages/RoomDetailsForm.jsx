@@ -340,11 +340,15 @@ const RoomDetailsForm = () => {
           </Typography>
           <Box>
             <Bar props="PROPERTY ADDRESS" />
-
+            <Typography sx={{ fontSize: 16, mb: 1 }}>PROPERTY NAME</Typography>
             <TextField
-              variant="outlined"
+              variant="filled"
               name="name"
               type="text"
+<<<<<<< HEAD
+=======
+              //label="Property Name"
+>>>>>>> ecef616b2e1c8f9ac59572fa322ee9b5ba36a700
               required
               // InputProps={{ style: { padding:0 } }}
               // InputLabelProps={{ style: { padding: 0 } }}
@@ -355,9 +359,12 @@ const RoomDetailsForm = () => {
               size="small"
             />
             <br />
+            <Typography sx={{ fontSize: 16, mb: 1 }}>
+              PROPERTY ADDRESS
+            </Typography>
             <TextField
-              variant="outlined"
-              label="Property Address"
+              variant="filled"
+              //label="Property Address"
               required
               name="address"
               type="text"
