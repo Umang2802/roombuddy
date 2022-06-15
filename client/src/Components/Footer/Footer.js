@@ -13,7 +13,7 @@ const Footer = () => {
   const Ul = styled("ul")({
     listStyle: "none",
   });
-
+  
   const Li = styled("li")({
     lineHeight: "2em",
   });
@@ -32,12 +32,12 @@ const Footer = () => {
         container
         spacing={2}
         sx={{
-          justifyContent: "space-between",
+          justifyContent: {md: 'space-between', sm: 'center', xs: 'center'},
           alignItems: "center",
           py: 5,
         }}
       >
-        <Grid item xs={3}>
+        <Grid item md={3} sm={12}>
           <center>
             <img src={Logo} alt="img" loading="lazy" width="30%" />
             <Typography sx={{ pt: 2 }}>
@@ -46,7 +46,7 @@ const Footer = () => {
             </Typography>
           </center>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item md={1} sm={4} xs={12}>
           <Typography variant="h6" sx={{ fontWeight: "bold", pb: 2 }}>
             Company
           </Typography>
@@ -58,7 +58,7 @@ const Footer = () => {
             <Li>Blog</Li>
           </Ul>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item md={1} sm={4} xs={12}>
           <Typography variant="h6" sx={{ fontWeight: "bold", pb: 2 }}>
             Company
           </Typography>
@@ -70,7 +70,7 @@ const Footer = () => {
             <Li>Blog</Li>
           </Ul>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item md={1} sm={4} xs={12}>
           <Typography variant="h6" sx={{ fontWeight: "bold", pb: 2 }}>
             Company
           </Typography>
@@ -82,7 +82,7 @@ const Footer = () => {
             <Li>Blog</Li>
           </Ul>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item md={2} sm={12} xs={12}>
           <center>
             <Typography variant="h6" sx={{ fontWeight: "bold", pb: 2 }}>
               Connect with US
