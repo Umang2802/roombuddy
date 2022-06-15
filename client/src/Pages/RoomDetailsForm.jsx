@@ -345,7 +345,6 @@ const RoomDetailsForm = () => {
               variant="outlined"
               name="name"
               type="text"
-              label="Property Name"
               required
               // InputProps={{ style: { padding:0 } }}
               // InputLabelProps={{ style: { padding: 0 } }}

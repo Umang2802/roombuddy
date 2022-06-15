@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Home from "./Pages/Home";
+import Home from "./Pages/Homepage/Home";
 import Signup from "./Pages/Signup";
 import Roompage from "./Pages/Roompage";
 import Postform from "./Pages/Postform";

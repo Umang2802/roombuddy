@@ -1,0 +1,138 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins";
+}
+
+.mainsection .content1 {
+  margin-top: 5rem;
+  margin-left: 5rem;
+  z-index: 2;
+}
+.mainsection .content1 h1 {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 900;
+  font-size: 7vw;
+  color: #323232;
+}
+.mainsection .content1 h2 {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+
+  width: 30%;
+
+  /* Black */
+
+  color: #111827;
+}
+.mainsection .content1 button {
+  margin-top: 1.5rem;
+  background: #6177d4;
+  border: 1px solid #6177d4;
+  border-radius: 35px;
+  padding: 0.6rem 2.2rem;
+  color: white;
+  font-size: 1rem;
+}
+.mainsection .background {
+  position: absolute;
+}
+
+.featuredrooms {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.heading1 {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 900;
+  font-size: 2rem;
+  line-height: 52px;
+  text-align: center;
+  color: #323232;
+  margin: 10vh 0;
+}
+.featuredrooms .locations {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+.roommate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.roommate .contentgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 0;
+  margin: 0 5rem;
+}
+.writtencontent {
+  padding: 0 6vw;
+}
+.contentgrid .writtencontent button {
+  margin-top: 1.5rem;
+  background: #6177d4;
+  border: 1px solid #6177d4;
+  border-radius: 35px;
+  padding: 0.6rem 2.2rem;
+  color: white;
+  font-size: 1rem;
+}
+
+.whyusgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5vw;
+  text-align: center;
+}
+.whyusgrid .price img,
+.smart img,
+.chat img {
+  padding: 3vw;
+  background-color: white;
+  box-shadow: 0px 0px 76px -5px #d6defa;
+  border-radius: 10px;
+  margin-bottom: 4vh;
+}
+.whyusgrid .smart img {
+  box-shadow: 0px 0px 76px -15px #ffc5b3;
+}
+.whyusgrid .chat img {
+  box-shadow: 0px 0px 76px 12px #e5ffdc;
+}
+.whyusgrid h4 {
+  font-weight: 900;
+  font-size: 1.2rem;
+  line-height: 30px;
+  /* identical to box height */
+
+  text-align: center;
+
+  margin-bottom: 0.2rem;
+  color: #323232;
+}
+.whyusgrid p {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 22px;
+  text-align: center;
+
+  color: #8c8c8c;
+}

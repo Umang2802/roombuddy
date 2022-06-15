@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/authaction";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   maindiv: {
@@ -88,7 +89,7 @@ const validationSchema = yup.object({
 });
 const Signup = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const googleSuccess = async (res) => {
     const userdata = jwt(res.credential);
     console.log(userdata);
@@ -99,7 +100,7 @@ const Signup = () => {
       bio: "",
       type: "googlelogin",
     };
-    dispatch(actionCreator.signUpAction(params));
+    dispatch(actionCreator.signUpAction(params, navigate));
   };
 
   const googleFailure = async (error) => {
@@ -118,7 +119,7 @@ const Signup = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      dispatch(actionCreator.signUpAction(values));
+      dispatch(actionCreator.signUpAction(values, navigate));
     },
   });
 
