@@ -16,6 +16,8 @@ import Findroommate from "../Assets/Findroommates.png";
 import houseicon from "../Assets/houseicon.png";
 import chaticon from "../Assets/chaticon.png";
 import recomendationicon from "../Assets/recomendationicon.png";
+import Footer from "../Components/Footer/Footer"
+
 const Home = () => {
   const featureditems = [
     backgroundimg1,
@@ -223,6 +225,7 @@ const Home = () => {
           </Grid>
         </Container>
       </Container>
+      <Footer/>
     </div>
   );
 };
