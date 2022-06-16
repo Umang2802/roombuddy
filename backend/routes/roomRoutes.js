@@ -11,10 +11,4 @@ router.post('/', verifyToken, validateRoom, rooms.createRoom);
 router.post('/deleteRoom', verifyToken, rooms.deleteRoom);
 
 
-
-
-
-
-
-
 module.exports = router;
