@@ -106,9 +106,11 @@ export default function Roomcard({ props }) {
             {props?.images?.length > 0 && (
               <CardHeader
                 avatar={
-                  <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                    {props?.images[0].url}
-                  </Avatar>
+                  <Avatar
+                    sx={{ bgcolor: red[500] }}
+                    src={props?.images[0].url}
+                    aria-label="recipe"
+                  ></Avatar>
                 }
                 title={props?.user.username}
               />

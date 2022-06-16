@@ -138,6 +138,81 @@ module.exports.updateRoom = async (req, res) => {
     if (err) {
       res.send("error while verifying token");
     } else {
+      const {
+        name,
+        address,
+        description,
+        bhk,
+        bathroom,
+        propertyType,
+        smoking,
+        alcohol,
+        pets,
+        vegetarian,
+        noOfTenants,
+        amenities,
+        preferences,
+        rentPrice,
+        tenantDetails,
+        images,
+        roomId,
+        userId,
+      } = req.body;
+
+      if (authData.user._id === userId) {
+        const r = await Room.findById(roomId);
+        const deletedImages = [];
+        console.log("r min", r);
+
+        for (let j = 0; j < r.images.length; j++) {
+          console.log("image", r.images[j].filename);
+          deletedImages.push(r.images[j].filename);
+        }
+
+        await console.log("deletedImages : " + deletedImages);
+
+        const room = await Room.findByIdAndUpdate(roomId, {
+          name,
+          address,
+          description,
+          bhk,
+          bathroom,
+          propertyType,
+          smoking,
+          alcohol,
+          pets,
+          vegetarian,
+          noOfTenants,
+          amenities,
+          preferences,
+          rentPrice,
+          tenantDetails,
+        });
+
+        room.user = userId;
+        room.images = [];
+
+        for (let i = 0; i < images.length; i++) {
+          console.log("item", images[i]);
+          const fileStr = images[i];
+          console.log(fileStr);
+          const uploaded = await cloudinary.uploader.upload(fileStr, {
+            upload_preset: "roombuddy",
+          });
+          const roomImage = {
+            url: uploaded.url,
+            filename: uploaded.public_id,
+          };
+          room.images.push(roomImage);
+        }
+
+        //now delete from cloudinary
+        for (let i = 0; i < deletedImages.length; i++) {
+          await cloudinary.uploader.destroy(deletedImages[i]);
+        }
+      } else {
+        res.send("You are not authorised to update this room");
+      }
     }
   });
 };

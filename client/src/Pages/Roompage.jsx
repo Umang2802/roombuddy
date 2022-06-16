@@ -77,6 +77,30 @@ const Roompage = () => {
       console.log(e);
     }
   };
+  const updatepost = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      console.log(usertoken);
+      const params = {
+        ...roommdata,
+        rentPrice: 3000,
+        roomId: roommdata[0]._id,
+        userId: roommdata[0].user._id,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      axios.post("/rooms/updateRoom", params, config).then((res) => {
+        console.log(res.data);
+      });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
@@ -89,6 +113,7 @@ const Roompage = () => {
         ))}
       </Grid>
       <button onClick={deletepost}>Delete</button>
+      <button onClick={updatepost}>Update</button>
     </>
   );
 };
