@@ -122,6 +122,7 @@ module.exports.deleteRoom = async (req, res) => {
           }
           const deletedRoom = await Room.findByIdAndDelete(room._id);
           console.log("Deleted Room : " + deletedRoom);
+          res.send(deletedRoom);
         }
       } else {
         res.send("You are not authorised to delete this room !");
