@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   Backdrop,
   Box,
@@ -18,6 +20,7 @@ import RoomImage from "../Assets/room.jpg";
 import Map from "../Assets/map.jpg";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
+import { useEffect } from "react";
 
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -29,6 +32,7 @@ function srcset(image, size, rows = 1, cols = 1) {
 }
 
 const SingleRoom = () => {
+  const params = useParams();
   const [name, setName] = useState("umang");
   const [desc, setDesc] = useState("ntng");
   const [bhk, setBhk] = useState("3");
@@ -36,6 +40,33 @@ const SingleRoom = () => {
   const [type, setType] = useState("Flat");
   const [tenantNo, setTenantNo] = useState("2");
   const [clicked, setClicked] = useState(false);
+
+  const tokentest = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken.token}`,
+        },
+      };
+      axios
+        .get("/rooms/" + params.id, config)
+        .then((res) => {
+          console.log("response", res);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    tokentest();
+  }, []);
 
   const details = [
     {

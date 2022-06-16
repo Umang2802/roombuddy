@@ -30,9 +30,4 @@ const roomSchema = new Schema({
 });
 
 
-
-
-//add tenants after no. of tenants once tenent form is done
-
-
 module.exports = mongoose.model('Room', roomSchema);

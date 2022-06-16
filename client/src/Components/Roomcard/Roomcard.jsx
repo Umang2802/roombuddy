@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import PostChat from "../../Components/Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -130,23 +131,24 @@ export default function Roomcard({ props }) {
             </Typography>
           </Grid>
         </Grid>
-
-        {props?.images?.length > 0 && (
-          <CardMedia
-            component="img"
-            height="194"
-            image={props?.images[0].url}
-            alt="Paella dish"
-          />
-        )}
-        <CardContent>
-          <Typography variant="h7" color="text.primary" fontWeight="bolder">
-            {props?.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {props?.address}
-          </Typography>
-        </CardContent>
+        <Link style={{ textDecoration: "none" }} to={"/tasklist/" + props._id}>
+          {props?.images?.length > 0 && (
+            <CardMedia
+              component="img"
+              height="194"
+              image={props?.images[0].url}
+              alt="Paella dish"
+            />
+          )}
+          <CardContent>
+            <Typography variant="h7" color="text.primary" fontWeight="bolder">
+              {props?.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {props?.address}
+            </Typography>
+          </CardContent>
+        </Link>
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userProfileSchema = new Schema({
+const roommateProfileSchema = new Schema({
     name: String,
     age: Number,
     gender: String,
@@ -17,4 +17,4 @@ const userProfileSchema = new Schema({
     },
 });
 
-module.exports = mongoose.model('Userprofile', userProfileSchema);
+module.exports = mongoose.model('Roommateprofile', roommateProfileSchema);

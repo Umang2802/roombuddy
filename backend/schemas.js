@@ -17,7 +17,7 @@ module.exports.roomSchema = Joi.object({
     rentPrice: Joi.number().required(),
 });
 
-module.exports.userProfileSchema = Joi.object({
+module.exports.roommateProfileSchema = Joi.object({
     name: Joi.string().required(),
     age: Joi.number().required(),
     gender: Joi.string().required(),

@@ -47,7 +47,9 @@ const Roompage = () => {
     // eslint-disable-next-line
   }, []);
   const roommdata = useSelector((state) => state.roomdata.rooms);
+  const userdata = useSelector((state) => state.auth.user_id);
   console.log("room data", roommdata);
+  console.log("roomid ", userdata);
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
   //   const config = {

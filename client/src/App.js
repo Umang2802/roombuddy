@@ -30,7 +30,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/roompage" element={<Roompage />} />
           <Route path="/postform" element={<Postform />} />
-          <Route path="/rooms" element={<SingleRoom />} exact />
+          <Route path="/rooms/:id" element={<SingleRoom />} exact />
           <Route
             path="/profileDetailsForm"
             element={<ProfileDetailsForm />}
