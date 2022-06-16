@@ -112,6 +112,8 @@ module.exports.deleteRoom = async (req, res) => {
       res.send("error while verifying token");
     } else {
       const { roomId, userId } = req.body;
+      console.log("authdata", authData.user._id);
+      console.log("userid", userId);
       if (authData.user._id === userId) {
         const room = await Room.findById(roomId);
         if (!room) {
@@ -135,9 +137,7 @@ module.exports.updateRoom = async (req, res) => {
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
       res.send("error while verifying token");
-    }
-    else{
-      
+    } else {
     }
   });
-}
+};

@@ -5,6 +5,7 @@ import { Grid } from "@material-ui/core";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
+import { deletePost } from "../Services/index.js";
 const Roompage = () => {
   const dispatch = useDispatch();
   const [roomsdata, setRoomsdata] = useState([]);
@@ -47,6 +48,35 @@ const Roompage = () => {
   }, []);
   const roommdata = useSelector((state) => state.roomdata.rooms);
   console.log("room data", roommdata);
+  // const deletepost = () => {
+  //   const usertoken = JSON.parse(localStorage.getItem("token"));
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${usertoken}`,
+  //     },
+  //   };
+  const deletepost = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      console.log(usertoken);
+      const params = {
+        roomId: roommdata[0]._id,
+        userId: roommdata[0].user._id,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      axios.post("/rooms/deleteRoom", params, config).then((res) => {
+        console.log(res.data);
+      });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
@@ -58,6 +88,7 @@ const Roompage = () => {
           </Grid>
         ))}
       </Grid>
+      <button onClick={deletepost}>Delete</button>
     </>
   );
 };
