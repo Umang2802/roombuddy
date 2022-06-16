@@ -17,4 +17,4 @@ const roommateProfileSchema = new Schema({
     },
 });
 
-module.exports = mongoose.model('roomateprofile', roommateProfileSchema);
+module.exports = mongoose.model('Roommateprofile', roommateProfileSchema);
