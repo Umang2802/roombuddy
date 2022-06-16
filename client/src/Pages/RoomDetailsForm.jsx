@@ -345,10 +345,7 @@ const RoomDetailsForm = () => {
               variant="filled"
               name="name"
               type="text"
-<<<<<<< HEAD
-=======
               //label="Property Name"
->>>>>>> ecef616b2e1c8f9ac59572fa322ee9b5ba36a700
               required
               // InputProps={{ style: { padding:0 } }}
               // InputLabelProps={{ style: { padding: 0 } }}

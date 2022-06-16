@@ -5,10 +5,14 @@
   font-family: "Poppins";
 }
 
+/* .mainsection {
+  background-image: url("../../Assets/background.svg");
+  background-repeat: no-repeat;
+} */
+
 .mainsection .content1 {
   margin-top: 5rem;
   margin-left: 5rem;
-  z-index: 2;
 }
 .mainsection .content1 h1 {
   font-family: "Poppins";
@@ -16,6 +20,8 @@
   font-weight: 900;
   font-size: 7vw;
   color: #323232;
+
+  z-index: 20;
 }
 .mainsection .content1 h2 {
   font-family: "Inter";
@@ -40,6 +46,10 @@
 }
 .mainsection .background {
   position: absolute;
+  object-fit: contain;
+  top: 4vh;
+  height: 100%;
+  width: 90%;
 }
 
 .featuredrooms {
@@ -81,6 +91,7 @@
 .writtencontent {
   padding: 0 6vw;
 }
+
 .contentgrid .writtencontent button {
   margin-top: 1.5rem;
   background: #6177d4;
@@ -90,7 +101,10 @@
   color: white;
   font-size: 1rem;
 }
-
+.roommateimage img {
+  height: 80%;
+  width: 80%;
+}
 .whyusgrid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -99,6 +113,7 @@
   align-items: center;
   margin: 0 5vw;
   text-align: center;
+  margin-bottom: 10vh;
 }
 .whyusgrid .price img,
 .smart img,

@@ -15,6 +15,7 @@ import Findroommate from "../../Assets/Findroommates.png";
 import houseicon from "../../Assets/houseicon.png";
 import chaticon from "../../Assets/chaticon.png";
 import recomendationicon from "../../Assets/recomendationicon.png";
+import Footer from "../../Components/Footer/Footer";
 import "./Home.css";
 const Home = () => {
   const featureditems = [
@@ -31,7 +32,7 @@ const Home = () => {
     <div>
       <Navbar></Navbar>
       <section className="mainsection">
-        {/* <img className="background" src={backgroundimg} alt="" /> */}
+        <img className="background" src={backgroundimg} alt="" />
         <div className="content1">
           <h1>ROOMBUDDY</h1>
           <h2>Find rooms and roommates at the tip of your fingers! </h2>
@@ -82,7 +83,7 @@ const Home = () => {
           </div>
           <div className="smart">
             <img src={recomendationicon} alt="" />
-            <h4>Price Prediction</h4>
+            <h4>Smart Recommendation</h4>
             <p>
               We give you an accurate prediction of house rent prices of your
               selected area.so that the next time you bargain you are confident!
@@ -90,7 +91,7 @@ const Home = () => {
           </div>
           <div className="chat">
             <img src={chaticon} alt="" />
-            <h4>Price Prediction</h4>
+            <h4>Secure chat</h4>
             <p>
               We give you an accurate prediction of house rent prices of your
               selected area.so that the next time you bargain you are confident!
@@ -98,6 +99,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <Footer></Footer>
     </div>
   );
 };

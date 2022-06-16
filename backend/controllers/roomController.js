@@ -4,11 +4,12 @@ const mongoose = require("mongoose");
 const { cloudinary } = require("../cloudinary/index");
 
 module.exports.index = async (req, res) => {
+  console.log(req.token);
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
       res.send("error while verifying token");
     } else {
-      const rooms = await Room.find({});
+      const rooms = await Room.find({}).populate("user", "username imageURL");
       res.send(rooms);
     }
   });
