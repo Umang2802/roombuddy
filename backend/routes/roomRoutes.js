@@ -9,6 +9,6 @@ router.get('/', verifyToken ,rooms.index);
 router.get('/:id', verifyToken ,rooms.showRoom);
 router.post('/', verifyToken, validateRoom, rooms.createRoom);
 router.post('/deleteRoom', verifyToken, rooms.deleteRoom);
-
+router.post('/updateRoom', verifyToken, rooms.updateRoom);
 
 module.exports = router;
