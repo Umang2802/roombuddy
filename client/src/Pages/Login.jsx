@@ -12,6 +12,8 @@ import bck from "../Assets/loginbackgnd.png";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import * as actionCreator from "../State/Actions/authaction";
 
 const useStyles = makeStyles((theme) => ({
   maindiv: {
@@ -61,6 +63,7 @@ function Copyright(props) {
 }
 
 export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -70,26 +73,15 @@ export default function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
+    const params = {
+      name: name,
+      email: email,
+      password: password,
+      image: "",
+      bio: "",
+      type: "normallogin",
     };
-    const { data } = await axios
-      .post(
-        "/login",
-        {
-          email: email,
-          password: password,
-          type: "normallogin",
-        },
-        config
-      )
-      .then((res) => console.log(res));
-
-    localStorage.setItem("token", JSON.stringify(data));
-    navigate("/");
+    dispatch(actionCreator.LoginAction(params, navigate));
   };
 
   return (

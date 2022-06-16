@@ -1,9 +1,10 @@
 import { signUp } from "../../Services";
-export const signUpAction = (params) => (dispatch) => {
+import { Login } from "../../Services";
+export const signUpAction = (params, navigate) => (dispatch) => {
   signUp(params)
     .then((res) => {
-      localStorage.setItem("token", JSON.stringify(res));
-      console.log(res.data);
+      localStorage.setItem("token", JSON.stringify(res.data.token));
+      navigate("/");
       dispatch({
         type: "SIGNUP_SUCCESS",
         payload: res.data,
@@ -17,10 +18,28 @@ export const signUpAction = (params) => (dispatch) => {
     );
 };
 
-// export const logout = (history) => (dispatch) => {
-//   localStorage.removeItem("admin_user_id");
-//   dispatch({
-//     type: "LOGOUT",
-//   });
-//   history.push("/admin");
-// };
+export const LoginAction = (params, navigate) => (dispatch) => {
+  Login(params)
+    .then((res) => {
+      console.log(res.data);
+      localStorage.setItem("token", JSON.stringify(res.data.token));
+      navigate("/");
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: "LOGIN_FAILED",
+        payload: err.response.data,
+      });
+    });
+};
+export const logout = (history) => (dispatch) => {
+  localStorage.removeItem("token");
+  dispatch({
+    type: "LOGOUT",
+  });
+  history.push("/");
+};

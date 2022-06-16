@@ -31,22 +31,24 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Roomcard() {
+export default function Roomcard({ props }) {
+  console.log(props);
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const { setSelectedChat, user, chats, setChats } = ChatState();
+  const { setSelectedChat, chats, setChats } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
 
   const fetchChats = async () => {
     //console.log(user._id);
+    const usertoken = JSON.parse(localStorage.getItem("token"));
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${usertoken}`,
         },
       };
 
@@ -64,7 +66,7 @@ export default function Roomcard() {
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${props.props?.user.token}`,
         },
       };
       const { data } = await axios.post(`/api/chat`, { userId }, config);
@@ -79,10 +81,11 @@ export default function Roomcard() {
     }
   };
 
-  useEffect(() => {
-    fetchChats();
-  }, [fetchChats]);
-
+  // useEffect(() => {
+  //   fetchChats();
+  // }, [fetchChats]);
+  // if (props.props?.images?.length > 0) {
+  // }
   return (
     <>
       {showChat ? (
@@ -97,17 +100,21 @@ export default function Roomcard() {
       ) : (
         <></>
       )}
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 340, minHeight: 450 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                  R
-                </Avatar>
-              }
-              title="Dheeraj Gandhi"
-            />
+            {props?.images?.length > 0 && (
+              <CardHeader
+                avatar={
+                  <Avatar
+                    sx={{ bgcolor: red[500] }}
+                    src={props?.images[0].url}
+                    aria-label="recipe"
+                  ></Avatar>
+                }
+                title={props?.user.username}
+              />
+            )}
           </Grid>
           <Grid item xs={4}>
             <Typography
@@ -119,23 +126,25 @@ export default function Roomcard() {
               }}
               variant="h7"
             >
-              $2393
+              {props.rentPrice}
             </Typography>
           </Grid>
         </Grid>
 
-        <CardMedia
-          component="img"
-          height="194"
-          image="/static/images/cards/paella.jpg"
-          alt="Paella dish"
-        />
+        {props?.images?.length > 0 && (
+          <CardMedia
+            component="img"
+            height="194"
+            image={props?.images[0].url}
+            alt="Paella dish"
+          />
+        )}
         <CardContent>
           <Typography variant="h7" color="text.primary" fontWeight="bolder">
-            Spacious rooms for rent with no deposit
+            {props?.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            5316 Tinker St, Boise, Illinois, United States
+            {props?.address}
           </Typography>
         </CardContent>
         <CardActions>
@@ -144,7 +153,7 @@ export default function Roomcard() {
               <IconButton
                 onClick={() => {
                   setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  accessChat(props.props?.user);
                 }}
                 aria-label="add to favorites"
               >
