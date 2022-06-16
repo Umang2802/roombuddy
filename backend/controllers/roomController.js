@@ -206,6 +206,8 @@ module.exports.updateRoom = async (req, res) => {
         for (let i = 0; i < deletedImages.length; i++) {
           await cloudinary.uploader.destroy(deletedImages[i]);
         }
+
+        await room.save();
       } else {
         res.send("You are not authorised to update this room");
       }
