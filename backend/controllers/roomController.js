@@ -4,11 +4,12 @@ const mongoose = require("mongoose");
 const { cloudinary } = require("../cloudinary/index");
 
 module.exports.index = async (req, res) => {
+  console.log(req.token);
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
       res.send("error while verifying token");
     } else {
-      const rooms = await Room.find({});
+      const rooms = await Room.find({}).populate("user", "username imageURL");
       res.send(rooms);
     }
   });
@@ -111,6 +112,8 @@ module.exports.deleteRoom = async (req, res) => {
       res.send("error while verifying token");
     } else {
       const { roomId, userId } = req.body;
+      console.log("authdata", authData.user._id);
+      console.log("userid", userId);
       if (authData.user._id === userId) {
         const room = await Room.findById(roomId);
         if (!room) {
@@ -159,11 +162,14 @@ module.exports.updateRoom = async (req, res) => {
       if (authData.user._id === userId) {
         const r = await Room.findById(roomId);
         const deletedImages = [];
+        console.log("r min", r);
+
         for (let j = 0; j < r.images.length; j++) {
+          console.log("image", r.images[j].filename);
           deletedImages.push(r.images[j].filename);
         }
 
-        console.log("deletedImages : " + deletedImages);
+        await console.log("deletedImages : " + deletedImages);
 
         const room = await Room.findByIdAndUpdate(roomId, {
           name,

@@ -1,6 +1,7 @@
 import { postRoom } from "../../Services";
 export const postRoomAction = (params) => (dispatch) => {
-  const usertoken = JSON.parse(localStorage.getItem("userInfo"));
+  const usertoken = JSON.parse(localStorage.getItem("token"));
+  console.log(usertoken);
   const config = {
     headers: {
       Authorization: `Bearer ${usertoken}`,
@@ -9,7 +10,6 @@ export const postRoomAction = (params) => (dispatch) => {
   };
   postRoom(params, config)
     .then((res) => {
-      localStorage.setItem("token", JSON.stringify(res));
       console.log(res.data);
       dispatch({
         type: "POSTROOM",

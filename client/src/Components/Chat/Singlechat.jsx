@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import Lottie from "react-lottie";
-import animationData from "../../Animations/typing.json";
+import animationData from "../../animations/typing.json";
 import io from "socket.io-client";
 import { ChatState } from "../../Context/Provider";
 import CircularProgress from "@mui/material/CircularProgress";
