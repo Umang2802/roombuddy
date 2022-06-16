@@ -104,3 +104,38 @@ module.exports.showRoom = async (req, res) => {
     }
   });
 };
+
+module.exports.deleteRoom = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token");
+    } else {
+      const { roomId, userId } = req.body;
+      if (authData.user._id === userId) {
+        const room = await Room.findById(roomId);
+        if (!room) {
+          res.send("Room not listed");
+        } else {
+          for (let i = 0; i < room.images.length; i++) {
+            await cloudinary.uploader.destroy(room.images[i].filename);
+          }
+          const deletedRoom = await Room.findByIdAndDelete(room._id);
+          console.log("Deleted Room : " + deletedRoom);
+        }
+      } else {
+        res.send("You are not authorised to delete this room !");
+      }
+    }
+  });
+};
+
+module.exports.updateRoom = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token");
+    }
+    else{
+      
+    }
+  });
+}
