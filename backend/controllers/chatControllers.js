@@ -15,7 +15,7 @@ const accessChat = asyncHandler(async (req, res) => {
 
   var isChat = await Chat.find({
     $and: [
-      { users: { $elemMatch: { $eq: req.user._id } } },
+      { users: { $elemMatch: { $eq: "62ab88a41839901e0eb018be" } } },
       { users: { $elemMatch: { $eq: userId } } },
     ],
   })
@@ -32,7 +32,7 @@ const accessChat = asyncHandler(async (req, res) => {
   } else {
     var chatData = {
       chatName: "sender",
-      users: [req.user._id, userId],
+      users: ["62ab88a41839901e0eb018be", userId],
     };
 
     try {
@@ -54,7 +54,7 @@ const accessChat = asyncHandler(async (req, res) => {
 //@access          Protected
 const fetchChats = asyncHandler(async (req, res) => {
   try {
-    Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+    Chat.find({ users: { $elemMatch: { $eq: "62ab88a41839901e0eb018be" } } })
       .populate("users", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })

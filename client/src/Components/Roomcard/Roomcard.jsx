@@ -38,21 +38,21 @@ export default function Roomcard({ props }) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const { setSelectedChat, chats, setChats } = ChatState();
+  const { setSelectedChat, chats, setChats,user } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
 
   const fetchChats = async () => {
     //console.log(user._id);
-    const usertoken = JSON.parse(localStorage.getItem("token"));
+    const usertoken = JSON.parse(localStorage.getItem("userInfo"));
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${usertoken}`,
+          Authorization: `Bearer ${user.token}`,
         },
       };
 
-      const { data } = await axios.get("/chat", config);
+      const { data } = await axios.get("/api/chat", config);
       setChats(data);
     } catch (error) {
       console.log(error);
@@ -66,10 +66,10 @@ export default function Roomcard({ props }) {
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${props.props?.user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`/chat`, { userId }, config);
+      const { data } = await axios.post(`/api/chat`, { userId }, config);
       console.log(data);
 
       if (!chats.find((c) => c._id === data._id)) {
@@ -153,7 +153,7 @@ export default function Roomcard({ props }) {
               <IconButton
                 onClick={() => {
                   setShowChat(true);
-                  accessChat(props.props?.user);
+                  accessChat("628273c939b9dd3b346ec13a");
                 }}
                 aria-label="add to favorites"
               >
