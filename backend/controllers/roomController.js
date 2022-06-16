@@ -165,23 +165,27 @@ module.exports.updateRoom = async (req, res) => {
 
         console.log("deletedImages : " + deletedImages);
 
-        const room = await Room.findByIdAndUpdate(roomId, {
-          name,
-          address,
-          description,
-          bhk,
-          bathroom,
-          propertyType,
-          smoking,
-          alcohol,
-          pets,
-          vegetarian,
-          noOfTenants,
-          amenities,
-          preferences,
-          rentPrice,
-          tenantDetails,
-        });
+        const room = await Room.findByIdAndUpdate(
+          roomId,
+          {
+            name,
+            address,
+            description,
+            bhk,
+            bathroom,
+            propertyType,
+            smoking,
+            alcohol,
+            pets,
+            vegetarian,
+            noOfTenants,
+            amenities,
+            preferences,
+            rentPrice,
+            tenantDetails,
+          },
+          { new: true }
+        );
 
         room.user = userId;
         room.images = [];
@@ -201,13 +205,13 @@ module.exports.updateRoom = async (req, res) => {
         }
 
         await room.save();
-
         //now delete old images from cloudinary
         for (let i = 0; i < deletedImages.length; i++) {
           await cloudinary.uploader.destroy(deletedImages[i]);
         }
 
-        
+        console.log(room);
+        res.send(room);
       } else {
         res.send("You are not authorised to update this room");
       }

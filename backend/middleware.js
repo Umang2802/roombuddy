@@ -1,5 +1,5 @@
 const { roomSchema } = require("./schemas");
-const { userProfileSchema } = require("./schemas");
+const { roommateProfileSchema } = require("./schemas");
 const Room = require("./models/room");
 
 module.exports.validateRoom = (req, res, next) => {
@@ -45,8 +45,8 @@ module.exports.validateRoom = (req, res, next) => {
   }
 };
 
-module.exports.validateUserProfile = (req, res, next) => {
-  const { error } = userProfileSchema.validate(req.body);
+module.exports.validateRoommateProfile = (req, res, next) => {
+  const { error } = roommateProfileSchema.validate(req.body);
   if (error) {
     res.send("JOI validation error for user profile");
     const msg = error.details.map((el) => el.message).join(",");
