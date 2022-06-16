@@ -186,6 +186,8 @@ module.exports.updateRoom = async (req, res) => {
         room.user = userId;
         room.images = [];
 
+        await room.save();
+
         for (let i = 0; i < images.length; i++) {
           console.log("item", images[i]);
           const fileStr = images[i];
