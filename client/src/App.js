@@ -14,6 +14,7 @@ import SingleRoom from "./Pages/SingleRoom";
 import ProfileDetailsForm from "./Pages/ProfileDetailsForm";
 import { Provider } from "react-redux";
 import store from "./State/store";
+import RoomDetails from "./Pages/RoomDetails";
 
 const App = () => {
   return (
@@ -24,8 +25,8 @@ const App = () => {
           <Route path="/login" element={<Login />} exact />
           <Route path="/logout" element={<Logout />} exact />
           <Route path="/chats" element={<ChatApp />} />
-          <Route path="/room" element={<PostRoom />} />
           <Route path="/roomDetailsForm" element={<RoomDetailsForm />} />
+          <Route path="/roomDetails" element={<RoomDetails />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/roompage" element={<Roompage />} />
           <Route path="/postform" element={<Postform />} />

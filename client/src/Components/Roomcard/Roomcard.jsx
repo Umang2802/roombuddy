@@ -50,7 +50,7 @@ export default function Roomcard() {
         },
       };
 
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.get("/chat", config);
       setChats(data);
     } catch (error) {
       console.log(error);
@@ -67,7 +67,7 @@ export default function Roomcard() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+      const { data } = await axios.post(`/chat`, { userId }, config);
       console.log(data);
 
       if (!chats.find((c) => c._id === data._id)) {
@@ -144,7 +144,7 @@ export default function Roomcard() {
               <IconButton
                 onClick={() => {
                   setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  accessChat("62a084a9f484fbe4e7a48bdf");
                 }}
                 aria-label="add to favorites"
               >

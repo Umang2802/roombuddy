@@ -290,7 +290,7 @@ const RoomDetailsForm = () => {
     const amenitydata = [];
     event.preventDefault();
     for (let i = 0; i < amenities.length; i++) {
-      if (amenities[i].onClick == true) {
+      if (amenities[i].onClick === true) {
         amenitydata.push(amenities[i].value);
       }
     }
