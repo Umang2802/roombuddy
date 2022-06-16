@@ -9,7 +9,7 @@ const User = require("./models/user");
 
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
-const userProfileRoutes = require("./routes/userProfileRoutes");
+const roommateProfileRoutes = require("./routes/roommateProfileRoutes");
 
 const app = express();
 
@@ -30,7 +30,7 @@ mongoose
 
 app.use("/", userRoutes);
 app.use("/rooms", roomRoutes);
-app.use("/userprofiles", userProfileRoutes);
+app.use("/roommateprofiles", roommateProfileRoutes);
 
 app.listen(5000, () => {
   console.log("Serving on port 5000");
