@@ -104,3 +104,113 @@ module.exports.showRoom = async (req, res) => {
     }
   });
 };
+
+module.exports.deleteRoom = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token");
+    } else {
+      const { roomId, userId } = req.body;
+      if (authData.user._id === userId) {
+        const room = await Room.findById(roomId);
+        if (!room) {
+          res.send("Room not listed");
+        } else {
+          for (let i = 0; i < room.images.length; i++) {
+            await cloudinary.uploader.destroy(room.images[i].filename);
+          }
+          const deletedRoom = await Room.findByIdAndDelete(room._id);
+          console.log("Deleted Room : " + deletedRoom);
+          res.send(deletedRoom);
+        }
+      } else {
+        res.send("You are not authorised to delete this room !");
+      }
+    }
+  });
+};
+
+module.exports.updateRoom = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token");
+    } else {
+      const {
+        name,
+        address,
+        description,
+        bhk,
+        bathroom,
+        propertyType,
+        smoking,
+        alcohol,
+        pets,
+        vegetarian,
+        noOfTenants,
+        amenities,
+        preferences,
+        rentPrice,
+        tenantDetails,
+        images,
+        roomId,
+        userId,
+      } = req.body;
+
+      if (authData.user._id === userId) {
+        const r = await Room.findById(roomId);
+        const deletedImages = [];
+        for (let j = 0; j < r.images.length; j++) {
+          deletedImages.push(r.images[j].filename);
+        }
+
+        console.log("deletedImages : " + deletedImages);
+
+        const room = await Room.findByIdAndUpdate(roomId, {
+          name,
+          address,
+          description,
+          bhk,
+          bathroom,
+          propertyType,
+          smoking,
+          alcohol,
+          pets,
+          vegetarian,
+          noOfTenants,
+          amenities,
+          preferences,
+          rentPrice,
+          tenantDetails,
+        });
+
+        room.user = userId;
+        room.images = [];
+
+        for (let i = 0; i < images.length; i++) {
+          console.log("item", images[i]);
+          const fileStr = images[i];
+          console.log(fileStr);
+          const uploaded = await cloudinary.uploader.upload(fileStr, {
+            upload_preset: "roombuddy",
+          });
+          const roomImage = {
+            url: uploaded.url,
+            filename: uploaded.public_id,
+          };
+          room.images.push(roomImage);
+        }
+
+        await room.save();
+
+        //now delete old images from cloudinary
+        for (let i = 0; i < deletedImages.length; i++) {
+          await cloudinary.uploader.destroy(deletedImages[i]);
+        }
+
+        
+      } else {
+        res.send("You are not authorised to update this room");
+      }
+    }
+  });
+};
