@@ -20,7 +20,7 @@ module.exports.createRoom = async (req, res) => {
 
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
-      res.send("error while verifying token");
+      res.send("error while verifying token in create room");
     } else {
       try {
         const {
@@ -89,7 +89,7 @@ module.exports.createRoom = async (req, res) => {
 module.exports.showRoom = async (req, res) => {
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
-      res.send("error while verifying token");
+      res.send("error while verifying token in show room");
     } else {
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         const room = await Room.findById(req.params.id);
@@ -109,7 +109,7 @@ module.exports.showRoom = async (req, res) => {
 module.exports.deleteRoom = async (req, res) => {
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
-      res.send("error while verifying token");
+      res.send("error while verifying token in deleteRoom");
     } else {
       const { roomId, userId } = req.body;
       console.log("authdata", authData.user._id);
@@ -136,7 +136,7 @@ module.exports.deleteRoom = async (req, res) => {
 module.exports.updateRoom = async (req, res) => {
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
-      res.send("error while verifying token");
+      res.send("error while verifying token in updateRoom");
     } else {
       const {
         name,
