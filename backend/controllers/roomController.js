@@ -206,10 +206,14 @@ module.exports.updateRoom = async (req, res) => {
           room.images.push(roomImage);
         }
 
-        //now delete from cloudinary
+        await room.save();
+
+        //now delete old images from cloudinary
         for (let i = 0; i < deletedImages.length; i++) {
           await cloudinary.uploader.destroy(deletedImages[i]);
         }
+
+        
       } else {
         res.send("You are not authorised to update this room");
       }
