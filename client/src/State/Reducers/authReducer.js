@@ -1,5 +1,5 @@
 const initialState = {
-  user_id: "",
+  user_id: localStorage.getItem("userid"),
   token: localStorage.getItem("token"),
   username: "",
   error: null,

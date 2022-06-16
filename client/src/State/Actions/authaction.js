@@ -23,6 +23,7 @@ export const LoginAction = (params, navigate) => (dispatch) => {
     .then((res) => {
       console.log(res.data);
       localStorage.setItem("token", JSON.stringify(res.data.token));
+      localStorage.setItem("userid", JSON.stringify(res.data.user._id));
       navigate("/");
       dispatch({
         type: "LOGIN_SUCCESS",
