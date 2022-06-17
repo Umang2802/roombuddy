@@ -31,8 +31,8 @@ const Home = () => {
   return (
     <div>
       <Navbar></Navbar>
+      <img className="background" src={backgroundimg} alt="" />
       <section className="mainsection">
-        <img className="background" src={backgroundimg} alt="" />
         <div className="content1">
           <h1>ROOMBUDDY</h1>
           <h2>Find rooms and roommates at the tip of your fingers! </h2>

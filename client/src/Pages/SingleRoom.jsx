@@ -39,21 +39,34 @@ const SingleRoom = () => {
   const [bath, setBath] = useState("4");
   const [type, setType] = useState("Flat");
   const [tenantNo, setTenantNo] = useState("2");
+  const [preferences, setPreferences] = useState([]);
   const [clicked, setClicked] = useState(false);
-
+  const [address, setAddress] = useState("");
+  const [tenants, setTenants] = useState([]);
+  const [images, setImages] = useState([]);
   const tokentest = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
 
       const config = {
         headers: {
-          Authorization: `Bearer ${usertoken.token}`,
+          Authorization: `Bearer ${usertoken}`,
         },
       };
       axios
         .get("/rooms/" + params.id, config)
         .then((res) => {
           console.log("response", res);
+          setName(res.data.name);
+          setDesc(res.data.description);
+          setBhk(res.data.bhk);
+          setBath(res.data.bathroom);
+          setType(res.data.propertyType);
+          setTenantNo(res.data.noOfTenants);
+          setPreferences(res.data.preferences);
+          setAddress(res.data.address);
+          setTenants(res.data.tenantDetails);
+          setImages(res.data.images);
         })
         .catch((err) => {
           console.log("Error", err);
@@ -87,18 +100,18 @@ const SingleRoom = () => {
     },
   ];
 
-  const tenants = [
-    {
-      id: 0,
-      name: "Helen kelly",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,porttitor rhoncus dolor purus non enim praesent elementum facilisisleo, ve",
-    },
-    {
-      id: 1,
-      name: "Helen kelly",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,porttitor rhoncus dolor purus non enim praesent elementum facilisisleo, ve",
-    },
-  ];
+  // const tenants = [
+  //   {
+  //     id: 0,
+  //     name: "Helen kelly",
+  //     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,porttitor rhoncus dolor purus non enim praesent elementum facilisisleo, ve",
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "Helen kelly",
+  //     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,porttitor rhoncus dolor purus non enim praesent elementum facilisisleo, ve",
+  //   },
+  // ];
 
   const itemData = [
     {
@@ -150,12 +163,12 @@ const SingleRoom = () => {
           </Fab>
           <Container maxWidth="lg" sx={{ p: 10 }}>
             <ImageList cols={1} gap={10}>
-              {itemData.map((item) => (
-                <ImageListItem key={item.img}>
+              {images.map((item) => (
+                <ImageListItem key={item.url}>
                   <img
-                    src={`${item.img}?fit=crop&auto=format`}
-                    srcSet={`${item.img}?fit=crop&auto=format&dpr=2 2x`}
-                    alt={item.title}
+                    src={`${item.url}?fit=crop&auto=format`}
+                    srcSet={`${item.url}?fit=crop&auto=format&dpr=2 2x`}
+                    alt={"image"}
                     loading="lazy"
                   />
                 </ImageListItem>
@@ -215,7 +228,7 @@ const SingleRoom = () => {
             </ImageList>
             <Box>
               <Typography variant="h4" sx={{ my: 4 }}>
-                Spacious rooms for rent with no deposit {name}
+                {name}
               </Typography>
               <Button
                 disableElevation={true}
@@ -263,14 +276,14 @@ const SingleRoom = () => {
               <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
                 Preferences
               </Typography>
-              {details.map((item) => (
+              {preferences.map((item) => (
                 <Typography
                   variant="body1"
                   sx={{ color: "#717171", mr: 10 }}
                   component="span"
                   key={item.value}
                 >
-                  {item.value}
+                  {item}
                 </Typography>
               ))}
             </Box>
@@ -288,9 +301,7 @@ const SingleRoom = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="caption">
-                    5316 Tinker St, Boise, Illinois, United States
-                  </Typography>
+                  <Typography variant="caption">{address}</Typography>
                 </CardContent>
               </Card>
             </Box>
@@ -301,12 +312,12 @@ const SingleRoom = () => {
               </Typography>
               <Box>
                 {tenants.map((item) => (
-                  <Box key={item.id}>
+                  <Box key={item._id}>
                     <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold" }}>
                       {item.name}
                     </Typography>
                     <Typography variant="body1" sx={{ my: 1 }}>
-                      {item.desc}
+                      {item.bio}
                     </Typography>
                   </Box>
                 ))}
