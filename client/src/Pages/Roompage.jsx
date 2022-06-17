@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
 import { deletePost } from "../Services/index.js";
+import Appbar from "../Components/Appbar/Appbar.jsx";
 const Roompage = () => {
   const dispatch = useDispatch();
   const [roomsdata, setRoomsdata] = useState([]);
@@ -107,6 +108,7 @@ const Roompage = () => {
   return (
     <>
       <Navbar></Navbar>
+      <Appbar props={"/roomDetails"} />
       <Grid container>
         {roommdata?.map((item, key) => (
           <Grid key={key} item xs={4}>

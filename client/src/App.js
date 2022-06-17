@@ -28,9 +28,9 @@ const App = () => {
           <Route path="/roomDetailsForm" element={<RoomDetailsForm />} />
           <Route path="/roomDetails" element={<RoomDetails />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/roompage" element={<Roompage />} />
+          <Route path="/room" element={<Roompage />} />
           <Route path="/postform" element={<Postform />} />
-          <Route path="/rooms/:id" element={<SingleRoom />} exact />
+          <Route path="/room/:id" element={<SingleRoom />} exact />
           <Route
             path="/profileDetailsForm"
             element={<ProfileDetailsForm />}

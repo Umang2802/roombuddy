@@ -297,10 +297,10 @@ const Signup = () => {
               Already have an account? Login to find your perfect roombuddy
             </Typography>
             <Button
-              type="submit"
+              onClick={() => navigate("/login")}
               fullWidth
               variant="contained"
-              onClick={roomsdetails}
+              //onClick={roomsdetails}
               sx={{
                 mt: 3,
                 mb: 2,

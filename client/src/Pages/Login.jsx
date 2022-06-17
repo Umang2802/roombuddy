@@ -205,7 +205,7 @@ export default function Login() {
               New here? Sign up to find your perfect roombuddy
             </Typography>
             <Button
-              type="submit"
+              onClick={() => navigate("/signup")}
               fullWidth
               variant="contained"
               sx={{
