@@ -2,6 +2,8 @@ const roommateprofile = require("../models/rommateProfile");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
+
+
 module.exports.createRoommateProfile = async (req, res) => {
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
