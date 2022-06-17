@@ -29,6 +29,7 @@ const App = () => {
           <Route path="/roomDetails" element={<RoomDetails />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/room" element={<Roompage />} />
+          <Route path="/roomchat" element={<PostRoom />} />
           <Route path="/postform" element={<Postform />} />
           <Route path="/room/:id" element={<SingleRoom />} exact />
           <Route

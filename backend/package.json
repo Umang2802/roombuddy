@@ -20,13 +20,6 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.4",
-<<<<<<< HEAD
-    "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0",
-    "nodemon": "^2.0.16",
-    "socket.io": "^4.5.1"
-=======
     "nodemon": "^2.0.16"
->>>>>>> 9024ec3ea7c794a6c9ce15d6719f8e89b2503f54
   }
 }
