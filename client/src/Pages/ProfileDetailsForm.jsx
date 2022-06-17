@@ -11,7 +11,8 @@ import React, { useState } from "react";
 import Bar from "../Components/Bar";
 import Navbar from "../Components/Navbar/Navbar";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { useDispatch } from "react-redux";
+import * as actionCreator from "../State/Actions/postroomAction";
 const ProfileDetailsForm = () => {
   const [name, setName] = useState();
   const [age, setAge] = useState();
@@ -23,7 +24,7 @@ const ProfileDetailsForm = () => {
   const [budget, setBudget] = useState();
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
-
+  const dispatch = useDispatch();
   const bhkOptions = [];
   for (let i = 1; i <= 6; i++) {
     bhkOptions.push(
@@ -44,6 +45,19 @@ const ProfileDetailsForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const roommatedata = {
+      name: name,
+      age: age,
+      gender: gender,
+      occupation: occupation,
+      lookingForRoomIn: lookingForRoomIn,
+      lookingToMoveIn: lookingToMoveInFrom,
+      preferredSize: bhk,
+      budget: budget,
+      preferences: preferences,
+    };
+
+    dispatch(actionCreator.postRoommateAction(roommatedata));
   };
 
   return (
@@ -207,6 +221,15 @@ const ProfileDetailsForm = () => {
               ))}
             </Box>
           </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            component="span"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
         </Box>
       </Container>
     </>

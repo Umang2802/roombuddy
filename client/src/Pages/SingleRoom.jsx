@@ -71,6 +71,7 @@ const SingleRoom = () => {
         .catch((err) => {
           console.log("Error", err);
         });
+        
 
       console.log("working");
     } catch (e) {
@@ -80,6 +81,11 @@ const SingleRoom = () => {
   useEffect(() => {
     tokentest();
   }, []);
+
+  if(images[0]){
+    images[0].rows = 4;
+    images[0].cols = 2;
+  }
 
   const details = [
     {
@@ -113,38 +119,38 @@ const SingleRoom = () => {
   //   },
   // ];
 
-  const itemData = [
-    {
-      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-      title: "Breakfast",
-      rows: 4,
-      cols: 2,
-    },
-    {
-      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-      title: "Burger",
-      rows: 2,
-      cols: 1,
-    },
-    {
-      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-      title: "Camera",
-      rows: 2,
-      cols: 1,
-    },
-    {
-      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-      title: "Coffee",
-      rows: 2,
-      cols: 1,
-    },
-    {
-      img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-      title: "Hats",
-      rows: 2,
-      cols: 1,
-    },
-  ];
+  // const itemData = [
+  //   {
+  //     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+  //     title: "Breakfast",
+  //     rows: 4,
+  //     cols: 2,
+  //   },
+  //   {
+  //     img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+  //     title: "Burger",
+  //     rows: 2,
+  //     cols: 1,
+  //   },
+  //   {
+  //     img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+  //     title: "Camera",
+  //     rows: 2,
+  //     cols: 1,
+  //   },
+  //   {
+  //     img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+  //     title: "Coffee",
+  //     rows: 2,
+  //     cols: 1,
+  //   },
+  //   {
+  //     img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+  //     title: "Hats",
+  //     rows: 2,
+  //     cols: 1,
+  //   },
+  // ];
 
   return (
     <>
@@ -168,7 +174,7 @@ const SingleRoom = () => {
                   <img
                     src={`${item.url}?fit=crop&auto=format`}
                     srcSet={`${item.url}?fit=crop&auto=format&dpr=2 2x`}
-                    alt={"image"}
+                    alt={"img"}
                     loading="lazy"
                   />
                 </ImageListItem>
@@ -187,15 +193,15 @@ const SingleRoom = () => {
               gap={8}
               sx={{ borderRadius: "8px", position: "relative" }}
             >
-              {itemData.map((item) => (
+              {images.map((item) => (
                 <ImageListItem
-                  key={item.img}
+                  key={item.url}
                   cols={item.cols || 1}
-                  rows={item.rows || 1}
+                  rows={item.rows || 2}
                 >
                   <img
-                    {...srcset(item.img, 500, item.rows, item.cols)}
-                    alt={item.title}
+                    {...srcset(item.url, 500, item.rows, item.cols)}
+                    alt={"img"}
                     loading="lazy"
                     sx={{ pointer: "cursor" }}
                   />

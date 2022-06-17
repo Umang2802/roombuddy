@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const express = require("express");
-const methodOverride = require("method-override");
+
 const mongoose = require("mongoose");
 const User = require("./models/user");
 
