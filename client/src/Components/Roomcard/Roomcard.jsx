@@ -131,7 +131,7 @@ export default function Roomcard({ props }) {
             </Typography>
           </Grid>
         </Grid>
-        <Link style={{ textDecoration: "none" }} to={"/tasklist/" + props._id}>
+        <Link style={{ textDecoration: "none" }} to={"/rooms/" + props._id}>
           {props?.images?.length > 0 && (
             <CardMedia
               component="img"

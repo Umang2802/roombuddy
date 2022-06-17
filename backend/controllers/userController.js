@@ -30,12 +30,13 @@ module.exports.signUp = async (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
+  console.log(req.body);
   const { email, password, type } = req.body;
   if (type === "googlelogin") {
     const checkUser = await User.findOne({ email });
     if (checkUser) {
       jwt.sign({ user: checkUser }, "mysecretkey", (err, token) => {
-        res.send(token);
+        res.send({ token: token, user: checkUser });
       });
     } else {
       res.send("Incorrect email");

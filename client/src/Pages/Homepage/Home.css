@@ -44,12 +44,16 @@
   color: white;
   font-size: 1rem;
 }
-.mainsection .background {
+.background {
   position: absolute;
   object-fit: contain;
   top: 4vh;
   height: 100%;
   width: 90%;
+  z-index: -1;
+}
+.mainsection {
+  z-index: 100 !important;
 }
 
 .featuredrooms {

@@ -14,6 +14,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/authaction";
+import { GoogleLogin } from "@react-oauth/google";
+import jwt from "jwt-decode";
 
 const useStyles = makeStyles((theme) => ({
   maindiv: {
@@ -70,7 +72,23 @@ export default function Login() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const googleSuccess = async (res) => {
+    const userdata = jwt(res.credential);
+    const params = {
+      name: userdata.name,
+      email: userdata.email,
+      imageURL: userdata.picture,
+      password: userdata.email,
+      bio: "",
+      type: "googlelogin",
+    };
+    dispatch(actionCreator.LoginAction(params, navigate));
+  };
 
+  const googleFailure = async (error) => {
+    await console.log(error);
+    await console.log("failed");
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const params = {
@@ -172,15 +190,14 @@ export default function Login() {
               </Button>
             </Box>
             <Typography>or</Typography>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, textTransform: "none", fontSize: "1rem" }}
-              className={classes.loginsubmit}
-            >
-              Sign in using Google
-            </Button>
+            <GoogleLogin
+              buttonText="Log in with Google"
+              onSuccess={googleSuccess}
+              onFailure={googleFailure}
+              cookiePolicy="single_host_origin"
+              size="large"
+              width="300"
+            />
           </Box>
         </Grid>
         <Grid

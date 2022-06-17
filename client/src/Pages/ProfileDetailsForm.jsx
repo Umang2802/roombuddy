@@ -1,42 +1,50 @@
-import { Box, Button, Container, IconButton, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  IconButton,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import Bar from "../Components/Bar";
 import Navbar from "../Components/Navbar/Navbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const ProfileDetailsForm = () => {
-    const [name, setName] = useState();
-    const [age, setAge] = useState();
-    const [gender, setGender] = useState();
-    const [occupation, setOccupation] = useState();
-    const [lookingForRoomIn, setLookingForRoomIn] = useState();
-    const [lookingToMoveInFrom, setLookingToMoveInFrom] = useState();
-    const [bhk, setBhk] = useState();
-    const [budget, setBudget] = useState();
-    const [preferences, setPreferences] = useState([]);
-    const [preferenceItem, setPreferenceItem] = useState("");
+  const [name, setName] = useState();
+  const [age, setAge] = useState();
+  const [gender, setGender] = useState();
+  const [occupation, setOccupation] = useState();
+  const [lookingForRoomIn, setLookingForRoomIn] = useState();
+  const [lookingToMoveInFrom, setLookingToMoveInFrom] = useState();
+  const [bhk, setBhk] = useState();
+  const [budget, setBudget] = useState();
+  const [preferences, setPreferences] = useState([]);
+  const [preferenceItem, setPreferenceItem] = useState("");
 
-     const bhkOptions = [];
-     for (let i = 1; i <= 6; i++) {
-       bhkOptions.push(
-         <MenuItem key={i} value={i}>
-           {i}
-         </MenuItem>
-       );
-     }
+  const bhkOptions = [];
+  for (let i = 1; i <= 6; i++) {
+    bhkOptions.push(
+      <MenuItem key={i} value={i}>
+        {i}
+      </MenuItem>
+    );
+  }
 
-      const preferencesHandler = () => {
-        setPreferences((preference) => [...preference, preferenceItem]);
-        setPreferenceItem("");
-      };
+  const preferencesHandler = () => {
+    setPreferences((preference) => [...preference, preferenceItem]);
+    setPreferenceItem("");
+  };
 
-      const deletePreferencesHandler = (item) => {
-        setPreferences(preferences.filter((preference) => preference !== item));
-      };
+  const deletePreferencesHandler = (item) => {
+    setPreferences(preferences.filter((preference) => preference !== item));
+  };
 
-     const handleSubmit = (event) => {
-       event.preventDefault();
-     };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <>

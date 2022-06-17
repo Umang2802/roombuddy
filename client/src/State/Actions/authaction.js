@@ -21,9 +21,9 @@ export const signUpAction = (params, navigate) => (dispatch) => {
 export const LoginAction = (params, navigate) => (dispatch) => {
   Login(params)
     .then((res) => {
-      console.log(res.data);
+      console.log(res);
       localStorage.setItem("token", JSON.stringify(res.data.token));
-      localStorage.setItem("userid", JSON.stringify(res.data.user._id));
+
       navigate("/");
       dispatch({
         type: "LOGIN_SUCCESS",
