@@ -86,9 +86,7 @@ const Allchats = ({ fetchAgain }) => {
                 key={chat._id}
               >
                 <Typography>
-                  {!chat.isGroupChat
-                    ? getSender(loggedUser, chat.users)
-                    : chat.chatName}
+                  {getSender(loggedUser, chat.users)}
                 </Typography>
                 {chat.latestMessage && (
                   <Typography sx={{ fontSize: 12 }}>
