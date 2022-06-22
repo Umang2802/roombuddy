@@ -16,8 +16,7 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.createRoom = async (req, res) => {
-  //res.send(room);
-
+  
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
       res.send("error while verifying token in create room");
