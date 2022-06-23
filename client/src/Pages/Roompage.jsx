@@ -109,15 +109,16 @@ const Roompage = () => {
     <>
       <Navbar></Navbar>
       <Appbar props={"/roomDetails"} />
-      <Grid container>
+
+      <Grid container spacing={0}>
         {roommdata?.map((item, key) => (
-          <Grid key={key} item xs={4}>
+          <Grid key={key} item xs={3}>
             <Roomcard props={item}></Roomcard>
           </Grid>
         ))}
       </Grid>
-      <button onClick={deletepost}>Delete</button>
-      <button onClick={updatepost}>Update</button>
+      {/* <button onClick={deletepost}>Delete</button>
+      <button onClick={updatepost}>Update</button> */}
     </>
   );
 };

@@ -39,7 +39,7 @@ export default function Roomcard({ props }) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const { setSelectedChat, chats, setChats,user } = ChatState();
+  const { setSelectedChat, chats, setChats, user } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
 
@@ -101,7 +101,7 @@ export default function Roomcard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
             {props?.images?.length > 0 && (
@@ -159,17 +159,17 @@ export default function Roomcard({ props }) {
                 }}
                 aria-label="add to favorites"
               >
-                <ChatBubbleOutlineIcon sx={{ fontSize: "25px" }} />
+                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
               </IconButton>
             </Grid>
             <Grid item xs={4}>
               <IconButton aria-label="share">
-                <StarBorderOutlinedIcon sx={{ fontSize: "28px" }} />
+                <StarBorderOutlinedIcon size="small" />
               </IconButton>
             </Grid>
             <Grid item xs={4}>
               <IconButton aria-label="location">
-                <LocationOnOutlinedIcon sx={{ fontSize: "28px" }} />
+                <LocationOnOutlinedIcon size="small" />
               </IconButton>
             </Grid>
           </Grid>
