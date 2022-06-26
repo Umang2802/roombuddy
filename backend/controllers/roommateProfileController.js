@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 module.exports.showAllRoommateProfiles = async (req, res) => {
   const profiles = await roommateprofile.find({});
+  console.log(profiles);
   res.send(profiles);
 }
 
@@ -25,10 +26,12 @@ module.exports.showRoommateProfile = async (req, res) => {
     if (err) {
       res.send("error while verifying token in showRoommateProfile");
     } else {
+      
       if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
         const userprofile = await roommateprofile.findOne({
           user: req.params.userId,
         });
+    
         if (!userprofile) {
           res.send("User profile not listed");
         } else {
