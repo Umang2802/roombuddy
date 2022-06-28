@@ -10,6 +10,7 @@ const User = require("./models/user");
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
 const roommateProfileRoutes = require("./routes/roommateProfileRoutes");
+const favoritePostsRoutes = require('./routes/favoritePostsRoutes');
 
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
@@ -34,6 +35,7 @@ mongoose
 app.use("/", userRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/roommateprofiles", roommateProfileRoutes);
+app.use("/favoriteposts", favoritePostsRoutes);
 
 app.use("/chat", chatRoutes);
 app.use("/message", messageRoutes);
