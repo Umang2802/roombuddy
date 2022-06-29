@@ -17,7 +17,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Backdrop, Button } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import PostChat from "../../Components/Chat/PostChat";
+import PostChat from "../Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";

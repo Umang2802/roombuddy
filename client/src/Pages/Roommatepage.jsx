@@ -7,10 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
 import { deletePost } from "../Services/index.js";
 import Appbar from "../Components/Appbar/Appbar.jsx";
-const Roompage = () => {
+import Roommatecard from "../Components/Roommatecard/Roommatecard";
+const Roommatepage = () => {
   const dispatch = useDispatch();
-  const [roomsdata, setRoomsdata] = useState([]);
-  // const roomsdetails = async () => {
+  // const [roommatedata, setRoommatedata] = useState([]);
+  // const roommatedetails = async () => {
   //   try {
   //     const usertoken = JSON.parse(localStorage.getItem("token"));
   //     const config = {
@@ -47,9 +48,9 @@ const Roompage = () => {
     dispatch(actionCreator.getroomAction());
     // eslint-disable-next-line
   }, []);
-  const roommdata = useSelector((state) => state.roomdata.rooms);
+  const roommatedata = useSelector((state) => state.roommatedata.rooms);
   const userdata = useSelector((state) => state.auth.user_id);
-  console.log("room data", roommdata);
+  console.log("room data", roommatedata);
   console.log("roomid ", userdata);
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -58,62 +59,62 @@ const Roompage = () => {
   //       Authorization: `Bearer ${usertoken}`,
   //     },
   //   };
-  const deletepost = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        roomId: roommdata[0]._id,
-        userId: roommdata[0].user._id,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/deleteRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
+  // const deletepost = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("token"));
+  //     console.log(usertoken);
+  //     const params = {
+  //       roomId: roommdata[0]._id,
+  //       userId: roommdata[0].user._id,
+  //     };
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken}`,
+  //       },
+  //     };
+  //     axios.post("/rooms/deleteRoom", params, config).then((res) => {
+  //       console.log(res.data);
+  //     });
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const updatepost = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        ...roommdata,
-        rentPrice: 3000,
-        roomId: roommdata[0]._id,
-        userId: roommdata[0].user._id,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
+  //     console.log("working");
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+  // const updatepost = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("token"));
+  //     console.log(usertoken);
+  //     const params = {
+  //       ...roommdata,
+  //       rentPrice: 3000,
+  //       roomId: roommdata[0]._id,
+  //       userId: roommdata[0].user._id,
+  //     };
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken}`,
+  //       },
+  //     };
+  //     axios.post("/rooms/updateRoom", params, config).then((res) => {
+  //       console.log(res.data);
+  //     });
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //     console.log("working");
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   return (
     <>
       <Navbar></Navbar>
-      <Appbar props={"/roomDetails"} />
+      <Appbar props={"/roommateDetails"} />
 
       <Grid container spacing={0}>
-        {roommdata?.map((item, key) => (
+        {roommatedata?.map((item, key) => (
           <Grid key={key} item xs={3}>
-            <Roomcard props={item}></Roomcard>
+            <Roommatecard props={item}></Roommatecard>
           </Grid>
         ))}
       </Grid>
@@ -122,4 +123,4 @@ const Roompage = () => {
     </>
   );
 };
-export default Roompage;
+export default Roommatepage;

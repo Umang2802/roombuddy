@@ -15,6 +15,10 @@ const roommateProfileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    image: {
+        url: String,
+        filename: String
+    }
 });
 
 module.exports = mongoose.model('Roommateprofile', roommateProfileSchema);

@@ -15,6 +15,8 @@ import ProfileDetailsForm from "./Pages/ProfileDetailsForm";
 import { Provider } from "react-redux";
 import store from "./State/store";
 import RoomDetails from "./Pages/RoomDetails";
+import Roommatepage from "./Pages/Roommatepage";
+import Dashboard from "./Pages/Dashboard";
 
 const App = () => {
   return (
@@ -37,6 +39,8 @@ const App = () => {
             element={<ProfileDetailsForm />}
             exact
           />
+          <Route path="/roommatepage" element={<Roommatepage />} />
+          <Route path="/dashboard" element={<Dashboard></Dashboard>} />
         </Routes>
       </div>
     </Provider>
