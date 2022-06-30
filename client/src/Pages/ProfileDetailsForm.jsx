@@ -1,7 +1,9 @@
 import {
+  Avatar,
   Box,
   Button,
   Container,
+  Grid,
   IconButton,
   ImageList,
   ImageListItem,
@@ -11,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Bar from "../Components/Bar";
 import Navbar from "../Components/Navbar/Navbar";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -27,11 +29,22 @@ const fileToDataUri = (file) =>
     reader.readAsDataURL(file);
   });
 
+  const genderOptions = [
+    {
+      value: "Male",
+    },
+    {
+      value: "Female",
+    },
+    {
+      value: "Prefer not to say",
+    },
+  ];
 
 const ProfileDetailsForm = () => {
   const [name, setName] = useState();
   const [age, setAge] = useState();
-  const [gender, setGender] = useState();
+  const [gender, setGender] = useState("Prefer not to say");
   const [occupation, setOccupation] = useState();
   const [lookingForRoomIn, setLookingForRoomIn] = useState();
   const [lookingToMoveInFrom, setLookingToMoveInFrom] = useState();
@@ -41,9 +54,9 @@ const ProfileDetailsForm = () => {
   const [preferenceItem, setPreferenceItem] = useState("");
   const [pics, setPics] = useState("");
 
-    const Input = styled("input")({
-      display: "none",
-    });
+  const Input = styled("input")({
+    display: "none",
+  });
 
   const dispatch = useDispatch();
   const bhkOptions = [];
@@ -64,16 +77,16 @@ const ProfileDetailsForm = () => {
     setPreferences(preferences.filter((preference) => preference !== item));
   };
 
-    const coverImageChangeHandler = (event) => {
-      fileToDataUri(event.target.files[0]).then((dataUri) => {
-        setPics(
-          pics.map((v, i) => {
-            if (i === 0) return dataUri;
-            return v;
-          })
-        );
-      });
-    };
+  const coverImageChangeHandler = (event) => {
+    fileToDataUri(event.target.files[0]).then((dataUri) => {
+      setPics(
+        pics.map((v, i) => {
+          if (i === 0) return dataUri;
+          return v;
+        })
+      );
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -93,6 +106,11 @@ const ProfileDetailsForm = () => {
     dispatch(actionCreator.postRoommateAction(roommatedata));
   };
 
+  useEffect(() => {
+    
+  }, [])
+  
+
   return (
     <>
       <Navbar />
@@ -107,119 +125,120 @@ const ProfileDetailsForm = () => {
           </Typography>
           <Box>
             <Bar props="BIO" />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>NAME</Typography>
-            <TextField
-              variant="filled"
-              required
-              name="name"
-              type="text"
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "30%" }}
-              id="outlined-size-small"
-              size="small"
-            />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>AGE</Typography>
-            <TextField
-              variant="filled"
-              required
-              name="age"
-              type="text"
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "30%" }}
-              id="outlined-size-small"
-              size="small"
-            />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>GENDER</Typography>
-            <TextField
-              variant="filled"
-              required
-              name="gender"
-              type="text"
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "30%" }}
-              id="outlined-size-small"
-              size="small"
-            />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>OCCUPATION</Typography>
-            <TextField
-              variant="filled"
-              required
-              name="occupation"
-              type="text"
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              value={occupation}
-              onChange={(e) => setOccupation(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "30%" }}
-              id="outlined-size-small"
-              size="small"
-            />
-          </Box>
-
-          <Box>
-            <Bar props="PROFILE PICTURE" />
-            <Box
-              sx={{
-                display: pics === "" ? "none" : "initial",
-              }}
-            >
-              <ImageList
-                sx={{
-                  width: "65%",
-                  display: "grid",
-                }}
-              >
-                <ImageListItem key={pics[0]}>
-                  <img
-                    src={pics[0]}
-                    srcSet={pics[0]}
-                    alt={pics[0]}
-                    loading="lazy"
-                  />
-                </ImageListItem>
-              </ImageList>
-            </Box>
-
-            {pics === "" ? (
-              <label htmlFor="contained-button-image">
-                <Input
-                  accept="image/*"
-                  id="contained-button-image"
-                  multiple
-                  type="file"
-                  onChange={(event) => {
-                    fileToDataUri(event.target.files[0]).then((dataUri) => {
-                      setPics((coverPic) => [...coverPic, dataUri]);
-                    });
-                  }}
+            <Grid container spacing={1}>
+              <Grid item md={6} sm={1} xs={1}>
+                <Typography sx={{ fontSize: 16, mb: 1 }}>NAME</Typography>
+                <TextField
+                  variant="filled"
+                  required
+                  name="name"
+                  type="text"
+                  InputLabelProps={{ style: { fontSize: 12 } }}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  sx={{ mb: 3, p: 0, width: "70%" }}
+                  id="outlined-size-small"
+                  size="small"
                 />
-                <Button variant="contained" component="span">
-                  Add Profile Picture
-                </Button>
-              </label>
-            ) : (
-              <>
-                <br />
-                <label htmlFor="contained-button-coverImage">
-                  <Input
-                    name="coverImage"
-                    accept="image/*"
-                    id="contained-button-coverImage"
-                    multiple
-                    type="file"
-                    onChange={coverImageChangeHandler}
-                  />
-                  <Button variant="contained" component="span">
-                    Change Profile Picture
-                  </Button>
-                </label>
-              </>
-            )}
+                <Typography sx={{ fontSize: 16, mb: 1 }}>AGE</Typography>
+                <TextField
+                  variant="filled"
+                  required
+                  name="age"
+                  type="text"
+                  InputLabelProps={{ style: { fontSize: 12 } }}
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  sx={{ mb: 3, p: 0, width: "20%" }}
+                  id="outlined-size-small"
+                  size="small"
+                />
+                <Typography sx={{ fontSize: 16, mb: 1 }}>GENDER</Typography>
+                <TextField
+                  id="outlined-select"
+                  select
+                  value={gender}
+                  variant="filled"
+                  onChange={(e) => setGender(e.target.value)}
+                  sx={{ mb: 4, mr: 7 }}
+                  size="small"
+                >
+                  {genderOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <Typography sx={{ fontSize: 16, mb: 1 }}>OCCUPATION</Typography>
+                <TextField
+                  variant="filled"
+                  required
+                  name="occupation"
+                  type="text"
+                  InputLabelProps={{ style: { fontSize: 12 } }}
+                  value={occupation}
+                  onChange={(e) => setOccupation(e.target.value)}
+                  sx={{ mb: 3, p: 0, width: "70%" }}
+                  id="outlined-size-small"
+                  size="small"
+                />
+              </Grid>
+
+              <Grid item md={3} sm={1} xs={1}>
+                <center>
+                  {pics === "" ? (
+                    <>
+                      <Avatar
+                        alt="Remy Sharp"
+                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn3.iconfinder.com%2Fdata%2Ficons%2Fuser-2%2F100%2F10-512.png&f=1&nofb=1"
+                        sx={{ width: 180, height: 180 }}
+                      />
+                      <br />
+                      <label htmlFor="contained-button-image">
+                        <Input
+                          accept="image/*"
+                          id="contained-button-image"
+                          multiple
+                          type="file"
+                          onChange={(event) => {
+                            fileToDataUri(event.target.files[0]).then(
+                              (dataUri) => {
+                                setPics((coverPic) => [...coverPic, dataUri]);
+                              }
+                            );
+                          }}
+                        />
+                        <Button variant="contained" component="span">
+                          Add Profile Picture
+                        </Button>
+                      </label>
+                    </>
+                  ) : (
+                    <>
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={pics[0]}
+                        sx={{ width: 180, height: 180 }}
+                      />
+                      <br />
+                      <label htmlFor="contained-button-coverImage">
+                        <Input
+                          name="coverImage"
+                          accept="image/*"
+                          id="contained-button-coverImage"
+                          multiple
+                          type="file"
+                          onChange={coverImageChangeHandler}
+                        />
+                        <Button variant="contained" component="span">
+                          Change Profile Picture
+                        </Button>
+                      </label>
+                    </>
+                  )}
+                </center>
+              </Grid>
+            </Grid>
           </Box>
 
           <Box>

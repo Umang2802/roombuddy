@@ -454,19 +454,6 @@ const RoomDetailsForm = () => {
                   <center>
                     <h4>{item.value}</h4>
                     <ToggleButton
-                      value="true"
-                      sx={{ border: "none" }}
-                      onClick={() => {
-                        tickedRulesHandler(item);
-                      }}
-                    >
-                      {item.ticked ? (
-                        <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                      ) : (
-                        <CheckCircleOutlineRoundedIcon />
-                      )}
-                    </ToggleButton>
-                    <ToggleButton
                       value="false"
                       sx={{ border: "none" }}
                       onClick={() => {
@@ -477,6 +464,19 @@ const RoomDetailsForm = () => {
                         <CancelRoundedIcon sx={{ color: "red" }} />
                       ) : (
                         <CancelOutlinedIcon />
+                      )}
+                    </ToggleButton>
+                    <ToggleButton
+                      value="true"
+                      sx={{ border: "none" }}
+                      onClick={() => {
+                        tickedRulesHandler(item);
+                      }}
+                    >
+                      {item.ticked ? (
+                        <CheckCircleRoundedIcon sx={{ color: "green" }} />
+                      ) : (
+                        <CheckCircleOutlineRoundedIcon />
                       )}
                     </ToggleButton>
                   </center>
