@@ -4,7 +4,7 @@ import Navbar from "../Components/Navbar/Navbar.js";
 import { Grid } from "@material-ui/core";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionCreator from "../State/Actions/getroomAction";
+import * as actionCreator from "../State/Actions/getroommateAction";
 import { deletePost } from "../Services/index.js";
 import Appbar from "../Components/Appbar/Appbar.jsx";
 import Roommatecard from "../Components/Roommatecard/Roommatecard";
@@ -45,10 +45,10 @@ const Roommatepage = () => {
   //   console.log("in second useeffect", roomsdata);
   // }, [roomsdata]);
   useEffect(() => {
-    dispatch(actionCreator.getroomAction());
+    dispatch(actionCreator.getroommateAction());
     // eslint-disable-next-line
   }, []);
-  const roommatedata = useSelector((state) => state.roommatedata.rooms);
+  const roommatedata = useSelector((state) => state.roommatedata.roommates);
   const userdata = useSelector((state) => state.auth.user_id);
   console.log("room data", roommatedata);
   console.log("roomid ", userdata);

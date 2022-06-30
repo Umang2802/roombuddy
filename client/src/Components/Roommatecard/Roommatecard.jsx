@@ -32,7 +32,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Roomcard({ props }) {
+export default function Roommatecard({ props }) {
   console.log(props);
   const [expanded, setExpanded] = React.useState(false);
 
@@ -103,33 +103,7 @@ export default function Roomcard({ props }) {
       )}
       <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
         <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item xs={8}>
-            {props?.images?.length > 0 && (
-              <CardHeader
-                avatar={
-                  <Avatar
-                    sx={{ bgcolor: red[500] }}
-                    src={props?.images[0].url}
-                    aria-label="recipe"
-                  ></Avatar>
-                }
-                title={props?.user.username}
-              />
-            )}
-          </Grid>
-          <Grid item xs={4}>
-            <Typography
-              sx={{
-                bgcolor: "#6177D4",
-                color: "white",
-                padding: ".5rem 1rem",
-                borderRadius: ".1rem",
-              }}
-              variant="h7"
-            >
-              {props.rentPrice}
-            </Typography>
-          </Grid>
+          {props?.images?.length > 0 && <CardHeader title={props?.name} />}
         </Grid>
         <Link style={{ textDecoration: "none" }} to={"/room/" + props._id}>
           {props?.images?.length > 0 && (
@@ -142,10 +116,10 @@ export default function Roomcard({ props }) {
           )}
           <CardContent>
             <Typography variant="h7" color="text.primary" fontWeight="bolder">
-              {props?.name}
+              {props?.age}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {props?.address}
+              {props.gender}
             </Typography>
           </CardContent>
         </Link>

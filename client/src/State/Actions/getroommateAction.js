@@ -1,4 +1,4 @@
-import { getallPosts } from "../../Services";
+import { getallRoommates } from "../../Services";
 
 export const getroommateAction = () => (dispatch) => {
   const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -8,7 +8,7 @@ export const getroommateAction = () => (dispatch) => {
       "Content-type": "application/json",
     },
   };
-  getallPosts(config).then((res) => {
+  getallRoommates(config).then((res) => {
     console.log(res.data);
     dispatch({
       type: "GET_ALL_ROOMMATEPOSTS",
