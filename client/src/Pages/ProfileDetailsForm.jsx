@@ -3,7 +3,11 @@ import {
   Button,
   Container,
   IconButton,
+  ImageList,
+  ImageListItem,
+  Input,
   MenuItem,
+  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -13,6 +17,17 @@ import Navbar from "../Components/Navbar/Navbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/postroomAction";
+
+const fileToDataUri = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      resolve(event.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+
+
 const ProfileDetailsForm = () => {
   const [name, setName] = useState();
   const [age, setAge] = useState();
@@ -24,6 +39,12 @@ const ProfileDetailsForm = () => {
   const [budget, setBudget] = useState();
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
+  const [pics, setPics] = useState("");
+
+    const Input = styled("input")({
+      display: "none",
+    });
+
   const dispatch = useDispatch();
   const bhkOptions = [];
   for (let i = 1; i <= 6; i++) {
@@ -43,6 +64,17 @@ const ProfileDetailsForm = () => {
     setPreferences(preferences.filter((preference) => preference !== item));
   };
 
+    const coverImageChangeHandler = (event) => {
+      fileToDataUri(event.target.files[0]).then((dataUri) => {
+        setPics(
+          pics.map((v, i) => {
+            if (i === 0) return dataUri;
+            return v;
+          })
+        );
+      });
+    };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const roommatedata = {
@@ -54,6 +86,7 @@ const ProfileDetailsForm = () => {
       lookingToMoveIn: lookingToMoveInFrom,
       preferredSize: bhk,
       budget: budget,
+      image: pics[0],
       preferences: preferences,
     };
 
@@ -127,6 +160,68 @@ const ProfileDetailsForm = () => {
               size="small"
             />
           </Box>
+
+          <Box>
+            <Bar props="PROFILE PICTURE" />
+            <Box
+              sx={{
+                display: pics === "" ? "none" : "initial",
+              }}
+            >
+              <ImageList
+                sx={{
+                  width: "65%",
+                  display: "grid",
+                }}
+              >
+                <ImageListItem key={pics[0]}>
+                  <img
+                    src={pics[0]}
+                    srcSet={pics[0]}
+                    alt={pics[0]}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              </ImageList>
+            </Box>
+
+            {pics === "" ? (
+              <label htmlFor="contained-button-image">
+                <Input
+                  accept="image/*"
+                  id="contained-button-image"
+                  multiple
+                  type="file"
+                  onChange={(event) => {
+                    fileToDataUri(event.target.files[0]).then((dataUri) => {
+                      setPics((coverPic) => [...coverPic, dataUri]);
+                    });
+                  }}
+                />
+                <Button variant="contained" component="span">
+                  Add Profile Picture
+                </Button>
+              </label>
+            ) : (
+              <>
+                <br />
+                <label htmlFor="contained-button-coverImage">
+                  <Input
+                    name="coverImage"
+                    accept="image/*"
+                    id="contained-button-coverImage"
+                    multiple
+                    type="file"
+                    onChange={coverImageChangeHandler}
+                  />
+                  <Button variant="contained" component="span">
+                    Change Profile Picture
+                  </Button>
+                </label>
+              </>
+            )}
+          </Box>
+
           <Box>
             <Bar props="ROOM FOR SEARCH" />
             <Typography sx={{ fontSize: 16, mb: 1 }}>

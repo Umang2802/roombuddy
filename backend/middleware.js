@@ -46,9 +46,30 @@ module.exports.validateRoom = (req, res, next) => {
 };
 
 module.exports.validateRoommateProfile = (req, res, next) => {
-  const { error } = roommateProfileSchema.validate(req.body);
+  const {
+    name,
+    age,
+    gender,
+    occupation,
+    lookingForRoomIn,
+    lookingToMoveIn,
+    preferredSize,
+    budget,
+    preferences,
+  } = req.body;
+  const { error } = roommateProfileSchema.validate({
+    name,
+    age,
+    gender,
+    occupation,
+    lookingForRoomIn,
+    lookingToMoveIn,
+    preferredSize,
+    budget,
+    preferences,
+  });
   if (error) {
-    res.send("JOI validation error for user profile");
+    res.send("JOI validation error for roommate profile");
     const msg = error.details.map((el) => el.message).join(",");
     console.log(msg);
   } else {

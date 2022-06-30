@@ -8,6 +8,6 @@ router.get('/', roommateprofile.showAllRoommateProfiles);
 router.get('/:userId', verifyToken, roommateprofile.showRoommateProfile);
 router.post('/', verifyToken, validateRoommateProfile, roommateprofile.createRoommateProfile);
 router.post('/deleteRoommateProfile', verifyToken, roommateprofile.deleteRoommateProfile);
-router.post('/updateRoommateProfile', verifyToken, roommateprofile.updateRoommateProfile);
+router.post('/updateRoommateProfile', verifyToken, validateRoommateProfile ,roommateprofile.updateRoommateProfile);
 
 module.exports = router;

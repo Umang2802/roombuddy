@@ -38,3 +38,20 @@ module.exports.addOrRemoveFavoritePost = async (req, res) => {
         }
     });
 }
+
+module.exports.showUserFavoritePosts = async (req, res) => {
+    jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+        const userFavoritePosts = await FavoritePosts.findOne({ user: authData.user._id });
+        if(userFavoritePosts){
+            if(userFavoritePosts.posts.length === 0){
+                res.send("You have no favorite posts listed !");
+            }
+            else{
+                res.send(userFavoritePosts);
+            }
+        }
+        else{
+            res.send("You have no favorite posts listed !");
+        }
+    });   
+}
