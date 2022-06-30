@@ -4,6 +4,7 @@ export const signUpAction = (params, navigate) => (dispatch) => {
   signUp(params)
     .then((res) => {
       localStorage.setItem("token", JSON.stringify(res.data.token));
+      localStorage.setItem("user_id", JSON.stringify(res.data.user._id));
       navigate("/");
       dispatch({
         type: "SIGNUP_SUCCESS",
@@ -23,6 +24,7 @@ export const LoginAction = (params, navigate) => (dispatch) => {
     .then((res) => {
       console.log(res);
       localStorage.setItem("token", JSON.stringify(res.data.token));
+      localStorage.setItem("user_id", JSON.stringify(res.data.user._id));
 
       navigate("/");
       dispatch({

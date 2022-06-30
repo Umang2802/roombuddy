@@ -313,6 +313,8 @@ const RoomDetailsForm = () => {
       images: pics,
       tenantDetails: tenantDetails,
     };
+    console.log("type", typeof roomdata.images);
+    console.log(console.log(pics));
     dispatch(actionCreator.postRoomAction(roomdata));
   };
 

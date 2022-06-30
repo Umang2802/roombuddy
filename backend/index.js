@@ -10,7 +10,7 @@ const User = require("./models/user");
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
 const roommateProfileRoutes = require("./routes/roommateProfileRoutes");
-const favoritePostsRoutes = require('./routes/favoritePostsRoutes');
+const favoritePostsRoutes = require("./routes/favoritePostsRoutes");
 
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
@@ -39,7 +39,6 @@ app.use("/favoriteposts", favoritePostsRoutes);
 
 app.use("/chat", chatRoutes);
 app.use("/message", messageRoutes);
-
 
 const server = app.listen(5000, () => {
   console.log("Serving on port 5000");
@@ -84,4 +83,3 @@ io.on("connection", (socket) => {
     socket.leave(userData._id);
   });
 });
-
