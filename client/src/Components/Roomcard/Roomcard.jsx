@@ -39,7 +39,7 @@ export default function Roomcard({ props }) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const { setSelectedChat, chats, setChats, user, token } = ChatState();
+  const { setSelectedChat, chats, setChats, user, token, fetchAgain ,setFetchAgain} = ChatState();
 
   const [showChat, setShowChat] = useState(false);
 
@@ -96,7 +96,11 @@ export default function Roomcard({ props }) {
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={showChat}
           >
-            <PostChat setShowChat={setShowChat} />
+            <PostChat
+              setShowChat={setShowChat}
+              fetchAgain={fetchAgain}
+              setFetchAgain={setFetchAgain}
+            />
           </Backdrop>
         </div>
       ) : (

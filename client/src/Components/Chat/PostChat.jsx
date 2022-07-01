@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const ENDPOINT = "http://localhost:5000"; // "https://roombuddy.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
-const PostChat = ({ setShowChat }) => {
+const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -34,7 +34,8 @@ const PostChat = ({ setShowChat }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const { selectedChat, user, notification, token, setNotification } = ChatState();
+  const { selectedChat, user, notification, token, setNotification } =
+    ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -48,16 +49,13 @@ const PostChat = ({ setShowChat }) => {
 
       setLoading(true);
 
-      const { data } = await axios.get(
-        `/message/${selectedChat._id}`,
-        config
-      );
+      const { data } = await axios.get(`/message/${selectedChat._id}`, config);
       setMessages(data);
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   };
 
@@ -114,6 +112,7 @@ const PostChat = ({ setShowChat }) => {
       ) {
         if (!notification.includes(newMessageRecieved)) {
           setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
         }
       } else {
         setMessages([...messages, newMessageRecieved]);
