@@ -216,14 +216,18 @@ const Singlechat = ({ fetchAgain, setFetchAgain }) => {
                 <ScrollableChat messages={messages} />
               </div>
             )}
-            <Box onKeyDown={sendMessage} id="first-name" isRequired>
+            <Box
+              onKeyDown={sendMessage}
+              id="first-name"
+              isRequired
+            >
               {istyping ? (
                 <div>
                   <Lottie
                     options={defaultOptions}
                     // height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                    width={50}
+                    style={{ marginBottom: 0, marginLeft: 0 }}
                   />
                 </div>
               ) : (

@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Logo from "../../Assets/logo.svg";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const settings = [
@@ -21,6 +22,8 @@ const Navbar = () => {
     { name: "Dashboard", link: "/dashboard" },
     { name: "Logout", link: "/logout" },
   ];
+
+  const userdata = useSelector((state) => state.auth.username);
   const navigate = useNavigate();
   const [show, setShow] = useState(true);
   const [uname, setUname] = useState();
@@ -45,10 +48,9 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    if (user) {
+    if (userdata) {
       setShow(false);
-      setUname(user.name);
+      setUname(userdata);
     }
   }, [show]);
 

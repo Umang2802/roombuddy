@@ -16,6 +16,12 @@ import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/authaction";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt from "jwt-decode";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const useStyles = makeStyles((theme) => ({
   maindiv: {
@@ -72,6 +78,16 @@ export default function Login() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const googleSuccess = async (res) => {
     const userdata = jwt(res.credential);
     const params = {
@@ -82,6 +98,7 @@ export default function Login() {
       bio: "",
       type: "googlelogin",
     };
+    setOpen(true);
     dispatch(actionCreator.LoginAction(params, navigate));
   };
 
@@ -91,7 +108,8 @@ export default function Login() {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const params = {
+    try{
+      const params = {
       name: name,
       email: email,
       password: password,
@@ -100,6 +118,10 @@ export default function Login() {
       type: "normallogin",
     };
     dispatch(actionCreator.LoginAction(params, navigate));
+    }
+    catch(error) {
+      //console.log(error);
+    }
   };
 
   return (
@@ -239,6 +261,11 @@ export default function Login() {
           </Container>
         </Grid>
       </Grid>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          This is a success message!
+        </Alert>
+      </Snackbar>
       <Copyright sx={{ mt: 3, mb: 3 }} />
     </div>
   );

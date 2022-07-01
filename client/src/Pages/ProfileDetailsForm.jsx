@@ -19,6 +19,12 @@ import Navbar from "../Components/Navbar/Navbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/postroomAction";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -41,6 +47,11 @@ const fileToDataUri = (file) =>
     },
   ];
 
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+
 const ProfileDetailsForm = () => {
   const [name, setName] = useState();
   const [age, setAge] = useState();
@@ -57,6 +68,16 @@ const ProfileDetailsForm = () => {
   const Input = styled("input")({
     display: "none",
   });
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const dispatch = useDispatch();
   const bhkOptions = [];
@@ -340,11 +361,28 @@ const ProfileDetailsForm = () => {
             variant="contained"
             color="success"
             component="span"
-            onClick={handleSubmit}
+            onClick={handleClickOpen}
           >
             Submit
           </Button>
         </Box>
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Sure you want to Submit?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSubmit}>Submit</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );
