@@ -33,27 +33,27 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function Roomcard({ props }) {
-  console.log(props);
+  //console.log(props);
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const { setSelectedChat, chats, setChats, user } = ChatState();
+  const { setSelectedChat, chats, setChats, user, token } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
 
   const fetchChats = async () => {
-    //console.log(user._id);
-    const usertoken = JSON.parse(localStorage.getItem("userInfo"));
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
 
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.post(
+        "/chat/fetch",{ user }, config
+      );
       setChats(data);
     } catch (error) {
       console.log(error);
@@ -67,10 +67,10 @@ export default function Roomcard({ props }) {
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+      const { data } = await axios.post(`/chat/access`, { user, userId }, config);
       console.log(data);
 
       if (!chats.find((c) => c._id === data._id)) {
@@ -82,11 +82,12 @@ export default function Roomcard({ props }) {
     }
   };
 
-  // useEffect(() => {
-  //   fetchChats();
-  // }, [fetchChats]);
-  // if (props.props?.images?.length > 0) {
-  // }
+  useEffect(() => {
+    fetchChats();
+  }, []);
+  //if (props.props?.images?.length > 0) {
+  //}
+
   return (
     <>
       {showChat ? (
@@ -155,7 +156,8 @@ export default function Roomcard({ props }) {
               <IconButton
                 onClick={() => {
                   setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  //console.log(`onclick ${props?.user._id}`);
+                  accessChat(props?.user._id);
                 }}
                 aria-label="add to favorites"
               >

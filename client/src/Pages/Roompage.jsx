@@ -72,7 +72,7 @@ const Roompage = () => {
         },
       };
       axios.post("/rooms/deleteRoom", params, config).then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
       });
 
       console.log("working");
@@ -96,7 +96,7 @@ const Roompage = () => {
         },
       };
       axios.post("/rooms/updateRoom", params, config).then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
       });
 
       console.log("working");

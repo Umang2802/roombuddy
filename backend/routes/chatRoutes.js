@@ -8,7 +8,7 @@ const { verifyToken } = require("../middleware");
 
 const router = express.Router();
 
-router.route("/").post(verifyToken, accessChat);
-router.route("/").get(verifyToken, fetchChats);
+router.route("/access").post(verifyToken, accessChat);
+router.route("/fetch").post(verifyToken, fetchChats);
 
 module.exports = router;

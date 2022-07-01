@@ -4,7 +4,6 @@ import "./App.css";
 import Home from "./Pages/Homepage/Home";
 import Signup from "./Pages/Signup";
 import Roompage from "./Pages/Roompage";
-import Postform from "./Pages/Postform";
 import ChatApp from "./Pages/Chat";
 import Login from "./Pages/Login";
 import Logout from "./Pages/Logout";
@@ -32,7 +31,6 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/room" element={<Roompage />} />
           <Route path="/roomchat" element={<PostRoom />} />
-          <Route path="/postform" element={<Postform />} />
           <Route path="/room/:id" element={<SingleRoom />} exact />
           <Route
             path="/profileDetailsForm"

@@ -4,7 +4,7 @@ import Singlechat from "./Singlechat";
 import { ChatState } from "../../Context/Provider";
 
 const Chatbox = ({ fetchAgain, setFetchAgain }) => {
-  const {selectedChat } = ChatState();
+  const { selectedChat } = ChatState();
   return (
     <Paper
       elevation={3}

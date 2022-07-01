@@ -12,17 +12,17 @@ import { ChatState } from "../../Context/Provider";
 const Allchats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
-  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const { selectedChat, setSelectedChat, user, token, chats, setChats } = ChatState();
 
   const fetchChats = async () => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
 
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.post("/chat/fetch",{user}, config);
       setChats(data);
     } catch (error) {
       console.log(error);
@@ -30,10 +30,9 @@ const Allchats = ({ fetchAgain }) => {
   };
 
   useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    setLoggedUser(JSON.parse(localStorage.getItem("user_id")));
     fetchChats();
-    // eslint-disable-next-line
-  }, [fetchAgain]);
+  }, [fetchChats]);
 
   return (
     <Paper
@@ -90,7 +89,7 @@ const Allchats = ({ fetchAgain }) => {
                 </Typography>
                 {chat.latestMessage && (
                   <Typography sx={{ fontSize: 12 }}>
-                    <b>{chat.latestMessage.sender.name} : </b>
+                    <b>{chat.latestMessage.sender.username} : </b>
                     {chat.latestMessage.content.length > 50
                       ? chat.latestMessage.content.substring(0, 51) + "..."
                       : chat.latestMessage.content}
