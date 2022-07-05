@@ -18,8 +18,10 @@ const messageRoutes = require("./routes/messageRoutes");
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
+// app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ limit: "50mb" }));
 mongoose
   .connect(
     "mongodb+srv://parth25:Comp2570@roombuddy.j50dr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",

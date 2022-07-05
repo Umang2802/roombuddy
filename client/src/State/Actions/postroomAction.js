@@ -2,7 +2,6 @@ import { postRoom } from "../../Services";
 import { postroommate } from "../../Services";
 export const postRoomAction = (params) => (dispatch) => {
   const usertoken = JSON.parse(localStorage.getItem("token"));
-  console.log(usertoken);
   const config = {
     headers: {
       Authorization: `Bearer ${usertoken}`,
@@ -27,7 +26,6 @@ export const postRoomAction = (params) => (dispatch) => {
 
 export const postRoommateAction = (params) => (dispatch) => {
   const usertoken = JSON.parse(localStorage.getItem("token"));
-  console.log(usertoken);
   const config = {
     headers: {
       Authorization: `Bearer ${usertoken}`,

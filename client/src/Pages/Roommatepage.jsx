@@ -6,7 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroommateAction";
 import { deletePost } from "../Services/index.js";
-import Appbar from "../Components/Appbar/Appbar.jsx";
+import RoommateAppbar from "../Components/Appbar/RoommateAppbar.jsx";
 import Roommatecard from "../Components/Roommatecard/Roommatecard";
 const Roommatepage = () => {
   const dispatch = useDispatch();
@@ -109,7 +109,7 @@ const Roommatepage = () => {
   return (
     <>
       <Navbar></Navbar>
-      <Appbar props={"/roommateDetails"} />
+      <RoommateAppbar props={"/roommateDetails"} />
 
       <Grid container spacing={0}>
         {roommatedata?.map((item, key) => (

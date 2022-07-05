@@ -39,7 +39,7 @@ const App = () => {
             element={<ProfileDetailsForm />}
             exact
           />
-          <Route path="/roommatepage" element={<Roommatepage />} />
+          <Route path="/roommates" element={<Roommatepage />} />
           <Route path="/dashboard" element={<Dashboard></Dashboard>} />
         </Routes>
       </div>

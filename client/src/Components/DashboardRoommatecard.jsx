@@ -11,16 +11,15 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import Container from "@mui/material/Container";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { useNavigate } from "react-router-dom";
 import { Backdrop, Button } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import PostChat from "../Chat/PostChat";
-import { ChatState } from "../../Context/Provider";
+import { useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -32,75 +31,60 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Roommatecard({ props }) {
-  console.log("props", props);
-  const [expanded, setExpanded] = React.useState(false);
+export default function DashboardRoommatecard({ props }) {
+  const userid = useSelector((state) => state.auth.user_id);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-  const { setSelectedChat, chats, setChats, user } = ChatState();
-
-  const [showChat, setShowChat] = useState(false);
-
-  const fetchChats = async () => {
-    //console.log(user._id);
-    const usertoken = JSON.parse(localStorage.getItem("userInfo"));
+  const navigate = useNavigate();
+  const deletepost = async () => {
     try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+
+      const params = {
+        roommateProfileId: props._id,
+        userId: userid,
+      };
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${usertoken}`,
         },
       };
-
-      const { data } = await axios.get("/api/chat", config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
+      axios
+        .post("/roommateprofiles/deleteRoommateProfile", params, config)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const editredirector = () => {
+    navigate("/roomdetailsform", { edit: true, roomdata: props });
+  };
+  const editHandler = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      console.log(usertoken);
+      const params = {
+        ...props,
+        rentPrice: 3000,
+        roomId: props._id,
+        userId: userid,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      axios.post("/rooms/updateRoom", params, config).then((res) => {
+        console.log(res.data);
+      });
+    } catch (e) {
+      console.log(e);
     }
   };
 
-  const accessChat = async (userId) => {
-    console.log(chats);
-
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
-      console.log(data);
-
-      if (!chats.find((c) => c._id === data._id)) {
-        setChats([data, ...chats]);
-      }
-      setSelectedChat(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   fetchChats();
-  // }, [fetchChats]);
-  // if (props.props?.images?.length > 0) {
-  // }
   return (
     <>
-      {showChat ? (
-        <div>
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={showChat}
-          >
-            <PostChat setShowChat={setShowChat} />
-          </Backdrop>
-        </div>
-      ) : (
-        <></>
-      )}
       <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
         <Grid item xs={8}>
           {props?.image && (
@@ -158,23 +142,22 @@ export default function Roommatecard({ props }) {
           <Grid container mt={0} align="center">
             <Grid item xs={4}>
               <IconButton
+                aria-label="edit"
                 onClick={() => {
-                  setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  editredirector();
                 }}
-                aria-label="add to favorites"
               >
-                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+                <EditOutlinedIcon size="small" />
               </IconButton>
             </Grid>
             <Grid item xs={4}>
-              <IconButton aria-label="share">
-                <StarBorderOutlinedIcon size="small" />
-              </IconButton>
-            </Grid>
-            <Grid item xs={4}>
-              <IconButton aria-label="location">
-                <LocationOnOutlinedIcon size="small" />
+              <IconButton
+                onClick={() => {
+                  deletepost();
+                }}
+                aria-label="delete"
+              >
+                <DeleteOutlineOutlinedIcon size="small" />
               </IconButton>
             </Grid>
           </Grid>

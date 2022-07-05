@@ -6,7 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
 import { deletePost } from "../Services/index.js";
-import Appbar from "../Components/Appbar/Appbar.jsx";
+import RoomAppbar from "../Components/Appbar/RoomAppbar.jsx";
 const Roompage = () => {
   const dispatch = useDispatch();
   const [roomsdata, setRoomsdata] = useState([]);
@@ -58,57 +58,11 @@ const Roompage = () => {
   //       Authorization: `Bearer ${usertoken}`,
   //     },
   //   };
-  const deletepost = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        roomId: roommdata[0]._id,
-        userId: roommdata[0].user._id,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/deleteRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
-
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const updatepost = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        ...roommdata,
-        rentPrice: 3000,
-        roomId: roommdata[0]._id,
-        userId: roommdata[0].user._id,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
-
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
     <>
       <Navbar></Navbar>
-      <Appbar props={"/roomDetails"} />
+      <RoomAppbar props={"/roomDetails"} />
 
       <Grid container spacing={0}>
         {roommdata?.map((item, key) => (

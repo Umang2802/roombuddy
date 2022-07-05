@@ -16,7 +16,6 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.createRoom = async (req, res) => {
-  
   jwt.verify(req.token, "mysecretkey", async (err, authData) => {
     if (err) {
       res.send("error while verifying token in create room");
@@ -59,12 +58,10 @@ module.exports.createRoom = async (req, res) => {
         });
 
         room.user = authData.user;
-        console.log(name);
-        console.log(images);
+
         for (let i = 0; i < images.length; i++) {
-          console.log("item", images[i]);
           const fileStr = images[i];
-          console.log(fileStr);
+
           const uploaded = await cloudinary.uploader.upload(fileStr, {
             upload_preset: "roombuddy",
           });
@@ -111,8 +108,7 @@ module.exports.deleteRoom = async (req, res) => {
       res.send("error while verifying token in deleteRoom");
     } else {
       const { roomId, userId } = req.body;
-      console.log("authdata", authData.user._id);
-      console.log("userid", userId);
+
       if (authData.user._id === userId) {
         const room = await Room.findById(roomId);
         if (!room) {
@@ -161,10 +157,8 @@ module.exports.updateRoom = async (req, res) => {
       if (authData.user._id === userId) {
         const r = await Room.findById(roomId);
         const deletedImages = [];
-        console.log("r min", r);
 
         for (let j = 0; j < r.images.length; j++) {
-          console.log("image", r.images[j].filename);
           deletedImages.push(r.images[j].filename);
         }
 
@@ -196,9 +190,8 @@ module.exports.updateRoom = async (req, res) => {
         room.images = [];
 
         for (let i = 0; i < images.length; i++) {
-          console.log("item", images[i]);
           const fileStr = images[i];
-          console.log(fileStr);
+
           const uploaded = await cloudinary.uploader.upload(fileStr, {
             upload_preset: "roombuddy",
           });

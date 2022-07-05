@@ -10,15 +10,15 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { useSelector } from "react-redux";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Backdrop, Button } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import PostChat from "../../Components/Chat/PostChat";
-import { ChatState } from "../../Context/Provider";
+import { useNavigate } from "react-router-dom";
+// import PostChat from "../../Components/Chat/PostChat";
+// import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 const ExpandMore = styled((props) => {
@@ -32,92 +32,60 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Roomcard({ props }) {
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-  const { setSelectedChat, chats, setChats, user } = ChatState();
-
-  const [showChat, setShowChat] = useState(false);
-
-  const fetchChats = async () => {
-    //console.log(user._id);
-
-    const usertoken = JSON.parse(localStorage.getItem("userInfo"));
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      const { data } = await axios.get("/api/chat", config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const accessChat = async (userId) => {
-    console.log(chats);
-
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
-      console.log(data);
-
-      if (!chats.find((c) => c._id === data._id)) {
-        setChats([data, ...chats]);
-      }
-      setSelectedChat(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const starredHandler = async () => {
+export default function DashboardRoomcard({ props }) {
+  const userid = useSelector((state) => state.auth.user_id);
+  const navigate = useNavigate();
+  const deletepost = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
+      console.log(usertoken);
+      const params = {
+        roomId: props._id,
+        userId: userid,
+      };
       const config = {
         headers: {
           Authorization: `Bearer ${usertoken}`,
         },
       };
+      axios.post("/rooms/deleteRoom", params, config).then((res) => {
+        console.log(res.data);
+      });
 
-      axios
-        .post("/favoriteposts/addOrRemoveFavoritePost", props._id, config)
-        .then((res) => {
-          console.log(res.data);
-        });
+      console.log("working");
     } catch (e) {
       console.log(e);
     }
   };
-  // useEffect(() => {
-  //   fetchChats();
-  // }, [fetchChats]);
-  // if (props.props?.images?.length > 0) {
-  // }
+  const editredirector = () => {
+    navigate("/roomdetailsform", { edit: true, roomdata: props });
+  };
+  const editHandler = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      console.log(usertoken);
+      const params = {
+        ...props,
+        rentPrice: 3000,
+        roomId: props._id,
+        userId: userid,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      axios.post("/rooms/updateRoom", params, config).then((res) => {
+        console.log(res.data);
+      });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
-      {showChat ? (
-        <div>
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={showChat}
-          >
-            <PostChat setShowChat={setShowChat} />
-          </Backdrop>
-        </div>
-      ) : (
-        <></>
-      )}
       <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
@@ -170,28 +138,22 @@ export default function Roomcard({ props }) {
           <Grid container align="center">
             <Grid item xs={4}>
               <IconButton
+                aria-label="edit"
                 onClick={() => {
-                  setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  editredirector();
                 }}
-                aria-label="add to favorites"
               >
-                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+                <EditOutlinedIcon size="small" />
               </IconButton>
             </Grid>
             <Grid item xs={4}>
               <IconButton
-                aria-label="share"
                 onClick={() => {
-                  starredHandler();
+                  deletepost();
                 }}
+                aria-label="delete"
               >
-                <StarBorderOutlinedIcon size="small" />
-              </IconButton>
-            </Grid>
-            <Grid item xs={4}>
-              <IconButton aria-label="location">
-                <LocationOnOutlinedIcon size="small" />
+                <DeleteOutlineOutlinedIcon size="small" />
               </IconButton>
             </Grid>
           </Grid>
