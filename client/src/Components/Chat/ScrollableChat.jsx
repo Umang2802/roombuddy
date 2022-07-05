@@ -4,6 +4,7 @@ import { ChatState } from "../../Context/Provider";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
+  //console.log(messages);
 
   return (
     <ScrollableFeed>
@@ -13,10 +14,10 @@ const ScrollableChat = ({ messages }) => {
             <span
               style={{
                 backgroundColor: `${
-                  m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"
+                  m.sender._id === user ? "#BEE3F8" : "#B9F5D0"
                 }`,
-                marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
+                marginLeft: isSameSenderMargin(messages, m, i, user),
+                marginTop: isSameUser(messages, m, i, user) ? 3 : 10,
                 borderRadius: "10px",
                 padding: "5px 15px",
                 maxWidth: "75%",

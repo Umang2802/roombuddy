@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const Chat = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
-  const { user } = ChatState();
+  const { user} = ChatState();
 
   return (
     <div>

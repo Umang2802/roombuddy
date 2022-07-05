@@ -8,12 +8,16 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [notification, setNotification] = useState([]);
   const [chats, setChats] = useState();
+  const [token, setToken] = useState();
+  const [fetchAgain, setFetchAgain] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userInfo = JSON.parse(localStorage.getItem("user_id"));
+    const tokenInfo = JSON.parse(localStorage.getItem("token"));
     setUser(userInfo);
+    setToken(tokenInfo);
 
     // if (!userInfo) navigate("/login");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -30,6 +34,10 @@ const ChatProvider = ({ children }) => {
         setNotification,
         chats,
         setChats,
+        token,
+        setToken,
+        fetchAgain,
+        setFetchAgain,
       }}
     >
       {children}

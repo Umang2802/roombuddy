@@ -35,7 +35,7 @@ const Singlechat = ({ fetchAgain, setFetchAgain }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const { selectedChat, setSelectedChat, user, notification, setNotification } =
+  const { selectedChat, setSelectedChat, user, token,notification, setNotification } =
     ChatState();
 
   const fetchMessages = async () => {
@@ -44,21 +44,23 @@ const Singlechat = ({ fetchAgain, setFetchAgain }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
 
       setLoading(true);
 
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        `/message/${selectedChat._id}`,
         config
       );
       setMessages(data);
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+    }
   };
 
   const sendMessage = async (event) => {
@@ -68,19 +70,20 @@ const Singlechat = ({ fetchAgain, setFetchAgain }) => {
         const config = {
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${token}`,
           },
         };
         setNewMessage("");
 
         console.log(selectedChat);
         console.log(newMessage);
-        console.log(user.token);
+        console.log(`singlechat userid ${user}`);
         console.log(config);
 
         const { data } = await axios.post(
-          "/api/message",
+          "/message",
           {
+            sender: user,
             content: newMessage,
             chatId: selectedChat,
           },
@@ -89,7 +92,9 @@ const Singlechat = ({ fetchAgain, setFetchAgain }) => {
 
         socket.emit("new message", data);
         setMessages([...messages, data]);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -211,14 +216,18 @@ const Singlechat = ({ fetchAgain, setFetchAgain }) => {
                 <ScrollableChat messages={messages} />
               </div>
             )}
-            <Box onKeyDown={sendMessage} id="first-name" isRequired>
+            <Box
+              onKeyDown={sendMessage}
+              id="first-name"
+              isRequired
+            >
               {istyping ? (
                 <div>
                   <Lottie
                     options={defaultOptions}
                     // height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                    width={50}
+                    style={{ marginBottom: 0, marginLeft: 0 }}
                   />
                 </div>
               ) : (

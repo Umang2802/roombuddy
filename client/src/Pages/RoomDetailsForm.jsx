@@ -22,6 +22,13 @@ import Navbar from "../Components/Navbar/Navbar";
 import { postRoom } from "../Services";
 import * as actionCreator from "../State/Actions/postroomAction";
 import { useDispatch } from "react-redux";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+
 const types = [
   {
     value: "Flat",
@@ -109,6 +116,10 @@ const fileToDataUri = (file) =>
     reader.readAsDataURL(file);
   });
 
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
 const RoomDetailsForm = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
@@ -132,6 +143,16 @@ const RoomDetailsForm = () => {
   const Input = styled("input")({
     display: "none",
   });
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const bhkOptions = [];
   for (let i = 1; i <= 6; i++) {
@@ -455,19 +476,6 @@ const RoomDetailsForm = () => {
                   <center>
                     <h4>{item.value}</h4>
                     <ToggleButton
-                      value="true"
-                      sx={{ border: "none" }}
-                      onClick={() => {
-                        tickedRulesHandler(item);
-                      }}
-                    >
-                      {item.ticked ? (
-                        <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                      ) : (
-                        <CheckCircleOutlineRoundedIcon />
-                      )}
-                    </ToggleButton>
-                    <ToggleButton
                       value="false"
                       sx={{ border: "none" }}
                       onClick={() => {
@@ -478,6 +486,19 @@ const RoomDetailsForm = () => {
                         <CancelRoundedIcon sx={{ color: "red" }} />
                       ) : (
                         <CancelOutlinedIcon />
+                      )}
+                    </ToggleButton>
+                    <ToggleButton
+                      value="true"
+                      sx={{ border: "none" }}
+                      onClick={() => {
+                        tickedRulesHandler(item);
+                      }}
+                    >
+                      {item.ticked ? (
+                        <CheckCircleRoundedIcon sx={{ color: "green" }} />
+                      ) : (
+                        <CheckCircleOutlineRoundedIcon />
                       )}
                     </ToggleButton>
                   </center>
@@ -690,10 +711,27 @@ const RoomDetailsForm = () => {
           variant="contained"
           color="success"
           component="span"
-          onClick={handleSubmit}
+          onClick={handleClickOpen}
         >
           Submit
         </Button>
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Sure you want to Submit?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSubmit}>Submit</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );

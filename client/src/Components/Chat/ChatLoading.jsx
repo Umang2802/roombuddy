@@ -15,8 +15,6 @@ const ChatLoading = () => {
       <Skeleton animation="wave" sx={{ p: 1 }} />
       <Skeleton animation="wave" sx={{ p: 1 }} />
       <Skeleton animation="wave" sx={{ p: 1 }} />
-      <Skeleton animation="wave" sx={{ p: 1 }} />
-      <Skeleton animation="wave" sx={{ p: 1 }} />
     </Box>
   );
 };

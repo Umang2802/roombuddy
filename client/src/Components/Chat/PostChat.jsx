@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const ENDPOINT = "http://localhost:5000"; // "https://roombuddy.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
-const PostChat = ({ setShowChat }) => {
+const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
@@ -34,7 +34,8 @@ const PostChat = ({ setShowChat }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const { selectedChat, user, notification, setNotification } = ChatState();
+  const { selectedChat, user, notification, token, setNotification } =
+    ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -42,21 +43,20 @@ const PostChat = ({ setShowChat }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
 
       setLoading(true);
 
-      const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
-        config
-      );
+      const { data } = await axios.get(`/message/${selectedChat._id}`, config);
       setMessages(data);
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const sendMessage = async (event) => {
@@ -66,13 +66,14 @@ const PostChat = ({ setShowChat }) => {
         const config = {
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${token}`,
           },
         };
         setNewMessage("");
         const { data } = await axios.post(
-          "/api/message",
+          "/message",
           {
+            sender: user,
             content: newMessage,
             chatId: selectedChat,
           },
@@ -80,7 +81,9 @@ const PostChat = ({ setShowChat }) => {
         );
         socket.emit("new message", data);
         setMessages([...messages, data]);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -109,6 +112,7 @@ const PostChat = ({ setShowChat }) => {
       ) {
         if (!notification.includes(newMessageRecieved)) {
           setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
         }
       } else {
         setMessages([...messages, newMessageRecieved]);

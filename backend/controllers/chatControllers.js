@@ -6,7 +6,7 @@ const User = require("../models/user");
 //@route           POST /api/chat/
 //@access          Protected
 const accessChat = asyncHandler(async (req, res) => {
-  const { userId } = req.body;
+  const { user, userId } = req.body;
 
   if (!userId) {
     console.log("UserId param not sent with request");
@@ -15,13 +15,14 @@ const accessChat = asyncHandler(async (req, res) => {
 
   var isChat = await Chat.find({
     $and: [
-      { users: { $elemMatch: { $eq: "62ab88a41839901e0eb018be" } } },
+      { users: { $elemMatch: { $eq: user } } },
       { users: { $elemMatch: { $eq: userId } } },
     ],
   })
     .populate("users", "-password")
     .populate("latestMessage");
 
+  console.log(`Userid in accesschats ${user}`);
   isChat = await User.populate(isChat, {
     path: "latestMessage.sender",
     select: "username email",
@@ -29,10 +30,11 @@ const accessChat = asyncHandler(async (req, res) => {
 
   if (isChat.length > 0) {
     res.send(isChat[0]);
+    //console.log(isChat[0]);
   } else {
     var chatData = {
       chatName: "sender",
-      users: ["62ab88a41839901e0eb018be", userId],
+      users: [user, userId],
     };
 
     try {
@@ -41,6 +43,7 @@ const accessChat = asyncHandler(async (req, res) => {
         "users",
         "-password"
       );
+      console.log(FullChat);
       res.status(200).json(FullChat);
     } catch (error) {
       res.status(400);
@@ -50,11 +53,14 @@ const accessChat = asyncHandler(async (req, res) => {
 });
 
 //@description     Fetch all chats for a user
-//@route           GET /api/chat/
+//@route           GET /chat/
 //@access          Protected
 const fetchChats = asyncHandler(async (req, res) => {
+  const { user } = req.body;
+  //console.log(`Userid in fetchchats ${user}`);
   try {
-    Chat.find({ users: { $elemMatch: { $eq: "62ab88a41839901e0eb018be" } } })
+    //console.log(`Userid in fetchchats in try ${req.header}`);
+    Chat.find({ users: { $elemMatch: { $eq: user } } })
       .populate("users", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
