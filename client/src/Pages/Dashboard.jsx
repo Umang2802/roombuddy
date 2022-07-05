@@ -71,20 +71,20 @@ export default function Dashboard() {
   useEffect(() => {
     dispatch(actionCreator.getroomAction());
     dispatch(actionCreator2.getroommateAction());
-    // try {
-    //   const usertoken = JSON.parse(localStorage.getItem("token"));
-    //   const config = {
-    //     headers: {
-    //       Authorization: `Bearer ${usertoken}`,
-    //     },
-    //   };
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
 
-    //   axios.post("/favoriteposts/userFavoritePosts", config).then((res) => {
-    //     console.log("fav", res.data);
-    //   });
-    // } catch (e) {
-    //   console.log(e);
-    // }
+      axios.get("/favoriteposts/userFavoritePosts", config).then((res) => {
+        console.log("fav", res.data);
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     // eslint-disable-next-line
   }, []);

@@ -98,9 +98,12 @@ export default function Roomcard({ props }) {
           Authorization: `Bearer ${usertoken}`,
         },
       };
-
+      const params = {
+        roomId: props._id,
+      };
+      console.log(params);
       axios
-        .post("/favoriteposts/addOrRemoveFavoritePost", props._id, config)
+        .post("/favoriteposts/addOrRemoveFavoritePost", params, config)
         .then((res) => {
           console.log(res.data);
         });

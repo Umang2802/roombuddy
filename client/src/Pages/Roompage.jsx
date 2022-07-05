@@ -49,8 +49,7 @@ const Roompage = () => {
   }, []);
   const roommdata = useSelector((state) => state.roomdata.rooms);
   const userdata = useSelector((state) => state.auth.user_id);
-  console.log("room data", roommdata);
-  console.log("roomid ", userdata);
+
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
   //   const config = {
@@ -61,7 +60,7 @@ const Roompage = () => {
   const deletepost = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
+
       const params = {
         roomId: roommdata[0]._id,
         userId: roommdata[0].user._id,

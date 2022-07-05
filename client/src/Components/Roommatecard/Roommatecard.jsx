@@ -81,7 +81,27 @@ export default function Roommatecard({ props }) {
       console.log(error);
     }
   };
-
+  const starredHandler = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      const params = {
+        roomId: props._id,
+      };
+      console.log(params);
+      axios
+        .post("/favoriteposts/addOrRemoveFavoritePost", params, config)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   // useEffect(() => {
   //   fetchChats();
   // }, [fetchChats]);
@@ -168,7 +188,12 @@ export default function Roommatecard({ props }) {
               </IconButton>
             </Grid>
             <Grid item xs={4}>
-              <IconButton aria-label="share">
+              <IconButton
+                aria-label="share"
+                onClick={() => {
+                  starredHandler();
+                }}
+              >
                 <StarBorderOutlinedIcon size="small" />
               </IconButton>
             </Grid>
