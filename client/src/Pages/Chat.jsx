@@ -12,21 +12,20 @@ const Chat = () => {
 
   return (
     <div>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg" sx={{ position: { md:"fixed", sm: "none"} }}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             flexWrap: "wrap",
             bgcolor: "#cfe8fc",
-            height: "80vh",
             p: 2,
           }}
         >
           {user && <Allchats fetchAgain={fetchAgain} />}
-          {user && 
+          {user && (
             <Chatbox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
-          }
+          )}
         </Box>
       </Container>
     </div>

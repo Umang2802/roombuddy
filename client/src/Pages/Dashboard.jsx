@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import DashboardRoommatecard from "../Components/DashboardRoommatecard";
 import * as actionCreator from "../State/Actions/getroomAction";
 import * as actionCreator2 from "../State/Actions/getroommateAction";
+import Chat from "./Chat";
 import axios from "axios";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -120,10 +121,10 @@ export default function Dashboard() {
             <DashboardRoommatecard props={roomatedata}></DashboardRoommatecard>
           ))}
         </TabPanel>
-        <TabPanel value={value} index={1}></TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
+        <TabPanel value={value} index={1}>
+          <Chat />
         </TabPanel>
+        <TabPanel value={value} index={2}></TabPanel>
       </Box>
     </>
   );
