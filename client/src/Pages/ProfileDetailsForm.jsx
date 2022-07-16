@@ -9,6 +9,7 @@ import {
   ImageListItem,
   Input,
   MenuItem,
+  Snackbar,
   styled,
   TextField,
   Typography,
@@ -23,8 +24,9 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { useForm } from "react-hook-form";
+import MuiAlert from "@mui/material/Alert";
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -53,23 +55,40 @@ const fileToDataUri = (file) =>
 
 
 const ProfileDetailsForm = () => {
-  const [name, setName] = useState();
-  const [age, setAge] = useState();
   const [gender, setGender] = useState("Prefer not to say");
-  const [occupation, setOccupation] = useState();
-  const [lookingForRoomIn, setLookingForRoomIn] = useState();
-  const [lookingToMoveInFrom, setLookingToMoveInFrom] = useState();
-  const [bhk, setBhk] = useState();
-  const [budget, setBudget] = useState();
+  const [bhk, setBhk] = useState(1);
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
+  const [open, setOpen] = useState(false);
   const [pics, setPics] = useState("");
+  const [openError, setOpenError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const dispatch = useDispatch();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+   const Alert = React.forwardRef(function Alert(props, ref) {
+     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+   });
+  
   const Input = styled("input")({
     display: "none",
   });
 
-  const [open, setOpen] = React.useState(false);
+  const handleErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+    setOpenSuccess(false);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -79,7 +98,6 @@ const ProfileDetailsForm = () => {
     setOpen(false);
   };
 
-  const dispatch = useDispatch();
   const bhkOptions = [];
   for (let i = 1; i <= 6; i++) {
     bhkOptions.push(
@@ -89,9 +107,53 @@ const ProfileDetailsForm = () => {
     );
   }
 
+  const valOptions = {
+    name: {
+      required: "Name is required",
+      minLength: {
+        value: 5,
+        message: "Name must have atleast 5 characters",
+      },
+    },
+    age: {
+      required: "Age is required",
+      min: {
+        value: 10,
+        message: "Age should be above 10",
+      },
+      max: {
+        value: 79,
+        message: "Age should be less than 80",
+      },
+    },
+    occupation: {
+      required: "Occupation is required",
+    },
+    lookingForRoomIn: {
+      required: "Room location is required",
+    },
+    lookingToMoveInFrom: {
+      required: "Location is required",
+    },
+    budget: {
+      required: "Budget is Required",
+      min: {
+        value: 200,
+        message: "Budget must be above 200",
+      },
+    },
+  };
+
   const preferencesHandler = () => {
-    setPreferences((preference) => [...preference, preferenceItem]);
-    setPreferenceItem("");
+     if (preferenceItem === "" || preferenceItem === " ") {
+       setErrorMessage("Please enter your Preferences");
+       setOpenError(true);
+     } else {
+       setPreferences((preference) => [...preference, preferenceItem]);
+       setPreferenceItem("");
+       setSuccessMessage("Preference added successfully");
+       setOpenSuccess(true);
+     }
   };
 
   const deletePreferencesHandler = (item) => {
@@ -109,34 +171,46 @@ const ProfileDetailsForm = () => {
     });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (data) => {
     const roommatedata = {
-      name: name,
-      age: age,
+      name: data.name,
+      age: data.age,
       gender: gender,
-      occupation: occupation,
-      lookingForRoomIn: lookingForRoomIn,
-      lookingToMoveIn: lookingToMoveInFrom,
+      occupation: data.occupation,
+      lookingForRoomIn: data.lookingForRoomIn,
+      lookingToMoveIn: data.lookingToMoveInFrom,
       preferredSize: bhk,
-      budget: budget,
+      budget: data.budget,
       image: pics[0],
       preferences: preferences,
     };
 
-    dispatch(actionCreator.postRoommateAction(roommatedata));
+    try {
+      if (pics.length === 0) {
+        throw "Profile image is required";
+      }
+      dispatch(actionCreator.postRoommateAction(roommatedata));
+      handleClose();
+      setSuccessMessage("Profile added successfully");
+      setOpenSuccess(true);
+    } catch (error) {
+      handleClose();
+      setErrorMessage(error);
+      setOpenError(true);
+    }
   };
 
-  useEffect(() => {
-    
-  }, [])
-  
+  const onError = (errors) => {
+    setErrorMessage("Please fill all fields correctly!");
+    setOpenError(true);
+    handleClose();
+  };
 
   return (
     <>
       <Navbar />
       <Container maxWidth="lg" sx={{ p: 4 }}>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" noValidate sx={{ mt: 1 }}>
           <Typography variant="h4" sx={{ fontWeight: "bold", py: 1 }}>
             Room Details
           </Typography>
@@ -151,27 +225,26 @@ const ProfileDetailsForm = () => {
                 <Typography sx={{ fontSize: 16, mb: 1 }}>NAME</Typography>
                 <TextField
                   variant="filled"
-                  required
                   name="name"
                   type="text"
                   InputLabelProps={{ style: { fontSize: 12 } }}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  {...register("name", valOptions.name)}
+                  error={Boolean(errors.name)}
+                  helperText={errors.name ? errors.name.message : ""}
                   sx={{ mb: 3, p: 0, width: "70%" }}
-                  id="outlined-size-small"
                   size="small"
                 />
                 <Typography sx={{ fontSize: 16, mb: 1 }}>AGE</Typography>
                 <TextField
                   variant="filled"
-                  required
                   name="age"
-                  type="text"
+                  type="number"
+                  InputProps={{ inputProps: { min: "10", max: "79", step: "1" } }}
                   InputLabelProps={{ style: { fontSize: 12 } }}
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  sx={{ mb: 3, p: 0, width: "20%" }}
-                  id="outlined-size-small"
+                  {...register("age", valOptions.age)}
+                  error={Boolean(errors.age)}
+                  helperText={errors.age ? errors.age.message : ""}
+                  sx={{ mb: 3, p: 0, width: "30%" }}
                   size="small"
                 />
                 <Typography sx={{ fontSize: 16, mb: 1 }}>GENDER</Typography>
@@ -197,8 +270,11 @@ const ProfileDetailsForm = () => {
                   name="occupation"
                   type="text"
                   InputLabelProps={{ style: { fontSize: 12 } }}
-                  value={occupation}
-                  onChange={(e) => setOccupation(e.target.value)}
+                  {...register("occupation", valOptions.occupation)}
+                  error={Boolean(errors.occupation)}
+                  helperText={
+                    errors.occupation ? errors.occupation.message : ""
+                  }
                   sx={{ mb: 3, p: 0, width: "70%" }}
                   id="outlined-size-small"
                   size="small"
@@ -273,8 +349,11 @@ const ProfileDetailsForm = () => {
               name="lookingForRoomIn"
               type="text"
               InputLabelProps={{ style: { fontSize: 12 } }}
-              value={lookingForRoomIn}
-              onChange={(e) => setLookingForRoomIn(e.target.value)}
+              {...register("lookingForRoomIn", valOptions.lookingForRoomIn)}
+              error={Boolean(errors.lookingForRoomIn)}
+              helperText={
+                errors.lookingForRoomIn ? errors.lookingForRoomIn.message : ""
+              }
               sx={{ mb: 3, p: 0, width: "30%" }}
               id="outlined-size-small"
               size="small"
@@ -288,8 +367,16 @@ const ProfileDetailsForm = () => {
               name="lookingToMoveInFrom"
               type="text"
               InputLabelProps={{ style: { fontSize: 12 } }}
-              value={lookingToMoveInFrom}
-              onChange={(e) => setLookingToMoveInFrom(e.target.value)}
+              {...register(
+                "lookingToMoveInFrom",
+                valOptions.lookingToMoveInFrom
+              )}
+              error={Boolean(errors.lookingToMoveInFrom)}
+              helperText={
+                errors.lookingToMoveInFrom
+                  ? errors.lookingToMoveInFrom.message
+                  : ""
+              }
               sx={{ mb: 3, p: 0, width: "30%" }}
               id="outlined-size-small"
               size="small"
@@ -315,8 +402,9 @@ const ProfileDetailsForm = () => {
               name="budget"
               type="text"
               InputLabelProps={{ style: { fontSize: 12 } }}
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
+              {...register("budget", valOptions.budget)}
+              error={Boolean(errors.budget)}
+              helperText={errors.budget ? errors.budget.message : ""}
               sx={{ mb: 3, p: 0, width: "30%" }}
               id="outlined-size-small"
               size="small"
@@ -366,6 +454,32 @@ const ProfileDetailsForm = () => {
             Submit
           </Button>
         </Box>
+        <Snackbar
+          open={openError}
+          autoHideDuration={5000}
+          onClose={handleErrorClose}
+        >
+          <Alert
+            onClose={handleErrorClose}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={openSuccess}
+          autoHideDuration={4000}
+          onClose={handleErrorClose}
+        >
+          <Alert
+            onClose={handleErrorClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            {successMessage}
+          </Alert>
+        </Snackbar>
         <Dialog
           open={open}
           TransitionComponent={Transition}
@@ -375,12 +489,12 @@ const ProfileDetailsForm = () => {
         >
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Sure you want to Submit?
+              Are you sure you want to Submit?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button onClick={handleSubmit(onSubmit, onError)}>Submit</Button>
           </DialogActions>
         </Dialog>
       </Container>

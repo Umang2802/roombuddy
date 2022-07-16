@@ -5,11 +5,12 @@ import {
   ImageList,
   ImageListItem,
   MenuItem,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Bar from "../Components/Bar";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -19,15 +20,16 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Navbar from "../Components/Navbar/Navbar";
-import { postRoom } from "../Services";
+//import { postRoom } from "../Services";
 import * as actionCreator from "../State/Actions/postroomAction";
 import { useDispatch } from "react-redux";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { useForm } from "react-hook-form";
+import MuiAlert from "@mui/material/Alert";
 
 const types = [
   {
@@ -116,21 +118,18 @@ const fileToDataUri = (file) =>
     reader.readAsDataURL(file);
   });
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const RoomDetailsForm = () => {
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [address, setAddress] = useState("");
   const [bath, setBath] = useState(1);
   const [bhk, setBhk] = useState(1);
   const [type, setType] = useState("Flat");
   const [rules, setRules] = useState(rule);
   const [pics, setPics] = useState([]);
-  const [rent, setRent] = useState("0");
+  const [errorMessage, setErrorMessage] = useState("");
   const [amenities, setAmenities] = useState(amenity);
   const [tenantNo, setTenantNo] = useState(1);
   const [tName, setTName] = useState("");
@@ -139,12 +138,110 @@ const RoomDetailsForm = () => {
   const [predictedRent, setPredictedRent] = useState("0");
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+  
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onError = (errors) => {
+    setErrorMessage("Please fill all fields correctly!");
+    setOpenError(true);
+    handleClose();
+  }
+
+  const onSubmit = (data) => {
+    console.log(data);
+    const amenitydata = [];
+    for (let i = 0; i < amenities.length; i++) {
+      if (amenities[i].onClick === true) {
+        amenitydata.push(amenities[i].value);
+      }
+    }
+
+    const roomdata = {
+      name: data.name,
+      address: data.address,
+      description: data.desc,
+      bhk: bhk,
+      bathroom: bath,
+      propertyType: type,
+      smoking: rule[0].ticked,
+      alcohol: rule[1].ticked,
+      pets: rule[2].ticked,
+      vegetarian: rule[3].ticked,
+      noOfTenants: tenantNo,
+      amenities: amenitydata,
+      preferences: preferences,
+      rentPrice: data.rent,
+      images: pics,
+      tenantDetails: tenantDetails,
+    };
+    console.log(roomdata);
+    try {
+      if(pics.length === 0)
+      {
+        throw 'Cover Image is required';
+      }
+      dispatch(actionCreator.postRoomAction(roomdata));
+      handleClose();
+      setSuccessMessage("Room added successfully");
+      setOpenSuccess(true);
+    } catch (error) {
+      handleClose();
+      setErrorMessage(error);
+      setOpenError(true);
+    }
+  };
+
+  const valOptions = {
+    name: {
+      required: "Property name is required",
+      minLength: {
+        value: 5,
+        message: "Property name must have atleast 5 characters",
+      },
+    },
+    address: {
+      required: "Property Address is required",
+    },
+    desc: {
+      required: "Property Description is required",
+      minLength: {
+        value: 20,
+        message: "Property description must have atlest 20 characters",
+      },
+    },
+    rent: {
+      required: "Property Rent is Required",
+      min: {
+        value: 200,
+        message: "Rent must be above 200",
+      },
+    },
+  };
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+    setOpenSuccess(false);
+  };
 
   const Input = styled("input")({
     display: "none",
   });
-
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -239,14 +336,35 @@ const RoomDetailsForm = () => {
     );
   };
 
+  function tenantNoHandler(e) {
+    if (Number(e.target.value) > 4) {
+      setErrorMessage("Please enter value less than 5");
+      setOpenError(true);
+      setTenantNo(1);
+    } else {
+      setTenantNo(e.target.value);
+    }
+  }
+
+
   const tenantHandler = () => {
-    setTenantDetails((prevTenant) => [
-      ...prevTenant,
-      {
-        name: tName,
-        bio: tBio,
-      },
-    ]);
+    if (tName === "" || tBio === " " || tName === " " || tBio === "") {
+      setErrorMessage("Please fill in Tenant details");
+      setOpenError(true);
+    } else {
+      setTenantDetails((prevTenant) => [
+        ...prevTenant,
+        {
+          name: tName,
+          bio: tBio,
+        },
+      ]);
+      setTName("");
+      setTBio("");
+      setSuccessMessage("Tenant details added successfully");
+      setOpenSuccess(true);
+    }
+    
   };
 
   const tenantFields = [];
@@ -255,7 +373,6 @@ const RoomDetailsForm = () => {
     tenantFields.push(
       <TextField
         variant="filled"
-        required
         name="tenant"
         type="text"
         InputLabelProps={{ style: { fontSize: 12 } }}
@@ -263,13 +380,13 @@ const RoomDetailsForm = () => {
           setTName(e.target.value);
         }}
         sx={{ mb: 3, p: 0, width: "30%" }}
-        id="outlined-size-small"
         size="small"
       />
     );
     tenantFields.push(<h4>TENANT {i} BIO: </h4>);
     tenantFields.push(
       <TextField
+        name="tenantBio"
         id="filled-multiline-static"
         multiline
         required
@@ -289,58 +406,26 @@ const RoomDetailsForm = () => {
         variant="contained"
         onClick={() => tenantHandler()}
       >
-        Add
+        Click to add tenant
       </Button>
     );
   }
 
   const preferencesHandler = () => {
     if (preferenceItem === "" || preferenceItem === " ") {
-      alert("Enter your Preferences");
+      setErrorMessage("Please enter your Preferences");
+      setOpenError(true);
     } else {
       setPreferences((preference) => [...preference, preferenceItem]);
       setPreferenceItem("");
+      setSuccessMessage("Preference added successfully");
+      setOpenSuccess(true);
     }
   };
 
   const deletePreferencesHandler = (item) => {
     setPreferences(preferences.filter((preference) => preference !== item));
   };
-
-  const handleSubmit = (event) => {
-    const amenitydata = [];
-    event.preventDefault();
-    for (let i = 0; i < amenities.length; i++) {
-      if (amenities[i].onClick === true) {
-        amenitydata.push(amenities[i].value);
-      }
-    }
-
-    const roomdata = {
-      name: name,
-      address: address,
-      description: desc,
-      bhk: bhk,
-      bathroom: bath,
-      propertyType: type,
-      smoking: rule[0].ticked,
-      alcohol: rule[1].ticked,
-      pets: rule[2].ticked,
-      vegetarian: rule[3].ticked,
-      noOfTenants: tenantNo,
-      amenities: amenitydata,
-      preferences: preferences,
-      rentPrice: rent,
-      images: pics,
-      tenantDetails: tenantDetails,
-    };
-    console.log("type", typeof roomdata.images);
-    dispatch(actionCreator.postRoomAction(roomdata));
-  };
-
-  // useEffect(() => {
-  //   console.log(preferences);
-  // });
 
   return (
     <>
@@ -349,7 +434,6 @@ const RoomDetailsForm = () => {
         <Box
           component="form"
           encType="multipart/form-data"
-          onSubmit={handleSubmit}
           noValidate
           sx={{ mt: 1 }}
         >
@@ -364,18 +448,15 @@ const RoomDetailsForm = () => {
             <Bar props="PROPERTY ADDRESS" />
             <Typography sx={{ fontSize: 16, mb: 1 }}>PROPERTY NAME</Typography>
             <TextField
+              autoFocus
               variant="filled"
               name="name"
               type="text"
-              //label="Property Name"
-              required
-              // InputProps={{ style: { padding:0 } }}
-              // InputLabelProps={{ style: { padding: 0 } }}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "30%", bgcolor: "" }}
-              id="outlined-size-small"
+              {...register("name", valOptions.name)}
+              sx={{ mb: 3, p: 0, width: "30%", height: "50%" }}
               size="small"
+              error={Boolean(errors.name)}
+              helperText={errors.name ? errors.name.message : ""}
             />
             <br />
             <Typography sx={{ fontSize: 16, mb: 1 }}>
@@ -383,15 +464,13 @@ const RoomDetailsForm = () => {
             </Typography>
             <TextField
               variant="filled"
-              //label="Property Address"
-              required
+              {...register("address", valOptions.address)}
               name="address"
               type="text"
-              id="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
               sx={{ mb: 4, p: 0, width: "30%" }}
               size="small"
+              error={Boolean(errors.address)}
+              helperText={errors.address ? errors.address.message : ""}
             />
           </Box>
           <Box>
@@ -400,16 +479,15 @@ const RoomDetailsForm = () => {
               PROPERTY DESCRIPTION
             </Typography>
             <TextField
-              id="filled-multiline-static"
+              name="desc"
               multiline
+              {...register("desc", valOptions.desc)}
               rows={3}
-              value={desc}
-              onChange={(e) => {
-                setDesc(e.target.value);
-              }}
               variant="filled"
               sx={{ mb: 4, p: 0, width: "55%" }}
               size="small"
+              error={Boolean(errors.desc)}
+              helperText={errors.desc ? errors.desc.message : ""}
             />
             <br />
             <Box sx={{ display: "flex" }}>
@@ -515,12 +593,12 @@ const RoomDetailsForm = () => {
               variant="filled"
               required
               name="rent"
-              type="text"
+              type="number"
+              InputProps={{ inputProps: { min: "1", max: "4", step: "1" } }}
               InputLabelProps={{ style: { fontSize: 12 } }}
               value={tenantNo}
-              onChange={(e) => setTenantNo(e.target.value)}
+              onChange={tenantNoHandler}
               sx={{ mb: 3, p: 0, width: "8%" }}
-              id="outlined-size-small"
               size="small"
             />
             <Box>{tenantFields}</Box>
@@ -557,7 +635,6 @@ const RoomDetailsForm = () => {
                 value={preferenceItem}
                 onChange={(e) => setPreferenceItem(e.target.value)}
                 sx={{ mb: 3, p: 0, mr: 2, width: "20%" }}
-                id="outlined-size-small"
                 size="small"
               />
               <Button variant="contained" onClick={() => preferencesHandler()}>
@@ -694,15 +771,14 @@ const RoomDetailsForm = () => {
             <h4>RENT PRICE: </h4>
             <TextField
               variant="filled"
-              required
               name="rent"
               type="text"
               InputLabelProps={{ style: { fontSize: 12 } }}
-              value={rent}
-              onChange={(e) => setRent(e.target.value)}
-              sx={{ mb: 3, p: 0, width: "10%" }}
-              id="outlined-size-small"
+              sx={{ mb: 3, p: 0, width: "20%" }}
               size="small"
+              {...register("rent", valOptions.rent)}
+              error={Boolean(errors.rent)}
+              helperText={errors.rent ? errors.rent.message : ""}
             />
           </Box>
         </Box>
@@ -715,6 +791,32 @@ const RoomDetailsForm = () => {
         >
           Submit
         </Button>
+        <Snackbar
+          open={openError}
+          autoHideDuration={5000}
+          onClose={handleErrorClose}
+        >
+          <Alert
+            onClose={handleErrorClose}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={openSuccess}
+          autoHideDuration={4000}
+          onClose={handleErrorClose}
+        >
+          <Alert
+            onClose={handleErrorClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            {successMessage}
+          </Alert>
+        </Snackbar>
         <Dialog
           open={open}
           TransitionComponent={Transition}
@@ -724,12 +826,12 @@ const RoomDetailsForm = () => {
         >
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Sure you want to Submit?
+              Are you sure you want to Submit?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button onClick={handleSubmit(onSubmit, onError)}>Submit</Button>
           </DialogActions>
         </Dialog>
       </Container>

@@ -205,7 +205,7 @@ const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
                       <Lottie
                         options={defaultOptions}
                         // height={50}
-                        width={70}
+                        width={50}
                         style={{ marginBottom: 15, marginLeft: 0 }}
                       />
                     </div>

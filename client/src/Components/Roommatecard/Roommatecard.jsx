@@ -39,54 +39,65 @@ export default function Roommatecard({ props }) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const { setSelectedChat, chats, setChats, user } = ChatState();
+const {
+  setSelectedChat,
+  chats,
+  setChats,
+  user,
+  token,
+  fetchAgain,
+  setFetchAgain,
+} = ChatState();
 
-  const [showChat, setShowChat] = useState(false);
+const [showChat, setShowChat] = useState(false);
 
-  const fetchChats = async () => {
-    //console.log(user._id);
-    const usertoken = JSON.parse(localStorage.getItem("userInfo"));
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+const fetchChats = async () => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-      const { data } = await axios.get("/api/chat", config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
+    const { data } = await axios.post("/chat/fetch", { user }, config);
+    setChats(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const accessChat = async (userId) => {
+  console.log(chats);
+
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const { data } = await axios.post(`/chat/access`, { user, userId }, config);
+    console.log(data);
+
+    if (!chats.find((c) => c._id === data._id)) {
+      setChats([data, ...chats]);
     }
-  };
-
-  const accessChat = async (userId) => {
-    console.log(chats);
-
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
-      console.log(data);
-
-      if (!chats.find((c) => c._id === data._id)) {
-        setChats([data, ...chats]);
-      }
-      setSelectedChat(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    setSelectedChat(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // useEffect(() => {
   //   fetchChats();
   // }, [fetchChats]);
   // if (props.props?.images?.length > 0) {
   // }
+
+  useEffect(() => {
+    fetchChats();
+  }, []);
+
   return (
     <>
       {showChat ? (
@@ -160,7 +171,7 @@ export default function Roommatecard({ props }) {
               <IconButton
                 onClick={() => {
                   setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  accessChat(props?.user);
                 }}
                 aria-label="add to favorites"
               >

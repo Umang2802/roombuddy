@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import DashboardRoommatecard from "../Components/DashboardRoommatecard";
 import * as actionCreator from "../State/Actions/getroomAction";
 import * as actionCreator2 from "../State/Actions/getroommateAction";
-import Chat from "./Chat";
+import Chat from "../Components/Chat/Chat";
 import axios from "axios";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
