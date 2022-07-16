@@ -372,6 +372,7 @@ const RoomDetailsForm = () => {
     tenantFields.push(<h4>TENANT {i} NAME: </h4>);
     tenantFields.push(
       <TextField
+        hiddenLabel
         variant="filled"
         name="tenant"
         type="text"
@@ -452,6 +453,7 @@ const RoomDetailsForm = () => {
               variant="filled"
               name="name"
               type="text"
+              hiddenLabel
               {...register("name", valOptions.name)}
               sx={{ mb: 3, p: 0, width: "30%", height: "50%" }}
               size="small"
@@ -463,6 +465,7 @@ const RoomDetailsForm = () => {
               PROPERTY ADDRESS
             </Typography>
             <TextField
+              hiddenLabel
               variant="filled"
               {...register("address", valOptions.address)}
               name="address"
@@ -494,6 +497,7 @@ const RoomDetailsForm = () => {
               <Box>
                 <h4>BHK:</h4>
                 <TextField
+                  hiddenLabel
                   id="outlined-select"
                   select
                   value={bhk}
@@ -508,6 +512,7 @@ const RoomDetailsForm = () => {
               <Box>
                 <h4>BATHROOM:</h4>
                 <TextField
+                  hiddenLabel
                   id="outlined-select"
                   select
                   value={bath}
@@ -522,6 +527,7 @@ const RoomDetailsForm = () => {
               <Box>
                 <h4>TYPE:</h4>
                 <TextField
+                  hiddenLabel
                   id="outlined-select"
                   select
                   value={type}
@@ -590,6 +596,7 @@ const RoomDetailsForm = () => {
             <Bar props="AMENITIES" />
             <h4>NO OF TENANTS: </h4>
             <TextField
+              hiddenLabel
               variant="filled"
               required
               name="rent"
@@ -628,6 +635,7 @@ const RoomDetailsForm = () => {
             <Bar props="PREFERENCES" />
             <Box>
               <TextField
+                hiddenLabel
                 variant="filled"
                 required
                 name="preferences"
@@ -770,6 +778,7 @@ const RoomDetailsForm = () => {
             <Bar props="PROPERTY RENT" />
             <h4>RENT PRICE: </h4>
             <TextField
+              hiddenLabel
               variant="filled"
               name="rent"
               type="text"

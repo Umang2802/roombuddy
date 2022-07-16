@@ -224,6 +224,7 @@ const ProfileDetailsForm = () => {
               <Grid item md={6} sm={1} xs={1}>
                 <Typography sx={{ fontSize: 16, mb: 1 }}>NAME</Typography>
                 <TextField
+                  hiddenLabel
                   variant="filled"
                   name="name"
                   type="text"
@@ -236,10 +237,13 @@ const ProfileDetailsForm = () => {
                 />
                 <Typography sx={{ fontSize: 16, mb: 1 }}>AGE</Typography>
                 <TextField
+                  hiddenLabel
                   variant="filled"
                   name="age"
                   type="number"
-                  InputProps={{ inputProps: { min: "10", max: "79", step: "1" } }}
+                  InputProps={{
+                    inputProps: { min: "10", max: "79", step: "1" },
+                  }}
                   InputLabelProps={{ style: { fontSize: 12 } }}
                   {...register("age", valOptions.age)}
                   error={Boolean(errors.age)}
@@ -249,6 +253,7 @@ const ProfileDetailsForm = () => {
                 />
                 <Typography sx={{ fontSize: 16, mb: 1 }}>GENDER</Typography>
                 <TextField
+                  hiddenLabel
                   id="outlined-select"
                   select
                   value={gender}
@@ -265,6 +270,7 @@ const ProfileDetailsForm = () => {
                 </TextField>
                 <Typography sx={{ fontSize: 16, mb: 1 }}>OCCUPATION</Typography>
                 <TextField
+                  hiddenLabel
                   variant="filled"
                   required
                   name="occupation"
@@ -344,6 +350,7 @@ const ProfileDetailsForm = () => {
               LOOKING FOR ROOM IN
             </Typography>
             <TextField
+              hiddenLabel
               variant="filled"
               required
               name="lookingForRoomIn"
@@ -362,6 +369,7 @@ const ProfileDetailsForm = () => {
               LOOKING TO MOVE IN FROM
             </Typography>
             <TextField
+              hiddenLabel
               variant="filled"
               required
               name="lookingToMoveInFrom"
@@ -385,6 +393,7 @@ const ProfileDetailsForm = () => {
               PREFFERED SIZE OF ROOM{" "}
             </Typography>
             <TextField
+              hiddenLabel
               id="outlined-select"
               select
               value={bhk}
@@ -397,6 +406,7 @@ const ProfileDetailsForm = () => {
             </TextField>
             <Typography sx={{ fontSize: 16, mb: 1 }}>BUDGET</Typography>
             <TextField
+              hiddenLabel
               variant="filled"
               required
               name="budget"
@@ -414,6 +424,7 @@ const ProfileDetailsForm = () => {
             <Bar props="PREFERENCES" />
             <Box>
               <TextField
+                hiddenLabel
                 variant="filled"
                 required
                 name="preferences"
