@@ -191,16 +191,18 @@ export default function Roomcard({ props }) {
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>
-              <IconButton
-                onClick={() => {
-                  setShowChat(true);
-                  //console.log(`onclick ${props?.user._id}`);
-                  accessChat(props?.user._id);
-                }}
-                aria-label="add to favorites"
-              >
-                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
-              </IconButton>
+              {user !==
+                props?.user._id ? (
+                  <IconButton
+                    onClick={() => {
+                      setShowChat(true);
+                      accessChat(props?.user._id);
+                    }}
+                    aria-label="add to favorites"
+                  >
+                    <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+                  </IconButton>
+                ) : <></>}
             </Grid>
             <Grid item xs={4}>
               <IconButton

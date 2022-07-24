@@ -20,6 +20,7 @@ import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
 import { Grid } from "@mui/material";
 
 import Chat from "./Chat";
+import Chat from "../Components/Chat/Chat";
 import axios from "axios";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

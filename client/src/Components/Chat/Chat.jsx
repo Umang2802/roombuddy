@@ -1,9 +1,9 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Chatbox from "../Components/Chat/Chatbox";
-import Allchats from "../Components/Chat/Allchats";
-import { ChatState } from "../Context/Provider";
+import Chatbox from "./Chatbox";
+import Allchats from "./Allchats";
+import { ChatState } from "../../Context/Provider";
 import { useState } from "react";
 
 const Chat = () => {
@@ -19,6 +19,8 @@ const Chat = () => {
             justifyContent: "space-between",
             flexWrap: "wrap",
             bgcolor: "#cfe8fc",
+            height: "80vh",
+            width: { md: "auto", sm: "auto"},
             p: 2,
           }}
         >
