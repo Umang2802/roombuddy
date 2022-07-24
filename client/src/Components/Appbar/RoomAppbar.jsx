@@ -173,7 +173,13 @@ export default function RoomAppbar(props) {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Button
               sx={{ bgcolor: "white", mr: 2 }}
-              onClick={() => navigate("/roomDetailsForm")}
+              onClick={() =>
+                navigate("/roomDetailsForm", {
+                  state: {
+                    status: "post",
+                  },
+                })
+              }
             >
               Post Room
             </Button>

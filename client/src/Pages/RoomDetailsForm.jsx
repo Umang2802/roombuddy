@@ -28,6 +28,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const types = [
   {
@@ -116,12 +118,15 @@ const fileToDataUri = (file) =>
     reader.readAsDataURL(file);
   });
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const RoomDetailsForm = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  console.log(location);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [address, setAddress] = useState("");
@@ -139,6 +144,55 @@ const RoomDetailsForm = () => {
   const [predictedRent, setPredictedRent] = useState("0");
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
+
+  useEffect(() => {
+    if (location.state.status == "edit") {
+      const data = location.state.payload;
+      setName(data.name);
+      setDesc(data.description);
+      setAddress(data.address);
+      setBath(data.bathroom);
+      setBhk(data.bhk);
+      setType(data.propertyType);
+      setPics(data.images);
+
+      setRent(data.rentPrice);
+      // setAmenities(data.amenities);
+      setTenantNo(data.noOfTenants);
+      setTenantDetails(data.tenantDetails);
+      setPreferences(data.preferences);
+      const rules1 = [];
+
+      rules1.push({ id: 0, ticked: !data.smoking, cancelled: data.smoking });
+      rules1.push({ id: 1, ticked: !data.alcohol, cancelled: data.alcohol });
+      rules1.push({ id: 2, ticked: !data.pets, cancelled: data.pets });
+      rules1.push({
+        id: 3,
+        ticked: !data.vegetarian,
+        cancelled: data.vegetarian,
+      });
+
+      for (let i = 0; i < 4; i++) {
+        if (rules1[i].ticked == false) {
+          tickedRulesHandler(rules1[i]);
+        } else {
+          cancelledRulesHandler(rules1[i]);
+        }
+      }
+      for (let i = 0; i < data.amenities.length; i++) {
+        console.log("orginal", amenities);
+        for (let j = 0; j < amenity.length; j++) {
+          if (data.amenities[i] == amenities[j].value) {
+            amenityClickHandler(amenities[j]);
+            console.log("hellow world");
+          }
+        }
+      }
+      console.log("original array ", rules);
+    } else {
+      console.log("false");
+    }
+  }, []);
 
   const Input = styled("input")({
     display: "none",
@@ -173,6 +227,7 @@ const RoomDetailsForm = () => {
   }
 
   const tickedRulesHandler = (item) => {
+    console.log("runing");
     setRules(
       rules.map((rule) =>
         rule.id === item.id
@@ -220,6 +275,7 @@ const RoomDetailsForm = () => {
   };
 
   const amenityClickHandler = (item) => {
+    console.log("running");
     setAmenities(
       amenities.map((amenity) =>
         amenity.id === item.id
@@ -258,6 +314,7 @@ const RoomDetailsForm = () => {
         required
         name="tenant"
         type="text"
+        value={tenantDetails[i - 1]?.name}
         InputLabelProps={{ style: { fontSize: 12 } }}
         onChange={(e) => {
           setTName(e.target.value);
@@ -273,6 +330,7 @@ const RoomDetailsForm = () => {
         id="filled-multiline-static"
         multiline
         required
+        value={tenantDetails[i - 1]?.bio}
         onChange={(e) => {
           setTBio(e.target.value);
         }}
@@ -336,6 +394,53 @@ const RoomDetailsForm = () => {
     };
     console.log("type", typeof roomdata.images);
     dispatch(actionCreator.postRoomAction(roomdata));
+  };
+  const handleUpdate = async (event) => {
+    try {
+      const amenitydata = [];
+      event.preventDefault();
+      for (let i = 0; i < amenities.length; i++) {
+        if (amenities[i].onClick === true) {
+          amenitydata.push(amenities[i].value);
+        }
+      }
+
+      const roomdata = {
+        name: name,
+        address: address,
+        description: desc,
+        bhk: bhk,
+        bathroom: bath,
+        propertyType: type,
+        smoking: rule[0].ticked,
+        alcohol: rule[1].ticked,
+        pets: rule[2].ticked,
+        vegetarian: rule[3].ticked,
+        noOfTenants: tenantNo,
+        amenities: amenitydata,
+        preferences: preferences,
+        rentPrice: rent,
+        images: pics,
+        tenantDetails: tenantDetails,
+        roomId: location.state.id,
+        userId: location.state.payload.user._id,
+      };
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
+        console.log(res.data);
+      });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("updated post");
   };
 
   // useEffect(() => {
@@ -600,9 +705,9 @@ const RoomDetailsForm = () => {
               >
                 <ImageListItem key={pics[0]}>
                   <img
-                    src={pics[0]}
-                    srcSet={pics[0]}
-                    alt={pics[0]}
+                    src={pics[0]?.url}
+                    srcSet={pics[0]?.url}
+                    alt={pics[0]?.url}
                     loading="lazy"
                   />
                 </ImageListItem>
@@ -659,9 +764,9 @@ const RoomDetailsForm = () => {
                         {i !== 0 && (
                           <ImageListItem key={item}>
                             <img
-                              src={item}
-                              srcSet={item}
-                              alt={item}
+                              src={item?.url}
+                              srcSet={item?.url}
+                              alt={item?.url}
                               loading="lazy"
                             />
                           </ImageListItem>
@@ -706,15 +811,27 @@ const RoomDetailsForm = () => {
             />
           </Box>
         </Box>
-        <Button
-          type="submit"
-          variant="contained"
-          color="success"
-          component="span"
-          onClick={handleClickOpen}
-        >
-          Submit
-        </Button>
+        {location.state.status == "post" ? (
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            component="span"
+            onClick={handleClickOpen}
+          >
+            Submit
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            component="span"
+            onClick={handleClickOpen}
+          >
+            Update Post
+          </Button>
+        )}
         <Dialog
           open={open}
           TransitionComponent={Transition}
@@ -729,7 +846,11 @@ const RoomDetailsForm = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmit}>Submit</Button>
+            {location.state.status == "post" ? (
+              <Button onClick={handleSubmit}>Submit</Button>
+            ) : (
+              <Button onClick={handleUpdate}>Update</Button>
+            )}
           </DialogActions>
         </Dialog>
       </Container>

@@ -23,7 +23,7 @@ const ScrollableChat = ({ messages }) => {
                 maxWidth: "75%",
               }}
             >
-              {m.content}
+              {m.content.split(" ")[0].length > 20 ? m.content.substring(0, 20): m.content}
             </span>
           </div>
         ))}

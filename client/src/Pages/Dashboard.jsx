@@ -6,13 +6,20 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Navbar from "../Components/Navbar/Navbar";
 import Roomcard from "../Components/Roomcard/Roomcard";
+import Roommatecard from "../Components/Roommatecard/Roommatecard";
 import { useSelector } from "react-redux";
 import DashboardRoomcard from "../Components/DashboardRoomcard";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import DashboardRoommatecard from "../Components/DashboardRoommatecard";
 import * as actionCreator from "../State/Actions/getroomAction";
 import * as actionCreator2 from "../State/Actions/getroommateAction";
+import * as actionCreator3 from "../State/Actions/getstarredroommateAction";
+import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
+
+import { Grid } from "@mui/material";
+
+import Chat from "./Chat";
 import axios from "axios";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,8 +57,29 @@ function a11yProps(index) {
 export default function Dashboard() {
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
+  const [starredroommate, setStarredroommate] = useState([]);
   const roomsdata = useSelector((state) => state.roomdata.rooms);
   const profiledata = useSelector((state) => state.roommatedata.roommates);
+
+  const starredroommatesdata = useSelector(
+    (state) => state.starredroommates.starredroommates
+  );
+  const starredroomsdata = useSelector(
+    (state) => state.starredrooms.starredrooms
+  );
+
+  const filterstarred = (arr1, arr2) => {
+    let res = [];
+    res = arr2.filter((element) => {
+      return arr1.find((el) => {
+        return el === element._id;
+      });
+    });
+    return res;
+  };
+  const starredroommates = filterstarred(starredroommatesdata, profiledata);
+  const starredrooms = filterstarred(starredroomsdata, roomsdata);
+  console.log("strd", starredrooms);
   const userdata = useSelector((state) => state.auth.user_id);
   const filteredroomdata = roomsdata.filter((rooms) => {
     if (rooms.user._id === userdata) {
@@ -65,12 +93,7 @@ export default function Dashboard() {
     }
   });
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  useEffect(() => {
-    dispatch(actionCreator.getroomAction());
-    dispatch(actionCreator2.getroommateAction());
+  const loadStarreddata = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
       const config = {
@@ -79,15 +102,43 @@ export default function Dashboard() {
         },
       };
 
-      axios.get("/favoriteposts/userFavoritePosts", config).then((res) => {
-        console.log("fav", res.data);
-      });
+      await axios
+        .get("/starredRoommates/userStarredRoommateProfiles", config)
+        .then((res) => {
+          console.log("api", res.data);
+          setStarredroommate(res.data.roomatees);
+
+          return res.data.roommates;
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  useEffect(() => {
+    dispatch(actionCreator.getroomAction());
+    dispatch(actionCreator2.getroommateAction());
+    dispatch(actionCreator3.getstarredroommateAction());
+    dispatch(actionCreator4.getstarredroomsAction());
+
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+
+      axios.get("/favoriteposts/userFavoritePosts", config).then((res) => {});
     } catch (e) {
       console.log(e);
     }
 
     // eslint-disable-next-line
-  }, []);
+  }, [starredroommate]);
   return (
     <>
       <Navbar></Navbar>
@@ -120,9 +171,26 @@ export default function Dashboard() {
             <DashboardRoommatecard props={roomatedata}></DashboardRoommatecard>
           ))}
         </TabPanel>
-        <TabPanel value={value} index={1}></TabPanel>
+        <TabPanel value={value} index={1}>
+          <Chat />
+        </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          <Typography>Posted Rooms</Typography>
+          <Grid container spacing={0}>
+            {starredrooms?.map((item, key) => (
+              <Grid key={key} item>
+                <Roomcard props={item}></Roomcard>
+              </Grid>
+            ))}
+          </Grid>
+          <Typography>Posted Rooms</Typography>
+          <Grid container spacing={0}>
+            {starredroommates?.map((item, key) => (
+              <Grid key={key} item>
+                <Roommatecard props={item}></Roommatecard>
+              </Grid>
+            ))}
+          </Grid>
         </TabPanel>
       </Box>
     </>

@@ -13,3 +13,7 @@ export const deleteRoommateProfile = (params) =>
   axios.post("/roommateprofiles/deleteRoommateProfile", params);
 export const updateRoommateProfile = (params) =>
   axios.post("roommateprofiles/updateRoommateProfile", params);
+export const starredroommates = (params) =>
+  axios.get("/starredRoommates/userStarredRoommateProfiles", params);
+export const starredrooms = (params) =>
+  axios.get("/favoriteposts/userFavoritePosts", params);

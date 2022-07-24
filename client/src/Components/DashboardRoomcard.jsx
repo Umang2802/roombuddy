@@ -17,6 +17,7 @@ import { Backdrop, Button } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 // import PostChat from "../../Components/Chat/PostChat";
 // import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
@@ -34,6 +35,7 @@ const ExpandMore = styled((props) => {
 
 export default function DashboardRoomcard({ props }) {
   const userid = useSelector((state) => state.auth.user_id);
+
   const navigate = useNavigate();
   const deletepost = async () => {
     try {
@@ -57,33 +59,7 @@ export default function DashboardRoomcard({ props }) {
       console.log(e);
     }
   };
-  const editredirector = () => {
-    navigate("/roomdetailsform", { edit: true, roomdata: props });
-  };
-  const editHandler = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        ...props,
-        rentPrice: 3000,
-        roomId: props._id,
-        userId: userid,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
   return (
     <>
       <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
@@ -140,7 +116,13 @@ export default function DashboardRoomcard({ props }) {
               <IconButton
                 aria-label="edit"
                 onClick={() => {
-                  editredirector();
+                  navigate("/roomDetailsForm", {
+                    state: {
+                      id: props._id,
+                      payload: props,
+                      status: "edit",
+                    },
+                  });
                 }}
               >
                 <EditOutlinedIcon size="small" />

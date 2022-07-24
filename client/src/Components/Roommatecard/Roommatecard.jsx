@@ -90,11 +90,15 @@ export default function Roommatecard({ props }) {
         },
       };
       const params = {
-        roomId: props._id,
+        roommateId: props._id,
       };
       console.log(params);
       axios
-        .post("/favoriteposts/addOrRemoveFavoritePost", params, config)
+        .post(
+          "/starredRoommates/addOrRemoveStarredRoommateProfile",
+          params,
+          config
+        )
         .then((res) => {
           console.log(res.data);
         });

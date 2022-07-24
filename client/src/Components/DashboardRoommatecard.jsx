@@ -57,31 +57,6 @@ export default function DashboardRoommatecard({ props }) {
       console.log(e);
     }
   };
-  const editredirector = () => {
-    navigate("/roomdetailsform", { edit: true, roomdata: props });
-  };
-  const editHandler = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        ...props,
-        rentPrice: 3000,
-        roomId: props._id,
-        userId: userid,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
     <>
@@ -144,7 +119,13 @@ export default function DashboardRoommatecard({ props }) {
               <IconButton
                 aria-label="edit"
                 onClick={() => {
-                  editredirector();
+                  navigate("/profileDetailsForm", {
+                    state: {
+                      id: props._id,
+                      payload: props,
+                      status: "edit",
+                    },
+                  });
                 }}
               >
                 <EditOutlinedIcon size="small" />

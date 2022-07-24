@@ -25,6 +25,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
@@ -35,24 +37,25 @@ const fileToDataUri = (file) =>
     reader.readAsDataURL(file);
   });
 
-  const genderOptions = [
-    {
-      value: "Male",
-    },
-    {
-      value: "Female",
-    },
-    {
-      value: "Prefer not to say",
-    },
-  ];
+const genderOptions = [
+  {
+    value: "Male",
+  },
+  {
+    value: "Female",
+  },
+  {
+    value: "Prefer not to say",
+  },
+];
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const ProfileDetailsForm = () => {
+  const location = useLocation();
+  console.log(location);
   const [name, setName] = useState();
   const [age, setAge] = useState();
   const [gender, setGender] = useState("Prefer not to say");
@@ -128,10 +131,60 @@ const ProfileDetailsForm = () => {
   };
 
   useEffect(() => {
-    
-  }, [])
-  
+    if (location.state.status == "edit") {
+      const data = location.state.payload;
+      setName(data.name);
+      setAge(data.age);
+      setGender(data.gender);
+      setOccupation(data.occupation);
+      setLookingForRoomIn(data.lookingForRoomIn);
+      setLookingToMoveInFrom(data.lookingToMoveIn);
+      setBhk(data.preferredSize);
+      setBudget(data.budget);
+      setPics(data.image);
+      setPreferences(data.preferences);
+    } else {
+      console.log("false");
+    }
+  }, []);
 
+  const handleUpdate = async (event) => {
+    try {
+      event.preventDefault();
+      const roommatedata = {
+        roommateProfileId: location.state.id,
+        name: name,
+        age: age,
+        gender: gender,
+        occupation: occupation,
+        lookingForRoomIn: lookingForRoomIn,
+        lookingToMoveIn: lookingToMoveInFrom,
+        preferredSize: bhk,
+        budget: budget,
+        image: pics[0],
+        preferences: preferences,
+        roomId: location.state.id,
+        userId: location.state.payload.user,
+      };
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      axios
+        .post("/roommateprofiles/updateRoommateProfile", roommatedata, config)
+        .then((res) => {
+          console.log(res.data);
+        });
+
+      console.log("working");
+    } catch (e) {
+      console.log(e);
+    }
+    console.log("updated post");
+  };
   return (
     <>
       <Navbar />
@@ -356,15 +409,27 @@ const ProfileDetailsForm = () => {
               ))}
             </Box>
           </Box>
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            component="span"
-            onClick={handleClickOpen}
-          >
-            Submit
-          </Button>
+          {location.state.status == "post" ? (
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              component="span"
+              onClick={handleClickOpen}
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              component="span"
+              onClick={handleClickOpen}
+            >
+              Update Post
+            </Button>
+          )}
         </Box>
         <Dialog
           open={open}
@@ -380,7 +445,11 @@ const ProfileDetailsForm = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmit}>Submit</Button>
+            {location.state.status == "post" ? (
+              <Button onClick={handleSubmit}>Submit</Button>
+            ) : (
+              <Button onClick={handleUpdate}>Update</Button>
+            )}
           </DialogActions>
         </Dialog>
       </Container>
