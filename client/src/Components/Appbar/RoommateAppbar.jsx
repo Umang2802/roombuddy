@@ -173,7 +173,13 @@ export default function RoommateAppbar(props) {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Button
               sx={{ bgcolor: "white", mr: 2 }}
-              onClick={() => navigate("/profileDetailsForm")}
+              onClick={() =>
+                navigate("/profileDetailsForm", {
+                  state: {
+                    status: "post",
+                  },
+                })
+              }
             >
               Post Profile
             </Button>

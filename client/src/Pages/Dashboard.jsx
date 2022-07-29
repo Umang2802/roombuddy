@@ -16,10 +16,7 @@ import * as actionCreator from "../State/Actions/getroomAction";
 import * as actionCreator2 from "../State/Actions/getroommateAction";
 import * as actionCreator3 from "../State/Actions/getstarredroommateAction";
 import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
-
 import { Grid } from "@mui/material";
-
-import Chat from "./Chat";
 import Chat from "../Components/Chat/Chat";
 import axios from "axios";
 function TabPanel(props) {
@@ -82,6 +79,7 @@ export default function Dashboard() {
   const starredrooms = filterstarred(starredroomsdata, roomsdata);
   console.log("strd", starredrooms);
   const userdata = useSelector((state) => state.auth.user_id);
+  console.log("state id", userdata);
   const filteredroomdata = roomsdata.filter((rooms) => {
     if (rooms.user._id === userdata) {
       return rooms;

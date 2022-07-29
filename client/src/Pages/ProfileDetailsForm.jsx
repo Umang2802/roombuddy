@@ -5,9 +5,6 @@ import {
   Container,
   Grid,
   IconButton,
-  ImageList,
-  ImageListItem,
-  Input,
   MenuItem,
   Snackbar,
   styled,
@@ -57,9 +54,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProfileDetailsForm = () => {
   const location = useLocation();
-  console.log(location);
-  const [name, setName] = useState();
-  const [age, setAge] = useState();
+  //console.log(location);
   const [gender, setGender] = useState("Prefer not to say");
   const [bhk, setBhk] = useState(1);
   const [preferences, setPreferences] = useState([]);
@@ -76,6 +71,7 @@ const ProfileDetailsForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -167,37 +163,63 @@ const ProfileDetailsForm = () => {
 
   const coverImageChangeHandler = (event) => {
     fileToDataUri(event.target.files[0]).then((dataUri) => {
-      setPics(
-        pics.map((v, i) => {
-          if (i === 0) return dataUri;
-          return v;
-        })
-      );
+      setPics(dataUri);
     });
   };
 
   const onSubmit = (data) => {
-    const roommatedata = {
-      name: data.name,
-      age: data.age,
-      gender: gender,
-      occupation: data.occupation,
-      lookingForRoomIn: data.lookingForRoomIn,
-      lookingToMoveIn: data.lookingToMoveInFrom,
-      preferredSize: bhk,
-      budget: data.budget,
-      image: pics[0],
-      preferences: preferences,
-    };
-
     try {
-      if (pics.length === 0) {
-        throw "Profile image is required";
+      if (location.state.status === "post") {
+        if (pics.length === 0) {
+          throw "Profile image is required";
+        }
+        const roommatedata = {
+          name: data.name,
+          age: data.age,
+          gender: gender,
+          occupation: data.occupation,
+          lookingForRoomIn: data.lookingForRoomIn,
+          lookingToMoveIn: data.lookingToMoveInFrom,
+          preferredSize: bhk,
+          budget: data.budget,
+          image: pics,
+          preferences: preferences,
+        };
+        dispatch(actionCreator.postRoommateAction(roommatedata));
+        handleClose();
+        setSuccessMessage("Profile added successfully");
+        setOpenSuccess(true);
+      } else {
+        const roommatedata = {
+          roommateProfileId: location.state.id,
+          name: data.name,
+          age: data.age,
+          gender: gender,
+          occupation: data.occupation,
+          lookingForRoomIn: data.lookingForRoomIn,
+          lookingToMoveIn: data.lookingToMoveInFrom,
+          preferredSize: bhk,
+          budget: data.budget,
+          image: pics,
+          preferences: preferences,
+          roomId: location.state.id,
+          userId: location.state.payload.user,
+        };
+        const usertoken = JSON.parse(localStorage.getItem("token"));
+        const config = {
+          headers: {
+            Authorization: `Bearer ${usertoken}`,
+          },
+        };
+        axios
+          .post("/roommateprofiles/updateRoommateProfile", roommatedata, config)
+          .then((res) => {
+            console.log(res.data);
+          });
+        handleClose();
+        setSuccessMessage("Profile Updated successfully");
+        setOpenSuccess(true);
       }
-      dispatch(actionCreator.postRoommateAction(roommatedata));
-      handleClose();
-      setSuccessMessage("Profile added successfully");
-      setOpenSuccess(true);
     } catch (error) {
       handleClose();
       setErrorMessage(error);
@@ -205,64 +227,31 @@ const ProfileDetailsForm = () => {
     }
   };
 
-  useEffect(() => {
-    // if (location.state.status == "edit") {
-    //   const data = location.state.payload;
-    //   setName(data.name);
-    //   setAge(data.age);
-    //   setGender(data.gender);
-    //   setOccupation(data.occupation);
-    //   setLookingForRoomIn(data.lookingForRoomIn);
-    //   setLookingToMoveInFrom(data.lookingToMoveIn);
-    //   setBhk(data.preferredSize);
-    //   setBudget(data.budget);
-    //   setPics(data.image);
-    //   setPreferences(data.preferences);
-    // } else {
-    //   console.log("false");
-    // }
-  }, []);
-
-  const handleUpdate = async (event) => {
-    // try {
-    //   event.preventDefault();
-    //   const roommatedata = {
-    //     roommateProfileId: location.state.id,
-    //     name: name,
-    //     age: age,
-    //     gender: gender,
-    //     occupation: occupation,
-    //     lookingForRoomIn: lookingForRoomIn,
-    //     lookingToMoveIn: lookingToMoveInFrom,
-    //     preferredSize: bhk,
-    //     budget: budget,
-    //     image: pics[0],
-    //     preferences: preferences,
-    //     roomId: location.state.id,
-    //     userId: location.state.payload.user,
-    //   };
-    //   const usertoken = JSON.parse(localStorage.getItem("token"));
-    //   const config = {
-    //     headers: {
-    //       Authorization: `Bearer ${usertoken}`,
-    //     },
-    //   };
-    //   axios
-    //     .post("/roommateprofiles/updateRoommateProfile", roommatedata, config)
-    //     .then((res) => {
-    //       console.log(res.data);
-    //     });
-    //   console.log("working");
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    // console.log("updated post");
-  };
   const onError = (errors) => {
     setErrorMessage("Please fill all fields correctly!");
     setOpenError(true);
     handleClose();
   };
+
+  useEffect(() => {
+    if (location.state.status === "edit") {
+      const data = location.state.payload;
+
+      setValue("name", data.name);
+      setValue("age", data.age);
+      setGender(data.gender);
+      setValue("occupation", data.occupation);
+      setValue("lookingForRoomIn", data.lookingForRoomIn);
+      setValue("lookingToMoveInFrom", data.lookingToMoveIn);
+      setBhk(data.preferredSize);
+      setValue("budget", data.budget);
+      setPics(data.image.url);
+      setPreferences(data.preferences);
+    } else {
+      console.log("false");
+    }
+  },[]);
+
   return (
     <>
       <Navbar />
@@ -349,13 +338,14 @@ const ProfileDetailsForm = () => {
                   {pics === "" ? (
                     <>
                       <Avatar
-                        alt="Remy Sharp"
+                        alt="User Profile"
                         src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn3.iconfinder.com%2Fdata%2Ficons%2Fuser-2%2F100%2F10-512.png&f=1&nofb=1"
                         sx={{ width: 180, height: 180 }}
                       />
                       <br />
                       <label htmlFor="contained-button-image">
                         <Input
+                          name="Image"
                           accept="image/*"
                           id="contained-button-image"
                           multiple
@@ -363,7 +353,7 @@ const ProfileDetailsForm = () => {
                           onChange={(event) => {
                             fileToDataUri(event.target.files[0]).then(
                               (dataUri) => {
-                                setPics((coverPic) => [...coverPic, dataUri]);
+                                setPics(dataUri);
                               }
                             );
                           }}
@@ -376,8 +366,8 @@ const ProfileDetailsForm = () => {
                   ) : (
                     <>
                       <Avatar
-                        alt="Remy Sharp"
-                        src={pics[0]}
+                        alt="User Profile"
+                        src={pics}
                         sx={{ width: 180, height: 180 }}
                       />
                       <br />
@@ -512,7 +502,7 @@ const ProfileDetailsForm = () => {
               ))}
             </Box>
           </Box>
-          {location.state.status == "post" ? (
+          {location.state.status === "post" ? (
             <Button
               type="submit"
               variant="contained"
@@ -574,10 +564,10 @@ const ProfileDetailsForm = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            {location.state.status == "post" ? (
+            {location.state.status === "post" ? (
               <Button onClick={handleSubmit(onSubmit, onError)}>Submit</Button>
             ) : (
-              <Button onClick={handleUpdate}>Update</Button>
+              <Button onClick={handleSubmit(onSubmit, onError)}>Update</Button>
             )}
           </DialogActions>
         </Dialog>

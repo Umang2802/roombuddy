@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonBase,
   Container,
   IconButton,
   ImageList,
@@ -9,8 +10,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Box, styled } from "@mui/system";
-import React, { useState } from "react";
+import { Box } from "@mui/system";
+import { styled } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
 import Bar from "../Components/Bar";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -30,7 +32,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Slide from "@mui/material/Slide";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import MuiAlert from "@mui/material/Alert";
 
 const types = [
@@ -45,7 +47,7 @@ const types = [
   },
 ];
 
-const rule = [
+var rule = [
   {
     id: 0,
     value: "SMOKING",
@@ -72,7 +74,7 @@ const rule = [
   },
 ];
 
-const amenity = [
+var amenity = [
   {
     id: 0,
     variant: "",
@@ -127,16 +129,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const RoomDetailsForm = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [address, setAddress] = useState("");
   const [bath, setBath] = useState(1);
   const [bhk, setBhk] = useState(1);
   const [type, setType] = useState("Flat");
-  const [rules, setRules] = useState(rule);
+  const [rules, setRules] = useState(location.state.status === "post" ? rule : '');
   const [pics, setPics] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [amenities, setAmenities] = useState(amenity);
+  const [amenities, setAmenities] = useState(
+    location.state.status === "post" ? amenity : ""
+  );
   const [tenantNo, setTenantNo] = useState(1);
   const [tName, setTName] = useState("");
   const [tBio, setTBio] = useState("");
@@ -149,6 +150,55 @@ const RoomDetailsForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [openSuccess, setOpenSuccess] = useState(false);
 
+  const ImageButton = styled(ButtonBase)(({ theme }) => ({
+    position: "relative",
+    height: 200,
+    [theme.breakpoints.down("sm")]: {
+      width: "100% !important",
+      height: 100,
+    },
+    "&:hover, &.Mui-focusVisible": {
+      zIndex: 1,
+      "& .MuiImageBackdrop-root": {
+        opacity: 0.4,
+      },
+      "& .MuiButton-root": {
+        opacity: 1,
+      },
+    },
+  }));
+
+  const ImageSrc = styled("span")({
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundSize: "cover",
+    backgroundPosition: "center 40%",
+  });
+
+  const ImageBackdrop = styled("span")(({ theme }) => ({
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: theme.palette.common.black,
+    opacity: 0,
+    transition: theme.transitions.create("opacity"),
+  }));
+
+  const ImageButtonIcon = styled(DeleteIcon)(({ theme }) => ({
+    opacity: 0,
+    position: "absolute",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: theme.palette.common.white,
+    transition: theme.transitions.create("opacity"),
+  }));
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -157,6 +207,7 @@ const RoomDetailsForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const onError = (errors) => {
@@ -174,33 +225,78 @@ const RoomDetailsForm = () => {
       }
     }
 
-    const roomdata = {
-      name: data.name,
-      address: data.address,
-      description: data.desc,
-      bhk: bhk,
-      bathroom: bath,
-      propertyType: type,
-      smoking: rule[0].ticked,
-      alcohol: rule[1].ticked,
-      pets: rule[2].ticked,
-      vegetarian: rule[3].ticked,
-      noOfTenants: tenantNo,
-      amenities: amenitydata,
-      preferences: preferences,
-      rentPrice: data.rent,
-      images: pics,
-      tenantDetails: tenantDetails,
-    };
-    console.log(roomdata);
     try {
       if (pics.length === 0) {
         throw "Cover Image is required";
       }
-      dispatch(actionCreator.postRoomAction(roomdata));
-      handleClose();
-      setSuccessMessage("Room added successfully");
-      setOpenSuccess(true);
+      if (pics.length < 5) {
+        throw "Please add minimum 5 images";
+      }
+      if (pics.length > 10) {
+        throw "Please add Maximum 15 images";
+      }
+      if (tenantDetails.length !== tenantNo) {
+        throw "Please add details of all tenants";
+      }
+
+      if (location.state.status === "post") {
+        const roomdata = {
+          name: data.name,
+          address: data.address,
+          description: data.desc,
+          bhk: bhk,
+          bathroom: bath,
+          propertyType: type,
+          smoking: rules[0].ticked,
+          alcohol: rules[1].ticked,
+          pets: rules[2].ticked,
+          vegetarian: rules[3].ticked,
+          noOfTenants: tenantNo,
+          amenities: amenitydata,
+          preferences: preferences,
+          rentPrice: data.rent,
+          images: pics,
+          tenantDetails: tenantDetails,
+        };
+        dispatch(actionCreator.postRoomAction(roomdata));
+        handleClose();
+        setSuccessMessage("Room added successfully");
+        setOpenSuccess(true);
+      } else {
+        const roomdata = {
+          name: data.name,
+          address: data.address,
+          description: data.desc,
+          bhk: bhk,
+          bathroom: bath,
+          propertyType: type,
+          smoking: rules[0].ticked,
+          alcohol: rules[1].ticked,
+          pets: rules[2].ticked,
+          vegetarian: rules[3].ticked,
+          noOfTenants: tenantNo,
+          amenities: amenitydata,
+          preferences: preferences,
+          rentPrice: data.rent,
+          images: pics,
+          tenantDetails: tenantDetails,
+          roomId: location.state.id,
+          userId: location.state.payload.user._id,
+        };
+        const usertoken = JSON.parse(localStorage.getItem("token"));
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${usertoken}`,
+          },
+        };
+        axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
+          console.log(res.data);
+        });
+        handleClose();
+        setSuccessMessage("Room Updated successfully");
+        setOpenSuccess(true);
+      }
     } catch (error) {
       handleClose();
       setErrorMessage(error);
@@ -245,51 +341,52 @@ const RoomDetailsForm = () => {
   };
 
   useEffect(() => {
-    if (location.state.status == "edit") {
+    if (location.state.status === "edit") {
       const data = location.state.payload;
-      setName(data.name);
-      setDesc(data.description);
-      setAddress(data.address);
+      console.log(data);
+      setValue("name", data.name);
+      setValue("desc", data.description);
+      setValue("address", data.address);
+      setValue("rent", data.rentPrice);
       setBath(data.bathroom);
       setBhk(data.bhk);
       setType(data.propertyType);
-      setPics(data.images);
-
-      setRent(data.rentPrice);
-      // setAmenities(data.amenities);
       setTenantNo(data.noOfTenants);
       setTenantDetails(data.tenantDetails);
       setPreferences(data.preferences);
-      const rules1 = [];
 
-      rules1.push({ id: 0, ticked: !data.smoking, cancelled: data.smoking });
-      rules1.push({ id: 1, ticked: !data.alcohol, cancelled: data.alcohol });
-      rules1.push({ id: 2, ticked: !data.pets, cancelled: data.pets });
-      rules1.push({
-        id: 3,
-        ticked: !data.vegetarian,
-        cancelled: data.vegetarian,
-      });
+      // Rules
+      const rul = [];
+      rul.push(data.smoking);
+      rul.push(data.alcohol);
+      rul.push(data.pets);
+      rul.push(data.vegetarian);
 
-      for (let i = 0; i < 4; i++) {
-        if (rules1[i].ticked == false) {
-          tickedRulesHandler(rules1[i]);
-        } else {
-          cancelledRulesHandler(rules1[i]);
-        }
+      for (let i = 0; i < rul.length; i++) {
+        rule[i].ticked = rul[i];
+        rule[i].cancelled = !rul[i];
       }
+      setRules(rule);
+
+      // Amenities
       for (let i = 0; i < data.amenities.length; i++) {
-        console.log("orginal", amenities);
         for (let j = 0; j < amenity.length; j++) {
-          if (data.amenities[i] == amenities[j].value) {
-            amenityClickHandler(amenities[j]);
-            console.log("hellow world");
+          if (data.amenities[i] === amenity[j].value) {
+            amenity[j].onClick = true;
+            amenity[j].variant = "outlined";
           }
         }
       }
-      console.log("original array ", rules);
+      setAmenities(amenity);
+
+      // Pics
+      const img = [];
+      for (let i = 0; i < data.images.length; i++) {
+        img.push(data.images[i].url);
+      }
+      setPics(img);
     } else {
-      console.log("false");
+      console.log("Room Data fetch failed");
     }
   }, []);
 
@@ -324,7 +421,6 @@ const RoomDetailsForm = () => {
   }
 
   const tickedRulesHandler = (item) => {
-    console.log("runing");
     setRules(
       rules.map((rule) =>
         rule.id === item.id
@@ -372,7 +468,6 @@ const RoomDetailsForm = () => {
   };
 
   const amenityClickHandler = (item) => {
-    console.log("running");
     setAmenities(
       amenities.map((amenity) =>
         amenity.id === item.id
@@ -402,6 +497,7 @@ const RoomDetailsForm = () => {
     }
   }
 
+  const [i, setI] = useState(1);
   const tenantHandler = () => {
     if (tName === "" || tBio === " " || tName === " " || tBio === "") {
       setErrorMessage("Please fill in Tenant details");
@@ -418,55 +514,11 @@ const RoomDetailsForm = () => {
       setTBio("");
       setSuccessMessage("Tenant details added successfully");
       setOpenSuccess(true);
+      if (i <= tenantNo) {
+        setI((oldCount) => oldCount + 1);
+      }
     }
   };
-
-  const tenantFields = [];
-  for (let i = 1; i <= tenantNo; i++) {
-    tenantFields.push(<h4>TENANT {i} NAME: </h4>);
-    tenantFields.push(
-      <TextField
-        hiddenLabel
-        variant="filled"
-        name="tenant"
-        type="text"
-        value={tenantDetails[i - 1]?.name}
-        InputLabelProps={{ style: { fontSize: 12 } }}
-        onChange={(e) => {
-          setTName(e.target.value);
-        }}
-        sx={{ mb: 3, p: 0, width: "30%" }}
-        size="small"
-      />
-    );
-    tenantFields.push(<h4>TENANT {i} BIO: </h4>);
-    tenantFields.push(
-      <TextField
-        name="tenantBio"
-        id="filled-multiline-static"
-        multiline
-        required
-        value={tenantDetails[i - 1]?.bio}
-        onChange={(e) => {
-          setTBio(e.target.value);
-        }}
-        rows={3}
-        variant="filled"
-        sx={{ mb: 2, p: 0, width: "55%" }}
-        size="small"
-      />
-    );
-    tenantFields.push(<br />);
-    tenantFields.push(
-      <Button
-        sx={{ mb: 4 }}
-        variant="contained"
-        onClick={() => tenantHandler()}
-      >
-        Click to add tenant
-      </Button>
-    );
-  }
 
   const preferencesHandler = () => {
     if (preferenceItem === "" || preferenceItem === " ") {
@@ -484,57 +536,9 @@ const RoomDetailsForm = () => {
     setPreferences(preferences.filter((preference) => preference !== item));
   };
 
-  const handleUpdate = async (event) => {
-    try {
-      const amenitydata = [];
-      event.preventDefault();
-      for (let i = 0; i < amenities.length; i++) {
-        if (amenities[i].onClick === true) {
-          amenitydata.push(amenities[i].value);
-        }
-      }
-
-      const roomdata = {
-        name: name,
-        address: address,
-        description: desc,
-        bhk: bhk,
-        bathroom: bath,
-        propertyType: type,
-        smoking: rule[0].ticked,
-        alcohol: rule[1].ticked,
-        pets: rule[2].ticked,
-        vegetarian: rule[3].ticked,
-        noOfTenants: tenantNo,
-        amenities: amenitydata,
-        preferences: preferences,
-        rentPrice: rent,
-        images: pics,
-        tenantDetails: tenantDetails,
-        roomId: location.state.id,
-        userId: location.state.payload.user._id,
-      };
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
-        console.log(res.data);
-      });
-
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-    console.log("updated post");
+  const imageDeleteHandler = (item) => {
+    setPics(pics.filter((pic) => pic !== item));
   };
-
-  // useEffect(() => {
-  //   console.log(preferences);
-  // });
 
   return (
     <>
@@ -658,44 +662,45 @@ const RoomDetailsForm = () => {
           <Box>
             <Bar props="PROPERTY RULES" />
             <Box sx={{ display: "flex" }} gap={4}>
-              {rules.map((item) => (
-                <ToggleButtonGroup
-                  color="primary"
-                  size="small"
-                  exclusive
-                  width={150}
-                >
-                  <center>
-                    <h4>{item.value}</h4>
-                    <ToggleButton
-                      value="false"
-                      sx={{ border: "none" }}
-                      onClick={() => {
-                        cancelledRulesHandler(item);
-                      }}
-                    >
-                      {item.cancelled ? (
-                        <CancelRoundedIcon sx={{ color: "red" }} />
-                      ) : (
-                        <CancelOutlinedIcon />
-                      )}
-                    </ToggleButton>
-                    <ToggleButton
-                      value="true"
-                      sx={{ border: "none" }}
-                      onClick={() => {
-                        tickedRulesHandler(item);
-                      }}
-                    >
-                      {item.ticked ? (
-                        <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                      ) : (
-                        <CheckCircleOutlineRoundedIcon />
-                      )}
-                    </ToggleButton>
-                  </center>
-                </ToggleButtonGroup>
-              ))}
+              {rules &&
+                rules.map((item) => (
+                  <ToggleButtonGroup
+                    color="primary"
+                    size="small"
+                    exclusive
+                    width={150}
+                  >
+                    <center>
+                      <h4>{item.value}</h4>
+                      <ToggleButton
+                        value="false"
+                        sx={{ border: "none" }}
+                        onClick={() => {
+                          cancelledRulesHandler(item);
+                        }}
+                      >
+                        {item.cancelled ? (
+                          <CancelRoundedIcon sx={{ color: "red" }} />
+                        ) : (
+                          <CancelOutlinedIcon />
+                        )}
+                      </ToggleButton>
+                      <ToggleButton
+                        value="true"
+                        sx={{ border: "none" }}
+                        onClick={() => {
+                          tickedRulesHandler(item);
+                        }}
+                      >
+                        {item.ticked ? (
+                          <CheckCircleRoundedIcon sx={{ color: "green" }} />
+                        ) : (
+                          <CheckCircleOutlineRoundedIcon />
+                        )}
+                      </ToggleButton>
+                    </center>
+                  </ToggleButtonGroup>
+                ))}
             </Box>
           </Box>
 
@@ -716,25 +721,71 @@ const RoomDetailsForm = () => {
               sx={{ mb: 3, p: 0, width: "8%" }}
               size="small"
             />
-            <Box>{tenantFields}</Box>
+            <Box>
+              <h4>TENANT {i} NAME: </h4>
+              <TextField
+                hiddenLabel
+                variant="filled"
+                name="tenant"
+                type="text"
+                value={tName}
+                InputLabelProps={{ style: { fontSize: 12 } }}
+                onChange={(e) => {
+                  setTName(e.target.value);
+                }}
+                sx={{ mb: 3, p: 0, width: "30%" }}
+                size="small"
+              />
+              <h4>TENANT {i} BIO: </h4>
+              <TextField
+                name="tenantBio"
+                id="filled-multiline-static"
+                multiline
+                required
+                value={tBio}
+                onChange={(e) => {
+                  setTBio(e.target.value);
+                }}
+                rows={3}
+                variant="filled"
+                sx={{ mb: 2, p: 0, width: "55%" }}
+                size="small"
+              />
+              <br />
+              
+              {i <= tenantNo ? <Button
+                sx={{ mb: 4 }}
+                variant="contained"
+                onClick={() => tenantHandler()}
+              >
+                Click to add tenant
+              </Button> : <Button
+                sx={{ mb: 4 }}
+                variant="contained"
+                disabled
+              >
+                Click to add tenant
+              </Button>}
+            </Box>
           </Box>
 
           {/* AMENITIES */}
           <Box>
             <Bar props="AMENITIES" />
             <Box sx={{ display: "flex" }} gap={2}>
-              {amenities.map((item) => (
-                <Button
-                  key={item.id}
-                  variant={item.variant}
-                  onClick={() => {
-                    amenityClickHandler(item);
-                  }}
-                  sx={{ border: "1px solid" }}
-                >
-                  {item.value}
-                </Button>
-              ))}
+              {amenities &&
+                amenities.map((item) => (
+                  <Button
+                    key={item.id}
+                    variant={item.variant}
+                    onClick={() => {
+                      amenityClickHandler(item);
+                    }}
+                    sx={{ border: "1px solid" }}
+                  >
+                    {item.value}
+                  </Button>
+                ))}
             </Box>
           </Box>
 
@@ -793,9 +844,9 @@ const RoomDetailsForm = () => {
               >
                 <ImageListItem key={pics[0]}>
                   <img
-                    src={pics[0]?.url}
-                    srcSet={pics[0]?.url}
-                    alt={pics[0]?.url}
+                    src={pics[0]}
+                    srcSet={pics[0]}
+                    alt={pics[0]}
                     loading="lazy"
                   />
                 </ImageListItem>
@@ -850,33 +901,45 @@ const RoomDetailsForm = () => {
                     return (
                       <>
                         {i !== 0 && (
-                          <ImageListItem key={item}>
-                            <img
-                              src={item?.url}
-                              srcSet={item?.url}
-                              alt={item?.url}
-                              loading="lazy"
+                          <ImageButton
+                            focusRipple
+                            key={item}
+                            onClick={() => imageDeleteHandler(item)}
+                          >
+                            <ImageSrc
+                              style={{ backgroundImage: `url(${item})` }}
                             />
-                          </ImageListItem>
+                            <ImageBackdrop className="MuiImageBackdrop-root" />
+                            <ImageButtonIcon
+                              className="MuiButton-root"
+                              fontSize="large"
+                            />
+                          </ImageButton>
                         )}
                       </>
                     );
                   })}
                 </ImageList>
                 <br />
-                <label htmlFor="contained-button-moreImage">
-                  <Input
-                    name="moreImages"
-                    accept="image/*"
-                    id="contained-button-moreImage"
-                    multiple
-                    type="file"
-                    onChange={picsInputHandler}
-                  />
-                  <Button variant="contained" component="span">
+                {pics.length < 16 ? (
+                  <label htmlFor="contained-button-moreImage">
+                    <Input
+                      name="moreImages"
+                      accept="image/*"
+                      id="contained-button-moreImage"
+                      multiple
+                      type="file"
+                      onChange={picsInputHandler}
+                    />
+                    <Button variant="contained" component="span">
+                      Add More Images
+                    </Button>
+                  </label>
+                ) : (
+                  <Button variant="contained" disabled>
                     Add More Images
                   </Button>
-                </label>
+                )}
               </>
             )}
           </Box>
@@ -900,7 +963,7 @@ const RoomDetailsForm = () => {
           </Box>
         </Box>
 
-        {location.state.status == "post" ? (
+        {location.state.status === "post" ? (
           <Button
             type="submit"
             variant="contained"
@@ -964,10 +1027,10 @@ const RoomDetailsForm = () => {
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
 
-            {location.state.status == "post" ? (
+            {location.state.status === "post" ? (
               <Button onClick={handleSubmit(onSubmit, onError)}>Submit</Button>
             ) : (
-              <Button onClick={handleUpdate}>Update</Button>
+              <Button onClick={handleSubmit(onSubmit, onError)}>Update</Button>
             )}
           </DialogActions>
         </Dialog>
