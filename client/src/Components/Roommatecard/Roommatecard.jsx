@@ -141,7 +141,7 @@ export default function Roommatecard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ mt: 3, width: 330, minHeight: 425 }}>
         <Grid item xs={8}>
           {props?.image && (
             <CardHeader
@@ -190,7 +190,7 @@ export default function Roommatecard({ props }) {
               color="#6177D4"
               fontWeight="Bolder"
             >
-              BUDGET : {props?.budget}
+              Budget : {props?.budget}
             </Typography>
           </CardContent>
         </Link>

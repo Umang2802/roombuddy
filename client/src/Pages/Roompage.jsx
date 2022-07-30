@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
 import { deletePost } from "../Services/index.js";
 import RoomAppbar from "../Components/Appbar/RoomAppbar.jsx";
+import { Box } from "@mui/material";
 const Roompage = () => {
   const dispatch = useDispatch();
   const [roomsdata, setRoomsdata] = useState([]);
@@ -108,14 +109,16 @@ const Roompage = () => {
     <>
       <Navbar></Navbar>
       <RoomAppbar props={"/roomDetails"} />
+      <Box sx={{ display: "grid", justifyContent: "center" }}>
+        <Grid container spacing={4}>
+          {roommdata?.map((item, key) => (
+            <Grid key={key} item xs={0}>
+              <Roomcard props={item}></Roomcard>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
-      <Grid container spacing={0}>
-        {roommdata?.map((item, key) => (
-          <Grid key={key} item xs={3}>
-            <Roomcard props={item}></Roomcard>
-          </Grid>
-        ))}
-      </Grid>
       {/* <button onClick={deletepost}>Delete</button>
       <button onClick={updatepost}>Update</button> */}
     </>

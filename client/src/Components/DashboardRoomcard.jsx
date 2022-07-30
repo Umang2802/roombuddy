@@ -62,7 +62,7 @@ export default function DashboardRoomcard({ props }) {
 
   return (
     <>
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ mt: 3, maxWidth: 340, maxHeight: 450 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
             {props?.images?.length > 0 && (
@@ -107,6 +107,9 @@ export default function DashboardRoomcard({ props }) {
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {props?.address}
+            </Typography>
+            <Typography mt={1} variant="body2" color="gray" fontWeight={"bold"}>
+              {props?.propertyType}
             </Typography>
           </CardContent>
         </Link>

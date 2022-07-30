@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Bar from "../Components/Bar";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -129,6 +129,7 @@ const RoomDetailsForm = () => {
   const location = useLocation();
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [rent, setRent] = useState();
   const [address, setAddress] = useState("");
   const [bath, setBath] = useState(1);
   const [bhk, setBhk] = useState(1);
@@ -148,7 +149,7 @@ const RoomDetailsForm = () => {
   const [openError, setOpenError] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [openSuccess, setOpenSuccess] = useState(false);
-
+  console.log(location.state);
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -522,7 +523,7 @@ const RoomDetailsForm = () => {
         },
       };
       axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
-        console.log(res.data);
+        console.log("updated", res.data);
       });
 
       console.log("working");

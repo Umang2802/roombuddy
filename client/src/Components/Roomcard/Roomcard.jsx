@@ -140,7 +140,7 @@ export default function Roomcard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ mt: 3, width: 330, minHeight: 425 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
             {props?.images?.length > 0 && (
@@ -179,30 +179,36 @@ export default function Roomcard({ props }) {
               alt="Paella dish"
             />
           )}
-          <CardContent>
+          <CardContent sx={{ paddingBottom: "0 !important" }}>
             <Typography variant="h7" color="text.primary" fontWeight="bolder">
               {props?.name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {props?.address}
+              {props?.address.length > 40
+                ? props.address.substring(0, 40) + "...."
+                : props.address}
+            </Typography>
+            <Typography mt={1} variant="body2" color="gray" fontWeight={"bold"}>
+              {props?.propertyType}
             </Typography>
           </CardContent>
         </Link>
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>
-              {user !==
-                props?.user._id ? (
-                  <IconButton
-                    onClick={() => {
-                      setShowChat(true);
-                      accessChat(props?.user._id);
-                    }}
-                    aria-label="add to favorites"
-                  >
-                    <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
-                  </IconButton>
-                ) : <></>}
+              {user !== props?.user._id ? (
+                <IconButton
+                  onClick={() => {
+                    setShowChat(true);
+                    accessChat(props?.user._id);
+                  }}
+                  aria-label="add to favorites"
+                >
+                  <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+                </IconButton>
+              ) : (
+                <></>
+              )}
             </Grid>
             <Grid item xs={4}>
               <IconButton

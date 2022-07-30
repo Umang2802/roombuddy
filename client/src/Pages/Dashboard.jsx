@@ -16,10 +16,9 @@ import * as actionCreator from "../State/Actions/getroomAction";
 import * as actionCreator2 from "../State/Actions/getroommateAction";
 import * as actionCreator3 from "../State/Actions/getstarredroommateAction";
 import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
-
+import profileimage from "../Assets/profileicon.png";
 import { Grid } from "@mui/material";
 
-import Chat from "./Chat";
 import Chat from "../Components/Chat/Chat";
 import axios from "axios";
 function TabPanel(props) {
@@ -61,7 +60,7 @@ export default function Dashboard() {
   const [starredroommate, setStarredroommate] = useState([]);
   const roomsdata = useSelector((state) => state.roomdata.rooms);
   const profiledata = useSelector((state) => state.roommatedata.roommates);
-
+  console.log(roomsdata);
   const starredroommatesdata = useSelector(
     (state) => state.starredroommates.starredroommates
   );
@@ -81,15 +80,16 @@ export default function Dashboard() {
   const starredroommates = filterstarred(starredroommatesdata, profiledata);
   const starredrooms = filterstarred(starredroomsdata, roomsdata);
   console.log("strd", starredrooms);
-  const userdata = useSelector((state) => state.auth.user_id);
+  const userdata = useSelector((state) => state.auth);
+
   const filteredroomdata = roomsdata.filter((rooms) => {
-    if (rooms.user._id === userdata) {
+    if (rooms.user._id === userdata.user_id) {
       return rooms;
     }
   });
 
   const filteredroomatedata = profiledata.filter((profile) => {
-    if (profile.user === userdata) {
+    if (profile.user === userdata.user_id) {
       return profile;
     }
   });
@@ -143,41 +143,100 @@ export default function Dashboard() {
   return (
     <>
       <Navbar></Navbar>
+      <Box sx={{ height: "20vh", backgroundColor: "#E1E7FF" }}></Box>
+      <Box sx={{ textAlign: "center", marginTop: "-15vh" }}>
+        <Grid container>
+          <Grid item sm={12}>
+            <img
+              style={{
+                height: "150px",
+                width: "150px",
+                borderRadius: "50%",
+              }}
+              src={profileimage}
+              // src={profileimage.length>0:profileimage?''}
+              alt=""
+            />
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+
+                fontWeight: "800",
+                fontSize: "1.7rem",
+              }}
+            >
+              {userdata.username}
+            </Typography>
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+
+                fontWeight: "medium",
+                fontSize: ".9rem",
+              }}
+            >
+              {userdata.bio}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
       <Box
         sx={{
-          flexGrow: 1,
           bgcolor: "background.paper",
-          display: "flex",
-          height: "100%",
+          display: "grid",
+          width: "100vw",
+          justifyContent: "center",
         }}
       >
         <Tabs
-          orientation="vertical"
+          orientation="horizontal"
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider" }}
+          sx={{
+            borderColor: "divider",
+            display: "grid",
+            justifyContent: "center",
+            mb: 3,
+            mt: 3,
+          }}
         >
-          <Tab label="My posts" {...a11yProps(0)} />
-          <Tab label="Chats" {...a11yProps(1)} />
-          <Tab label="Starred" {...a11yProps(2)} />
+          <Tab
+            sx={{ textTransform: "none" }}
+            label="My posts"
+            {...a11yProps(0)}
+          />
+          <Tab sx={{ textTransform: "none" }} label="Chats" {...a11yProps(1)} />
+          <Tab
+            sx={{ textTransform: "none" }}
+            label="Starred"
+            {...a11yProps(2)}
+          />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <Typography>Posted Rooms</Typography>
-          {filteredroomdata.map((filteredRoom) => (
-            <DashboardRoomcard props={filteredRoom}></DashboardRoomcard>
-          ))}
-          <Typography>Posted profile</Typography>
-          {filteredroomatedata.map((roomatedata) => (
-            <DashboardRoommatecard props={roomatedata}></DashboardRoommatecard>
-          ))}
+          <Grid container spacing={10}>
+            <Grid item sm={12} md={6}>
+              <Typography>Posted Rooms</Typography>
+              {filteredroomdata.map((filteredRoom) => (
+                <DashboardRoomcard props={filteredRoom}></DashboardRoomcard>
+              ))}
+            </Grid>
+            <Grid item sm={12} md={6}>
+              <Typography>Posted profile</Typography>
+              {filteredroomatedata.map((roomatedata) => (
+                <DashboardRoommatecard
+                  props={roomatedata}
+                ></DashboardRoommatecard>
+              ))}
+            </Grid>
+          </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Chat />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Typography>Posted Rooms</Typography>
-          <Grid container spacing={0}>
+          <Grid container spacing={6}>
             {starredrooms?.map((item, key) => (
               <Grid key={key} item>
                 <Roomcard props={item}></Roomcard>
