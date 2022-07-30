@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import store from "./State/store";
 import Roommatepage from "./Pages/Roommatepage";
 import Dashboard from "./Pages/Dashboard";
+import Errorpage from "./Pages/Errorpage";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           />
           <Route path="/roommates" element={<Roommatepage />} />
           <Route path="/dashboard" element={<Dashboard></Dashboard>} />
+          <Route path="*" element={<Errorpage />} />
         </Routes>
       </div>
     </Provider>
