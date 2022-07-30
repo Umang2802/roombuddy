@@ -140,11 +140,12 @@ export default function Roomcard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ m: 3, maxWidth: 340, minHeight: 300 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
             {props?.images?.length > 0 && (
               <CardHeader
+              sx={{p:1.3}}
                 avatar={
                   <Avatar
                     sx={{ bgcolor: red[500] }}
@@ -162,7 +163,7 @@ export default function Roomcard({ props }) {
                 bgcolor: "#6177D4",
                 color: "white",
                 padding: ".5rem 1rem",
-                borderRadius: ".1rem",
+                borderRadius: ".5rem",
               }}
               variant="h7"
             >
