@@ -1,5 +1,5 @@
 import { MenuItems } from "./MenuItems";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -101,17 +101,27 @@ const Navbar = () => {
               {MenuItems.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link
+                    <NavLink
+                      style={({ isActive }) =>
+                        isActive
+                          ? {
+                              borderBottom: "3px solid green",
+                              textDecoration: "none",
+                              color: "black",
+                              fontFamily: "Inter, sans-serif",
+                            }
+                          : {
+                              borderBottom: "0",
+                              textDecoration: "none",
+                              color: "black",
+                              fontFamily: "Inter, sans-serif",
+                            }
+                      }
                       to={page.link}
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                        fontFamily: "Inter, sans-serif",
-                      }}
                     >
                       {" "}
                       {page.name}{" "}
-                    </Link>
+                    </NavLink>
                   </Typography>
                 </MenuItem>
               ))}
@@ -147,7 +157,16 @@ const Navbar = () => {
                   textTransform: "capitalize",
                   fontFamily: "Inter, sans-serif",
                 }}
-                component={Link}
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        borderBottom: "3px solid green",
+                        borderBottomLeftRadius: "0",
+                        borderBottomRightRadius: "0",
+                      }
+                    : { borderBottom: "0" }
+                }
+                component={NavLink}
                 to={page.link}
               >
                 {page.name}
@@ -215,7 +234,7 @@ const Navbar = () => {
                     <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                       <Typography
                         textAlign="center"
-                        component={Link}
+                        component={NavLink}
                         to={setting.link}
                         style={{
                           textDecoration: "none",
