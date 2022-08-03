@@ -19,6 +19,15 @@ import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
 import profileimage from "../Assets/profileicon.png";
 import { Grid } from "@mui/material";
 
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
 import Chat from "../Components/Chat/Chat";
 import axios from "axios";
 function TabPanel(props) {
@@ -58,6 +67,8 @@ export default function Dashboard() {
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
   const [starredroommate, setStarredroommate] = useState([]);
+  const [Newusername, setNewusername] = useState();
+  const [Newuserbio, setNewuserbio] = useState();
   const roomsdata = useSelector((state) => state.roomdata.rooms);
   const profiledata = useSelector((state) => state.roommatedata.roommates);
   console.log(roomsdata);
@@ -140,10 +151,85 @@ export default function Dashboard() {
 
     // eslint-disable-next-line
   }, [starredroommate]);
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
+
+  const BootstrapDialogTitle = (props) => {
+    const { children, onClose, ...other } = props;
+
+    return (
+      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </DialogTitle>
+    );
+  };
+
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <Navbar></Navbar>
-      <Box sx={{ height: "20vh", backgroundColor: "#E1E7FF" }}></Box>
+      <Box sx={{ height: "20vh", backgroundColor: "#E1E7FF" }}>
+        <div>
+          <Button onClick={handleClickOpen}>Edit profile</Button>
+          <BootstrapDialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+          >
+            <BootstrapDialogTitle
+              id="customized-dialog-title"
+              onClose={handleClose}
+            >
+              Edit Profile
+            </BootstrapDialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+                Cras mattis consectetur purus sit amet fermentum. Cras justo
+                odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
+                risus, porta ac consectetur ac, vestibulum at eros.
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleClose}>
+                Save
+              </Button>
+            </DialogActions>
+          </BootstrapDialog>
+        </div>
+      </Box>
       <Box sx={{ textAlign: "center", marginTop: "-15vh" }}>
         <Grid container>
           <Grid item sm={12}>
@@ -215,13 +301,13 @@ export default function Dashboard() {
         </Tabs>
         <TabPanel value={value} index={0}>
           <Grid container spacing={10}>
-            <Grid item sm={12} md={6}>
+            <Grid item xs={12} sm={6}>
               <Typography>Posted Rooms</Typography>
               {filteredroomdata.map((filteredRoom) => (
                 <DashboardRoomcard props={filteredRoom}></DashboardRoomcard>
               ))}
             </Grid>
-            <Grid item sm={12} md={6}>
+            <Grid item xs={12} sm={6}>
               <Typography>Posted profile</Typography>
               {filteredroomatedata.map((roomatedata) => (
                 <DashboardRoommatecard

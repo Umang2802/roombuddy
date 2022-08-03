@@ -8,6 +8,7 @@ import * as actionCreator from "../State/Actions/getroomAction";
 import { deletePost } from "../Services/index.js";
 import RoomAppbar from "../Components/Appbar/RoomAppbar.jsx";
 import { Box } from "@mui/material";
+import TextField from "@mui/material/TextField";
 const Roompage = () => {
   const dispatch = useDispatch();
   const [roomsdata, setRoomsdata] = useState([]);
@@ -104,14 +105,28 @@ const Roompage = () => {
       console.log(e);
     }
   };
+  const [searchField, setSearchField] = useState("");
 
+  const filteredPersons = roommdata.filter((room) => {
+    return room.address.toLowerCase().includes(searchField.toLowerCase());
+  });
+
+  const handleChange = (e) => {
+    setSearchField(e.target.value);
+  };
   return (
     <>
       <Navbar></Navbar>
       <RoomAppbar props={"/roomDetails"} />
-      <Box sx={{ display: "grid", justifyContent: "center" }}>
+      <TextField
+        id="outlined-basic"
+        label="Outlined"
+        variant="outlined"
+        onChange={handleChange}
+      />
+      <Box sx={{}}>
         <Grid container spacing={4}>
-          {roommdata?.map((item, key) => (
+          {filteredPersons?.map((item, key) => (
             <Grid key={key} item xs={0}>
               <Roomcard props={item}></Roomcard>
             </Grid>

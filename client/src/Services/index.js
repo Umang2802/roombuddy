@@ -17,3 +17,6 @@ export const starredroommates = (params) =>
   axios.get("/starredRoommates/userStarredRoommateProfiles", params);
 export const starredrooms = (params) =>
   axios.get("/favoriteposts/userFavoritePosts", params);
+export const editUserProfile = (params) => {
+  axios.get("");
+};
