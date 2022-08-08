@@ -189,7 +189,7 @@ const Navbar = () => {
                   navigate("/login");
                 }}
               >
-                Login/Signup
+                Login
               </Button>
             ) : (
               <>

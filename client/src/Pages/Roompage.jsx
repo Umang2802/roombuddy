@@ -107,7 +107,7 @@ const Roompage = () => {
   };
   const [searchField, setSearchField] = useState("");
 
-  const filteredPersons = roommdata.filter((room) => {
+  const filteredrooms = roommdata.filter((room) => {
     return room.address.toLowerCase().includes(searchField.toLowerCase());
   });
 
@@ -116,17 +116,13 @@ const Roompage = () => {
   };
   return (
     <>
-      <Navbar></Navbar>
-      <RoomAppbar props={"/roomDetails"} />
-      <TextField
-        id="outlined-basic"
-        label="Outlined"
-        variant="outlined"
-        onChange={handleChange}
-      />
+    
+      <Navbar/>
+      <RoomAppbar handleChange={handleChange} />
+      
       <Box sx={{}}>
         <Grid container spacing={4}>
-          {filteredPersons?.map((item, key) => (
+          {filteredrooms?.map((item, key) => (
             <Grid key={key} item xs={0}>
               <Roomcard props={item}></Roomcard>
             </Grid>

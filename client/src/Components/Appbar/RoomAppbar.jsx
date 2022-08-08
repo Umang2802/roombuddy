@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function RoomAppbar(props) {
+export default function RoomAppbar({handleChange}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -160,13 +160,15 @@ export default function RoomAppbar(props) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: "#90A9FC" }}>
         <Toolbar>
-          <Search>
+          <Search sx={{ width: "100vh" }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Search location....."
               inputProps={{ "aria-label": "search" }}
+              onChange={handleChange}
+              sx={{ width: "50vh" }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />

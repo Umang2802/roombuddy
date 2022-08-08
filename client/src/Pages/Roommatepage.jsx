@@ -50,7 +50,7 @@ const Roommatepage = () => {
   }, []);
   const roommatedata = useSelector((state) => state.roommatedata.roommates);
   const userdata = useSelector((state) => state.auth.user_id);
-  console.log("room data", roommatedata);
+  console.log("roommate data", roommatedata);
   console.log("roomid ", userdata);
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -106,13 +106,23 @@ const Roommatepage = () => {
   //   }
   // };
 
+  const [searchField, setSearchField] = useState("");
+
+  const filteredRoommates = roommatedata.filter((roommate) => {
+    return roommate.lookingForRoomIn.toLowerCase().includes(searchField.toLowerCase());
+  });
+
+  const handleChange = (e) => {
+    setSearchField(e.target.value);
+  };
+
   return (
     <>
       <Navbar></Navbar>
-      <RoommateAppbar props={"/roommateDetails"} />
+      <RoommateAppbar handleChange={handleChange} />
 
       <Grid container spacing={0}>
-        {roommatedata?.map((item, key) => (
+        {filteredRoommates?.map((item, key) => (
           <Grid key={key} item xs={3}>
             <Roommatecard props={item}></Roommatecard>
           </Grid>

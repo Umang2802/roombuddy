@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router";
 import axios from "axios";
 import {
   Backdrop,
@@ -33,17 +34,18 @@ function srcset(image, size, rows = 1, cols = 1) {
 
 const SingleRoom = () => {
   const params = useParams();
-  const [name, setName] = useState("umang");
-  const [desc, setDesc] = useState("ntng");
-  const [bhk, setBhk] = useState("3");
-  const [bath, setBath] = useState("4");
-  const [type, setType] = useState("Flat");
-  const [tenantNo, setTenantNo] = useState("2");
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
+  const [bhk, setBhk] = useState("");
+  const [bath, setBath] = useState("");
+  const [type, setType] = useState("");
+  const [tenantNo, setTenantNo] = useState("");
   const [preferences, setPreferences] = useState([]);
   const [clicked, setClicked] = useState(false);
   const [address, setAddress] = useState("");
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
+  const navigate = useNavigate();
   const tokentest = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -71,7 +73,6 @@ const SingleRoom = () => {
         .catch((err) => {
           console.log("Error", err);
         });
-        
 
       console.log("working");
     } catch (e) {
@@ -82,7 +83,7 @@ const SingleRoom = () => {
     tokentest();
   }, []);
 
-  if(images[0]){
+  if (images[0]) {
     images[0].rows = 4;
     images[0].cols = 2;
   }
@@ -119,39 +120,6 @@ const SingleRoom = () => {
   //   },
   // ];
 
-  // const itemData = [
-  //   {
-  //     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-  //     title: "Breakfast",
-  //     rows: 4,
-  //     cols: 2,
-  //   },
-  //   {
-  //     img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-  //     title: "Burger",
-  //     rows: 2,
-  //     cols: 1,
-  //   },
-  //   {
-  //     img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-  //     title: "Camera",
-  //     rows: 2,
-  //     cols: 1,
-  //   },
-  //   {
-  //     img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-  //     title: "Coffee",
-  //     rows: 2,
-  //     cols: 1,
-  //   },
-  //   {
-  //     img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-  //     title: "Hats",
-  //     rows: 2,
-  //     cols: 1,
-  //   },
-  // ];
-
   return (
     <>
       {clicked ? (
@@ -185,6 +153,17 @@ const SingleRoom = () => {
       ) : (
         <>
           <Navbar />
+          <Fab
+            sx={{
+              position: "absolute",
+              left: "5%",
+              top: "15%",
+              bgcolor: "white",
+            }}
+            onClick={() => navigate("/room")}
+          >
+            <ArrowBackIosRoundedIcon />
+          </Fab>
           <Container maxWidth="lg" sx={{ my: 5 }}>
             <ImageList
               variant="quilted"
@@ -259,10 +238,7 @@ const SingleRoom = () => {
                 Property details
               </Typography>
               <Typography variant="body1" sx={{ my: 1 }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit ut
-                aliquam, purus sit amet luctus venenatis, lectus magna fringilla
-                urna, porttitor rhoncus dolor purus non enim praesent elementum
-                facilisis leo, vel {desc}
+                {desc}
               </Typography>
               <Box>
                 {details.map((item) => (

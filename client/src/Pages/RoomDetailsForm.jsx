@@ -32,7 +32,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Slide from "@mui/material/Slide";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { set, useForm } from "react-hook-form";
+import { set, useFieldArray, useForm } from "react-hook-form";
 import MuiAlert from "@mui/material/Alert";
 
 const types = [
@@ -140,10 +140,10 @@ const RoomDetailsForm = () => {
   const [amenities, setAmenities] = useState(
     location.state.status === "post" ? amenity : ""
   );
-  const [tenantNo, setTenantNo] = useState(1);
-  const [tName, setTName] = useState("");
-  const [tBio, setTBio] = useState("");
-  const [tenantDetails, setTenantDetails] = useState([]);
+  // const [tenantNo, setTenantNo] = useState(1);
+  // const [tName, setTName] = useState("");
+  // const [tBio, setTBio] = useState("");
+  //const [tenantDetails, setTenantDetails] = useState([]);
   const [predictedRent, setPredictedRent] = useState("0");
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
@@ -210,16 +210,30 @@ const RoomDetailsForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    control,
+    reset
   } = useForm();
 
+  const { fields, append, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "tenantDetails", // unique name for your Field Array
+    rules: {
+      minLength: {
+        value: 1,
+        message: "Tenants details are required",
+      },
+    },
+  });
+
   const onError = (errors) => {
+    console.log(errors);
     setErrorMessage("Please fill all fields correctly!");
     setOpenError(true);
     handleClose();
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(data.tenantDetails);
     const amenitydata = [];
     for (let i = 0; i < amenities.length; i++) {
       if (amenities[i].onClick === true) {
@@ -227,18 +241,16 @@ const RoomDetailsForm = () => {
       }
     }
 
+
     try {
-      if (pics.length === 0) {
-        throw "Cover Image is required";
-      }
-      if (pics.length < 5) {
-        throw "Please add minimum 5 images";
-      }
+      // if (pics.length === 0) {
+      //   throw "Cover Image is required";
+      // }
+      // if (pics.length < 5) {
+      //   throw "Please add minimum 5 images";
+      // }
       if (pics.length > 10) {
         throw "Please add Maximum 15 images";
-      }
-      if (tenantDetails.length !== tenantNo) {
-        throw "Please add details of all tenants";
       }
 
       if (location.state.status === "post") {
@@ -253,13 +265,15 @@ const RoomDetailsForm = () => {
           alcohol: rules[1].ticked,
           pets: rules[2].ticked,
           vegetarian: rules[3].ticked,
-          noOfTenants: tenantNo,
+          noOfTenants: data.tenantDetails.length,
           amenities: amenitydata,
           preferences: preferences,
           rentPrice: data.rent,
           images: pics,
-          tenantDetails: tenantDetails,
+          tenantDetails: data.tenantDetails,
         };
+        console.log("new ", roomdata);
+        console.log("tenant ", roomdata.tenantDetails);
         dispatch(actionCreator.postRoomAction(roomdata));
         handleClose();
         setSuccessMessage("Room added successfully");
@@ -276,25 +290,26 @@ const RoomDetailsForm = () => {
           alcohol: rules[1].ticked,
           pets: rules[2].ticked,
           vegetarian: rules[3].ticked,
-          noOfTenants: tenantNo,
+          noOfTenants: data.tenantDetails.length,
           amenities: amenitydata,
           preferences: preferences,
           rentPrice: data.rent,
           images: pics,
-          tenantDetails: tenantDetails,
+          tenantDetails: data.tenantDetails,
           roomId: location.state.id,
           userId: location.state.payload.user._id,
         };
+        console.log("update ",roomdata);
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${usertoken}`,
-          },
-        };
-        axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
-          console.log(res.data);
-        });
+        // const config = {
+        //   headers: {
+        //     Authorization: `Bearer ${usertoken}`,
+        //   },
+        // };
+        // axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
+        //   console.log(res.data);
+        // });
         handleClose();
         setSuccessMessage("Room Updated successfully");
         setOpenSuccess(true);
@@ -331,6 +346,20 @@ const RoomDetailsForm = () => {
         message: "Rent must be above 200",
       },
     },
+    tname: {
+      required: "Tenant name is Required",
+      minLength: {
+        value: 5,
+        message: "Tenant name must have atleast 5 characters",
+      },
+    },
+    bio: {
+      required: "Tenant Bio is Required",
+      minLength: {
+        value: 20,
+        message: "Tenant Bio must have atlest 20 characters",
+      },
+    },
   };
 
   const handleErrorClose = (event, reason) => {
@@ -353,8 +382,8 @@ const RoomDetailsForm = () => {
       setBath(data.bathroom);
       setBhk(data.bhk);
       setType(data.propertyType);
-      setTenantNo(data.noOfTenants);
-      setTenantDetails(data.tenantDetails);
+      // setTenantNo(data.noOfTenants);
+      // setTenantDetails(data.tenantDetails);
       setPreferences(data.preferences);
 
       // Rules
@@ -387,6 +416,12 @@ const RoomDetailsForm = () => {
         img.push(data.images[i].url);
       }
       setPics(img);
+
+      console.log(data.tenantDetails);
+      reset({
+        tenantDetails: data.tenantDetails
+      });
+
     } else {
       console.log("Room Data fetch failed");
     }
@@ -489,38 +524,38 @@ const RoomDetailsForm = () => {
     );
   };
 
-  function tenantNoHandler(e) {
-    if (Number(e.target.value) > 4) {
-      setErrorMessage("Please enter value less than 5");
-      setOpenError(true);
-      setTenantNo(1);
-    } else {
-      setTenantNo(e.target.value);
-    }
-  }
+  // function tenantNoHandler(e) {
+  //   if (Number(e.target.value) > 4) {
+  //     setErrorMessage("Please enter value less than 5");
+  //     setOpenError(true);
+  //     setTenantNo(1);
+  //   } else {
+  //     setTenantNo(e.target.value);
+  //   }
+  // }
 
-  const [i, setI] = useState(1);
-  const tenantHandler = () => {
-    if (tName === "" || tBio === " " || tName === " " || tBio === "") {
-      setErrorMessage("Please fill in Tenant details");
-      setOpenError(true);
-    } else {
-      setTenantDetails((prevTenant) => [
-        ...prevTenant,
-        {
-          name: tName,
-          bio: tBio,
-        },
-      ]);
-      setTName("");
-      setTBio("");
-      setSuccessMessage("Tenant details added successfully");
-      setOpenSuccess(true);
-      if (i <= tenantNo) {
-        setI((oldCount) => oldCount + 1);
-      }
-    }
-  };
+  // const [i, setI] = useState(1);
+  // const tenantHandler = () => {
+  //   if (tName === "" || tBio === " " || tName === " " || tBio === "") {
+  //     setErrorMessage("Please fill in Tenant details");
+  //     setOpenError(true);
+  //   } else {
+  //     setTenantDetails((prevTenant) => [
+  //       ...prevTenant,
+  //       {
+  //         name: tName,
+  //         bio: tBio,
+  //       },
+  //     ]);
+  //     setTName("");
+  //     setTBio("");
+  //     setSuccessMessage("Tenant details added successfully");
+  //     setOpenSuccess(true);
+  //     if (i <= tenantNo) {
+  //       setI((oldCount) => oldCount + 1);
+  //     }
+  //   }
+  // };
 
   const preferencesHandler = () => {
     if (preferenceItem === "" || preferenceItem === " ") {
@@ -708,67 +743,62 @@ const RoomDetailsForm = () => {
 
           {/* TENANT DETAILS */}
           <Box>
-            <Bar props="AMENITIES" />
-            <h4>NO OF TENANTS: </h4>
-            <TextField
-              hiddenLabel
-              variant="filled"
-              required
-              name="rent"
-              type="number"
-              InputProps={{ inputProps: { min: "1", max: "4", step: "1" } }}
-              InputLabelProps={{ style: { fontSize: 12 } }}
-              value={tenantNo}
-              onChange={tenantNoHandler}
-              sx={{ mb: 3, p: 0, width: "8%" }}
-              size="small"
-            />
-            <Box>
-              <h4>TENANT {i} NAME: </h4>
-              <TextField
-                hiddenLabel
-                variant="filled"
-                name="tenant"
-                type="text"
-                value={tName}
-                InputLabelProps={{ style: { fontSize: 12 } }}
-                onChange={(e) => {
-                  setTName(e.target.value);
-                }}
-                sx={{ mb: 3, p: 0, width: "30%" }}
-                size="small"
-              />
-              <h4>TENANT {i} BIO: </h4>
-              <TextField
-                name="tenantBio"
-                id="filled-multiline-static"
-                multiline
-                required
-                value={tBio}
-                onChange={(e) => {
-                  setTBio(e.target.value);
-                }}
-                rows={3}
-                variant="filled"
-                sx={{ mb: 2, p: 0, width: "55%" }}
-                size="small"
-              />
-              <br />
-
-              {i <= tenantNo ? (
-                <Button
-                  sx={{ mb: 4 }}
-                  variant="contained"
-                  onClick={() => tenantHandler()}
-                >
-                  Click to add tenant
-                </Button>
-              ) : (
-                <Button sx={{ mb: 4 }} variant="contained" disabled>
-                  Click to add tenant
-                </Button>
-              )}
-            </Box>
+            <Bar props="TENANT DETAILS" />
+            {fields.map((item, index) => (
+              <>
+                <h4>TENANT {index + 1} NAME: </h4>
+                <TextField
+                  hiddenLabel
+                  variant="filled"
+                  {...register(
+                    `tenantDetails[${index}].name`,
+                    valOptions.tname
+                  )}
+                  name={`tenantDetails[${index}].name`}
+                  type="text"
+                  sx={{ mb: 3, p: 0, width: "30%" }}
+                  size="small"
+                  defaultValue={item.name}
+                  // error={!!errors?.tenantDetails?.[index].tname}
+                  // helperText={
+                  //   !!errors?.tenantDetails?.[index].tname
+                  //     ? errors.tenantDetails[index].tname.message
+                  //     : ""
+                  // }
+                />
+                <h4>TENANT {index + 1} BIO: </h4>
+                <TextField
+                  {...register(`tenantDetails[${index}].bio`, valOptions.bio)}
+                  name={`tenantDetails[${index}].bio`}
+                  multiline
+                  rows={3}
+                  variant="filled"
+                  sx={{ mb: 2, p: 0, width: "55%" }}
+                  size="small"
+                  defaultValue={item.bio}
+                  // error={!!errors.tenantDetails?.[index].tbio}
+                  // helperText={
+                  //   !!errors?.tenantDetails?.[index].tbio
+                  //     ? errors.tenantDetails[index].tbio.message
+                  //     : ""
+                  // }
+                />
+              </>
+            ))}
+            <br />
+            {fields.length >= 4 || errors?.tenantDetails ? (
+              <Button sx={{ mb: 4 }} variant="contained" disabled>
+                Click to add tenant
+              </Button>
+            ) : (
+              <Button
+                sx={{ mb: 4 }}
+                variant="contained"
+                onClick={() => append({ name: "", bio: "" })}
+              >
+                Click to add tenant
+              </Button>
+            )}
           </Box>
 
           {/* AMENITIES */}
