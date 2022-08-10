@@ -171,7 +171,7 @@ const ProfileDetailsForm = () => {
     try {
       if (location.state.status === "post") {
         if (pics.length === 0) {
-          throw "Profile image is required";
+          throw new Error("Profile image is required");
         }
         const roommatedata = {
           name: data.name,
@@ -250,7 +250,7 @@ const ProfileDetailsForm = () => {
     } else {
       console.log("false");
     }
-  },[]);
+  },[location.state.payload, location.state.status, setValue]);
 
   return (
     <>
