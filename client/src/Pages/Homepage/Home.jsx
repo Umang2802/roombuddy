@@ -1,16 +1,8 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { ReactComponent as LineSvg } from "../../Assets/line.svg";
-import { ReactComponent as BlockSvg } from "../../Assets/block.svg";
 import backgroundimg from "../../Assets/background.svg";
 import Backgroundbuilding from "../../Assets/buildingsbck.svg";
 import FeatItems from "../../Components/FeaturedItems/FeaturedItems.jsx";
 import Navbar from "../../Components/Navbar/Navbar";
-import { Grid } from "@mui/material";
 import Findroommate from "../../Assets/Findroommates.png";
 import houseicon from "../../Assets/houseicon.png";
 import chaticon from "../../Assets/chaticon.png";
@@ -18,16 +10,7 @@ import recomendationicon from "../../Assets/recomendationicon.png";
 import Footer from "../../Components/Footer/Footer";
 import "./Home.css";
 const Home = () => {
-  const featureditems = [
-    backgroundimg,
-    backgroundimg,
-    backgroundimg,
-    backgroundimg,
-    backgroundimg,
-    backgroundimg,
-    backgroundimg,
-    backgroundimg,
-  ];
+
   return (
     <div>
       <Navbar></Navbar>

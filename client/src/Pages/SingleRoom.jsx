@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import {
-  Backdrop,
   Box,
   Button,
   Card,
@@ -17,7 +16,6 @@ import {
   Typography,
 } from "@mui/material";
 import Navbar from "../Components/Navbar/Navbar";
-import RoomImage from "../Assets/room.jpg";
 import Map from "../Assets/map.jpg";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
@@ -46,42 +44,43 @@ const SingleRoom = () => {
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
-  const tokentest = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios
-        .get("/rooms/" + params.id, config)
-        .then((res) => {
-          console.log("response", res);
-          setName(res.data.name);
-          setDesc(res.data.description);
-          setBhk(res.data.bhk);
-          setBath(res.data.bathroom);
-          setType(res.data.propertyType);
-          setTenantNo(res.data.noOfTenants);
-          setPreferences(res.data.preferences);
-          setAddress(res.data.address);
-          setTenants(res.data.tenantDetails);
-          setImages(res.data.images);
-        })
-        .catch((err) => {
-          console.log("Error", err);
-        });
-
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
   useEffect(() => {
+    const tokentest = async () => {
+      try {
+        const usertoken = JSON.parse(localStorage.getItem("token"));
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${usertoken}`,
+          },
+        };
+        axios
+          .get("/rooms/" + params.id, config)
+          .then((res) => {
+            console.log("response", res);
+            setName(res.data.name);
+            setDesc(res.data.description);
+            setBhk(res.data.bhk);
+            setBath(res.data.bathroom);
+            setType(res.data.propertyType);
+            setTenantNo(res.data.noOfTenants);
+            setPreferences(res.data.preferences);
+            setAddress(res.data.address);
+            setTenants(res.data.tenantDetails);
+            setImages(res.data.images);
+          })
+          .catch((err) => {
+            console.log("Error", err);
+          });
+
+        console.log("working");
+      } catch (e) {
+        console.log(e);
+      }
+    };
     tokentest();
-  }, []);
+  }, [params.id]);
 
   if (images[0]) {
     images[0].rows = 4;
@@ -106,19 +105,6 @@ const SingleRoom = () => {
       state: tenantNo,
     },
   ];
-
-  // const tenants = [
-  //   {
-  //     id: 0,
-  //     name: "Helen kelly",
-  //     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,porttitor rhoncus dolor purus non enim praesent elementum facilisisleo, ve",
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "Helen kelly",
-  //     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,porttitor rhoncus dolor purus non enim praesent elementum facilisisleo, ve",
-  //   },
-  // ];
 
   return (
     <>
@@ -172,20 +158,26 @@ const SingleRoom = () => {
               gap={8}
               sx={{ borderRadius: "8px", position: "relative" }}
             >
-              {images.map((item) => (
-                <ImageListItem
-                  key={item.url}
-                  cols={item.cols || 1}
-                  rows={item.rows || 2}
-                >
-                  <img
-                    {...srcset(item.url, 500, item.rows, item.cols)}
-                    alt={"img"}
-                    loading="lazy"
-                    sx={{ pointer: "cursor" }}
-                  />
-                </ImageListItem>
-              ))}
+              {images.map((item, i) => {
+                return (
+                  <>
+                    {i < 5 && (
+                      <ImageListItem
+                        key={item.url}
+                        cols={item.cols || 1}
+                        rows={item.rows || 2}
+                      >
+                        <img
+                          {...srcset(item.url, 500, item.rows, item.cols)}
+                          alt={"img"}
+                          loading="lazy"
+                          sx={{ pointer: "cursor" }}
+                        />
+                      </ImageListItem>
+                    )}
+                  </>
+                );
+              })}
               <Box
                 sx={{
                   position: "absolute",
@@ -274,7 +266,7 @@ const SingleRoom = () => {
               <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
                 Location
               </Typography>
-              <Card elevation={0} sx={{}}>
+              <Card elevation={0}>
                 <CardMedia component="img" height="350" image={Map} alt="map" />
                 <CardContent
                   sx={{

@@ -32,7 +32,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import Slide from "@mui/material/Slide";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { set, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import MuiAlert from "@mui/material/Alert";
 
 const types = [
@@ -140,11 +140,7 @@ const RoomDetailsForm = () => {
   const [amenities, setAmenities] = useState(
     location.state.status === "post" ? amenity : ""
   );
-  // const [tenantNo, setTenantNo] = useState(1);
-  // const [tName, setTName] = useState("");
-  // const [tBio, setTBio] = useState("");
-  //const [tenantDetails, setTenantDetails] = useState([]);
-  const [predictedRent, setPredictedRent] = useState("0");
+  //const [predictedRent, setPredictedRent] = useState("0");
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
   const [open, setOpen] = useState(false);
@@ -214,7 +210,7 @@ const RoomDetailsForm = () => {
     reset
   } = useForm();
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append} = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: "tenantDetails", // unique name for your Field Array
     rules: {
@@ -243,14 +239,14 @@ const RoomDetailsForm = () => {
 
 
     try {
-      // if (pics.length === 0) {
-      //   throw "Cover Image is required";
-      // }
-      // if (pics.length < 5) {
-      //   throw "Please add minimum 5 images";
-      // }
+      if (pics.length === 0) {
+        throw new Error("Cover Image is required");
+      }
+      if (pics.length < 5) {
+        throw new Error("Please add minimum 5 images");
+      }
       if (pics.length > 10) {
-        throw "Please add Maximum 15 images";
+        throw new Error("Please add Maximum 15 images");
       }
 
       if (location.state.status === "post") {
@@ -302,14 +298,14 @@ const RoomDetailsForm = () => {
         console.log("update ",roomdata);
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
-        // const config = {
-        //   headers: {
-        //     Authorization: `Bearer ${usertoken}`,
-        //   },
-        // };
-        // axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
-        //   console.log(res.data);
-        // });
+        const config = {
+          headers: {
+            Authorization: `Bearer ${usertoken}`,
+          },
+        };
+        axios.post("/rooms/updateRoom", roomdata, config).then((res) => {
+          console.log(res.data);
+        });
         handleClose();
         setSuccessMessage("Room Updated successfully");
         setOpenSuccess(true);
@@ -382,8 +378,6 @@ const RoomDetailsForm = () => {
       setBath(data.bathroom);
       setBhk(data.bhk);
       setType(data.propertyType);
-      // setTenantNo(data.noOfTenants);
-      // setTenantDetails(data.tenantDetails);
       setPreferences(data.preferences);
 
       // Rules
@@ -419,13 +413,12 @@ const RoomDetailsForm = () => {
 
       console.log(data.tenantDetails);
       reset({
-        tenantDetails: data.tenantDetails
+        tenantDetails: data.tenantDetails,
       });
-
     } else {
       console.log("Room Data fetch failed");
     }
-  }, []);
+  }, [location.state.payload, location.state.status, reset,setValue]);
 
   const Input = styled("input")({
     display: "none",
@@ -523,39 +516,6 @@ const RoomDetailsForm = () => {
       )
     );
   };
-
-  // function tenantNoHandler(e) {
-  //   if (Number(e.target.value) > 4) {
-  //     setErrorMessage("Please enter value less than 5");
-  //     setOpenError(true);
-  //     setTenantNo(1);
-  //   } else {
-  //     setTenantNo(e.target.value);
-  //   }
-  // }
-
-  // const [i, setI] = useState(1);
-  // const tenantHandler = () => {
-  //   if (tName === "" || tBio === " " || tName === " " || tBio === "") {
-  //     setErrorMessage("Please fill in Tenant details");
-  //     setOpenError(true);
-  //   } else {
-  //     setTenantDetails((prevTenant) => [
-  //       ...prevTenant,
-  //       {
-  //         name: tName,
-  //         bio: tBio,
-  //       },
-  //     ]);
-  //     setTName("");
-  //     setTBio("");
-  //     setSuccessMessage("Tenant details added successfully");
-  //     setOpenSuccess(true);
-  //     if (i <= tenantNo) {
-  //       setI((oldCount) => oldCount + 1);
-  //     }
-  //   }
-  // };
 
   const preferencesHandler = () => {
     if (preferenceItem === "" || preferenceItem === " ") {

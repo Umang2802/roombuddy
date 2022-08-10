@@ -18,7 +18,6 @@ import * as actionCreator3 from "../State/Actions/getstarredroommateAction";
 import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
 import profileimage from "../Assets/profileicon.png";
 import { Grid } from "@mui/material";
-
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -66,9 +65,9 @@ function a11yProps(index) {
 export default function Dashboard() {
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
-  const [starredroommate, setStarredroommate] = useState([]);
-  const [Newusername, setNewusername] = useState();
-  const [Newuserbio, setNewuserbio] = useState();
+  //const [starredroommate, setStarredroommate] = useState([]);
+  // const [Newusername, setNewusername] = useState();
+  // const [Newuserbio, setNewuserbio] = useState();
   const roomsdata = useSelector((state) => state.roomdata.rooms);
   const profiledata = useSelector((state) => state.roommatedata.roommates);
   console.log(roomsdata);
@@ -95,7 +94,10 @@ export default function Dashboard() {
 
   const filteredroomdata = roomsdata.filter((rooms) => {
     if (rooms.user._id === userdata.user_id) {
-      return rooms;
+    return rooms;
+    }
+    else{
+        return null;
     }
   });
 
@@ -103,29 +105,33 @@ export default function Dashboard() {
     if (profile.user === userdata.user_id) {
       return profile;
     }
+    else{
+        return null;
+    }
+    
   });
 
-  const loadStarreddata = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
+  // const loadStarreddata = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("token"));
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken}`,
+  //       },
+  //     };
 
-      await axios
-        .get("/starredRoommates/userStarredRoommateProfiles", config)
-        .then((res) => {
-          console.log("api", res.data);
-          setStarredroommate(res.data.roomatees);
+  //     await axios
+  //       .get("/starredRoommates/userStarredRoommateProfiles", config)
+  //       .then((res) => {
+  //         console.log("api", res.data);
+  //         setStarredroommate(res.data.roomatees);
 
-          return res.data.roommates;
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //         return res.data.roommates;
+  //       });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -150,7 +156,7 @@ export default function Dashboard() {
     }
 
     // eslint-disable-next-line
-  }, [starredroommate]);
+  }, []);
   const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
       padding: theme.spacing(2),

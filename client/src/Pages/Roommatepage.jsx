@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Roomcard from "../Components/Roomcard/Roomcard.jsx";
 import Navbar from "../Components/Navbar/Navbar.js";
 import { Grid } from "@material-ui/core";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroommateAction";
-import { deletePost } from "../Services/index.js";
+// import { deletePost } from "../Services/index.js";
 import RoommateAppbar from "../Components/Appbar/RoommateAppbar.jsx";
 import Roommatecard from "../Components/Roommatecard/Roommatecard";
 const Roommatepage = () => {
