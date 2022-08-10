@@ -14,14 +14,14 @@ const messageRoutes = require("./routes/messageRoutes");
 const app = express();
 
 // --------------------------deployment------------------------------
-
-//const __dirname1 = path.resolve();
+const path = require("path");
+const __dirname1 = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-  const path = require("path");
+  app.use(express.static(path.join(__dirname1,"client/build")));
+  
   app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+    res.sendFile(path.resolve(__dirname1, "client", "build", "index.html"))
   );
 } else {
   app.get("/", (req, res) => {
@@ -38,10 +38,7 @@ app.use(express.json({ limit: "50mb" }));
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.urlencoded({ limit: "50mb" }));
 mongoose
-  .connect(
-    "mongodb+srv://parth25:Comp2570@roombuddy.j50dr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true }
-  )
+  .connect(process.env.MONGO_URL, { useNewUrlParser: true })
   .then(() => {
     console.log("Mongo Connection working !");
   })
@@ -61,7 +58,7 @@ app.use("/message", messageRoutes);
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-  console.log("Serving on port 5000");
+  console.log(`Serving on port ${PORT}`);
 });
 
 const io = require("socket.io")(server, {
