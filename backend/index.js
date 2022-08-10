@@ -1,22 +1,36 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
-
 const mongoose = require("mongoose");
 const User = require("./models/user");
-
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
 const roommateProfileRoutes = require("./routes/roommateProfileRoutes");
 const favoritePostsRoutes = require("./routes/favoritePostsRoutes");
 const starredRoommateRoutes = require("./routes/starredRoommateRoutes");
-
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
-
 const app = express();
+
+// --------------------------deployment------------------------------
+
+//const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  const path = require("path");
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// --------------------------deployment------------------------------
+
 
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
