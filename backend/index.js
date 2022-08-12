@@ -39,13 +39,6 @@ app.use("/message", messageRoutes);
 
 // --------------------------deployment------------------------------
 
-// httpProxy.createProxyServer({
-//   target: "https://roombuddyindia.herokuapp.com/",
-//   toProxy: true,
-//   changeOrigin: true,
-//   xfwd: true,
-// });
-
 const __dirname1 = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
