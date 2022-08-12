@@ -14,6 +14,14 @@ const messageRoutes = require("./routes/messageRoutes");
 const app = express();
 
 // --------------------------deployment------------------------------
+
+httpProxy.createProxyServer({
+  target: "https://roombuddyindia.herokuapp.com/",
+  toProxy: true,
+  changeOrigin: true,
+  xfwd: true,
+});
+
 const path = require("path");
 const __dirname1 = path.resolve();
 
