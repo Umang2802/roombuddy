@@ -12,33 +12,7 @@ const starredRoommateRoutes = require("./routes/starredRoommateRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const app = express();
-
-// --------------------------deployment------------------------------
-
-// httpProxy.createProxyServer({
-//   target: "https://roombuddyindia.herokuapp.com/",
-//   toProxy: true,
-//   changeOrigin: true,
-//   xfwd: true,
-// });
-
 const path = require("path");
-const __dirname1 = path.resolve();
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1,"client/build")));
-  
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname1, "client", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running..");
-  });
-}
-
-// --------------------------deployment------------------------------
-
 
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
@@ -63,6 +37,32 @@ app.use("/starredRoommates", starredRoommateRoutes);
 app.use("/chat", chatRoutes);
 app.use("/message", messageRoutes);
 
+// --------------------------deployment------------------------------
+
+// httpProxy.createProxyServer({
+//   target: "https://roombuddyindia.herokuapp.com/",
+//   toProxy: true,
+//   changeOrigin: true,
+//   xfwd: true,
+// });
+
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1,"client/build")));
+  
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "client", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// --------------------------deployment------------------------------
+
+
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
@@ -72,7 +72,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://roombuddyindia.herokuapp.com/",
     // credentials: true,
   },
 });
