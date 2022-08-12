@@ -106,14 +106,14 @@ const Roompage = () => {
   //     console.log(e);
   //   }
   // };
-  const [searchField, setSearchField] = useState("");
+  // const [searchField, setSearchField] = useState("");
 
-  const filteredrooms = roommdata.filter((room) => {
-    return room.address.toLowerCase().includes(searchField.toLowerCase());
-  });
+  // const filteredrooms = roommdata.filter((room) => {
+  //   return room.address.toLowerCase().includes(searchField.toLowerCase());
+  // });
 
   const handleChange = (e) => {
-    setSearchField(e.target.value);
+    // setSearchField(e.target.value);
   };
   return (
     <>
@@ -123,7 +123,7 @@ const Roompage = () => {
       
       <Box sx={{}}>
         <Grid container spacing={4}>
-          {filteredrooms?.map((item, key) => (
+          {roommdata?.map((item, key) => (
             <Grid key={key} item xs={0}>
               <Roomcard props={item}></Roomcard>
             </Grid>
