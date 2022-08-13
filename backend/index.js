@@ -12,7 +12,7 @@ const userRoutes = require("./routes/userRoutes");
 const roommateProfileRoutes = require("./routes/roommateProfileRoutes");
 const favoritePostsRoutes = require("./routes/favoritePostsRoutes");
 const starredRoommateRoutes = require("./routes/starredRoommateRoutes");
-
+const modeldata = require("./routes/mlRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 
@@ -40,7 +40,7 @@ app.use("/rooms", roomRoutes);
 app.use("/roommateprofiles", roommateProfileRoutes);
 app.use("/favoriteposts", favoritePostsRoutes);
 app.use("/starredRoommates", starredRoommateRoutes);
-
+app.use("/model", modeldata);
 app.use("/chat", chatRoutes);
 app.use("/message", messageRoutes);
 

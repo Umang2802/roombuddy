@@ -22,6 +22,13 @@ import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { useEffect } from "react";
 
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import { Icon } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useMapEvents } from "react-leaflet";
 function srcset(image, size, rows = 1, cols = 1) {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -30,7 +37,14 @@ function srcset(image, size, rows = 1, cols = 1) {
     }&fit=crop&auto=format&dpr=2 2x`,
   };
 }
-
+const LocationFinderDummy = () => {
+  const map = useMapEvents({
+    click(e) {
+      console.log(e.latlng);
+    },
+  });
+  return null;
+};
 const SingleRoom = () => {
   const params = useParams();
   const [name, setName] = useState("umang");
@@ -44,6 +58,7 @@ const SingleRoom = () => {
   const [address, setAddress] = useState("");
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
+  const position = [51.505, -0.09];
   const tokentest = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -71,7 +86,6 @@ const SingleRoom = () => {
         .catch((err) => {
           console.log("Error", err);
         });
-        
 
       console.log("working");
     } catch (e) {
@@ -82,7 +96,7 @@ const SingleRoom = () => {
     tokentest();
   }, []);
 
-  if(images[0]){
+  if (images[0]) {
     images[0].rows = 4;
     images[0].cols = 2;
   }
@@ -151,7 +165,10 @@ const SingleRoom = () => {
   //     cols: 1,
   //   },
   // ];
-
+  const handlelocationClick = (e) => {
+    const { lat, lng } = e.latlng;
+    console.log(lat, lng);
+  };
   return (
     <>
       {clicked ? (
@@ -299,7 +316,38 @@ const SingleRoom = () => {
                 Location
               </Typography>
               <Card elevation={0} sx={{}}>
-                <CardMedia component="img" height="350" image={Map} alt="map" />
+                {/* <CardMedia component="img" height="350" image={Map} alt="map" /> */}
+
+                <MapContainer
+                  style={{ height: "50vh", width: "100%" }}
+                  center={[12.972442, 77.580643]}
+                  zoom={13}
+                  scrollWheelZoom={false}
+                  onClick={handlelocationClick}
+                >
+                  {" "}
+                  <LocationFinderDummy />
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker
+                    position={[12.972442, 77.580643]}
+                    icon={
+                      new Icon({
+                        iconUrl: markerIconPng,
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                      })
+                    }
+                    draggable={true}
+                  >
+                    <Popup>
+                      A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+
                 <CardContent
                   sx={{
                     display: "flex",
