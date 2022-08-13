@@ -37,14 +37,7 @@ function srcset(image, size, rows = 1, cols = 1) {
     }&fit=crop&auto=format&dpr=2 2x`,
   };
 }
-const LocationFinderDummy = () => {
-  const map = useMapEvents({
-    click(e) {
-      console.log(e.latlng);
-    },
-  });
-  return null;
-};
+
 const SingleRoom = () => {
   const params = useParams();
   const [name, setName] = useState("");
@@ -58,7 +51,7 @@ const SingleRoom = () => {
   const [address, setAddress] = useState("");
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
-  const position = [51.505, -0.09];
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -121,7 +114,10 @@ const SingleRoom = () => {
       state: tenantNo,
     },
   ];
-
+  const handlelocationClick = (e) => {
+    const { lat, lng } = e.latlng;
+    console.log(lat, lng);
+  };
   return (
     <>
       {clicked ? (
