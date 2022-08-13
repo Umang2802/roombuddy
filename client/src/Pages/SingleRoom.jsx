@@ -54,6 +54,15 @@ const SingleRoom = () => {
 
   const navigate = useNavigate();
 
+  const LocationFinderDummy = () => {
+    const map = useMapEvents({
+      click(e) {
+        console.log(e.latlng);
+      },
+    });
+    return null;
+  };
+
   useEffect(() => {
     const tokentest = async () => {
       try {
