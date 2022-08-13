@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import Roomcard from "../Components/Roomcard/Roomcard.jsx";
 import Navbar from "../Components/Navbar/Navbar.js";
 import { Grid } from "@material-ui/core";
-import axios from "axios";
+//import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
-import { deletePost } from "../Services/index.js";
+// import { deletePost } from "../Services/index.js";
 import RoomAppbar from "../Components/Appbar/RoomAppbar.jsx";
 import { Box } from "@mui/material";
-import TextField from "@mui/material/TextField";
 const Roompage = () => {
   const dispatch = useDispatch();
-  const [roomsdata, setRoomsdata] = useState([]);
+  // const [roomsdata, setRoomsdata] = useState([]);
   // const roomsdetails = async () => {
   //   try {
   //     const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -50,7 +49,8 @@ const Roompage = () => {
     // eslint-disable-next-line
   }, []);
   const roommdata = useSelector((state) => state.roomdata.rooms);
-  const userdata = useSelector((state) => state.auth.user_id);
+  console.log(roommdata);
+  //const userdata = useSelector((state) => state.auth.user_id);
 
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -59,55 +59,57 @@ const Roompage = () => {
   //       Authorization: `Bearer ${usertoken}`,
   //     },
   //   };
-  const deletepost = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
 
-      const params = {
-        roomId: roommdata[0]._id,
-        userId: roommdata[0].user._id,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/deleteRoom", params, config).then((res) => {
-        //console.log(res.data);
-      });
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const updatepost = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        ...roommdata,
-        rentPrice: 3000,
-        roomId: roommdata[0]._id,
-        userId: roommdata[0].user._id,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", params, config).then((res) => {
-        //console.log(res.data);
-      });
+  // const deletepost = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("token"));
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //     const params = {
+  //       roomId: roommdata[0]._id,
+  //       userId: roommdata[0].user._id,
+  //     };
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken}`,
+  //       },
+  //     };
+  //     axios.post("/rooms/deleteRoom", params, config).then((res) => {
+  //       //console.log(res.data);
+  //     });
+
+  //     console.log("working");
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+  // const updatepost = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("token"));
+  //     console.log(usertoken);
+  //     const params = {
+  //       ...roommdata,
+  //       rentPrice: 3000,
+  //       roomId: roommdata[0]._id,
+  //       userId: roommdata[0].user._id,
+  //     };
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken}`,
+  //       },
+  //     };
+  //     axios.post("/rooms/updateRoom", params, config).then((res) => {
+  //       //console.log(res.data);
+  //     });
+
+  //     console.log("working");
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
   const [searchField, setSearchField] = useState("");
 
-  const filteredPersons = roommdata.filter((room) => {
+  const filteredrooms = roommdata.filter((room) => {
     return room.address.toLowerCase().includes(searchField.toLowerCase());
   });
 
@@ -116,17 +118,13 @@ const Roompage = () => {
   };
   return (
     <>
-      <Navbar></Navbar>
-      <RoomAppbar props={"/roomDetails"} />
-      <TextField
-        id="outlined-basic"
-        label="Outlined"
-        variant="outlined"
-        onChange={handleChange}
-      />
+    
+      <Navbar/>
+      <RoomAppbar handleChange={handleChange} />
+      
       <Box sx={{}}>
         <Grid container spacing={4}>
-          {filteredPersons?.map((item, key) => (
+          {filteredrooms?.map((item, key) => (
             <Grid key={key} item xs={0}>
               <Roomcard props={item}></Roomcard>
             </Grid>

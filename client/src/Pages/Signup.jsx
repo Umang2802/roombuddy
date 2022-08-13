@@ -1,31 +1,23 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { width } from "@mui/system";
 import logo from "../Assets/logo.png";
 import bck from "../Assets/loginbackgnd.png";
-import { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+//import axios from "axios";
 import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/authaction";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-const theme = createTheme();
+
 const useStyles = makeStyles((theme) => ({
   maindiv: {
     display: "grid",
@@ -123,47 +115,47 @@ const Signup = () => {
     },
   });
 
-  const tokentest = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("username"));
+  // const tokentest = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("username"));
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken.token}`,
-        },
-      };
-      axios
-        .get("/rooms/6294e688889a2eb621b20cb8", config)
-        .then((res) => {
-          console.log("response", res);
-        })
-        .catch((err) => {
-          console.log("Error", err);
-        });
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken.token}`,
+  //       },
+  //     };
+  //     axios
+  //       .get("/rooms/6294e688889a2eb621b20cb8", config)
+  //       .then((res) => {
+  //         console.log("response", res);
+  //       })
+  //       .catch((err) => {
+  //         console.log("Error", err);
+  //       });
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const roomsdetails = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("username"));
+  //     console.log("working");
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+  // const roomsdetails = async () => {
+  //   try {
+  //     const usertoken = JSON.parse(localStorage.getItem("username"));
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken.token}`,
-        },
-      };
-      const { data } = await axios.get("/rooms", config);
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${usertoken.token}`,
+  //       },
+  //     };
+  //     const { data } = await axios.get("/rooms", config);
 
-      console.log(data);
+  //     console.log(data);
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //     console.log("working");
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
   const classes = useStyles();
 
   return (

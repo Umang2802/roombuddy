@@ -11,7 +11,6 @@ import logo from "../Assets/logo.png";
 import bck from "../Assets/loginbackgnd.png";
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import * as actionCreator from "../State/Actions/authaction";
 import { GoogleLogin } from "@react-oauth/google";

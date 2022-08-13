@@ -66,7 +66,7 @@ module.exports.createRoom = async (req, res) => {
             upload_preset: "roombuddy",
           });
           const roomImage = {
-            url: uploaded.url,
+            url: uploaded.secure_url,
             filename: uploaded.public_id,
           };
           room.images.push(roomImage);
@@ -196,7 +196,7 @@ module.exports.updateRoom = async (req, res) => {
             upload_preset: "roombuddy",
           });
           const roomImage = {
-            url: uploaded.url,
+            url: uploaded.secure_url,
             filename: uploaded.public_id,
           };
           room.images.push(roomImage);

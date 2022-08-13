@@ -14,25 +14,23 @@ const Allchats = ({ fetchAgain }) => {
 
   const { selectedChat, setSelectedChat, user, token, chats, setChats } = ChatState();
 
-  const fetchChats = async () => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await axios.post("/chat/fetch",{user}, config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("user_id")));
+    const fetchChats = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const { data } = await axios.post("/chat/fetch", { user }, config);
+        setChats(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchChats();
-  }, [fetchChats]);
+  }, [setChats, token, user]);
 
   return (
     <Paper
