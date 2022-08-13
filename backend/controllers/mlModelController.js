@@ -4,7 +4,7 @@ module.exports.mlmodelpredict = async (req, res) => {
   // spawn new child process to call the python script
   const { location, total_sqft, bath, bhk } = req.body;
   const python = spawn("python", [
-    "backend/controllers/predictprice.py",
+    "python backend/controllers/predictprice.py",
     location,
     total_sqft,
     bath,
