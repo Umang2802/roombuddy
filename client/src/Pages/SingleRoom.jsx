@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardMedia,
   Container,
   Divider,
   Fab,
@@ -16,19 +15,16 @@ import {
   Typography,
 } from "@mui/material";
 import Navbar from "../Components/Navbar/Navbar";
-import RoomImage from "../Assets/room.jpg";
-import Map from "../Assets/map.jpg";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { useEffect } from "react";
 
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer} from "react-leaflet";
 import { Popup } from "react-leaflet";
 import { Marker } from "react-leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useMapEvents } from "react-leaflet";
 function srcset(image, size, rows = 1, cols = 1) {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -53,15 +49,6 @@ const SingleRoom = () => {
   const [images, setImages] = useState([]);
 
   const navigate = useNavigate();
-
-  const LocationFinderDummy = () => {
-    const map = useMapEvents({
-      click(e) {
-        console.log(e.latlng);
-      },
-    });
-    return null;
-  };
 
   useEffect(() => {
     const tokentest = async () => {
@@ -298,7 +285,6 @@ const SingleRoom = () => {
                   onClick={handlelocationClick}
                 >
                   {" "}
-                  <LocationFinderDummy />
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
