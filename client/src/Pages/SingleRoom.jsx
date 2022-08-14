@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   Divider,
   Fab,
@@ -18,7 +19,7 @@ import Navbar from "../Components/Navbar/Navbar";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { useEffect } from "react";
-
+import { green } from "@mui/material/colors";
 import { MapContainer, TileLayer} from "react-leaflet";
 import { Popup } from "react-leaflet";
 import { Marker } from "react-leaflet";
@@ -48,6 +49,9 @@ const SingleRoom = () => {
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
   const [predictRent, setPredictRent] = useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const timer = React.useRef();
 
   const navigate = useNavigate();
 
@@ -128,6 +132,34 @@ const SingleRoom = () => {
       setPredictRent(res.data);
     });
   };
+
+  const buttonSx = {
+    ...(success && {
+      bgcolor: green[500],
+      "&:hover": {
+        bgcolor: green[700],
+      },
+    }),
+  };
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+  const handleButtonClick = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      clickedbtn();
+      timer.current = window.setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   return (
     <>
       {clicked ? (
@@ -238,7 +270,7 @@ const SingleRoom = () => {
                 Rent: &nbsp;$22
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button
+              {/* <Button
                 disableElevation={predictRent === null ? false : true}
                 disableRipple={predictRent === null ? false : true}
                 variant="contained"
@@ -246,12 +278,37 @@ const SingleRoom = () => {
                   cursor: predictRent === null ? "pointer" : "default",
                   bgcolor: "#6177D4",
                 }}
-                onClick={predictRent === null ? clickedbtn : ""}
+                onClick={clickedbtn}
               >
                 {predictRent === null
                   ? "Click button to Predict rent"
                   : `Predicted rent: ${predictRent}`}
-              </Button>
+              </Button> */}
+              <Box sx={{ m: 1, position: "relative" }}>
+                <Button
+                  variant="contained"
+                  sx={buttonSx}
+                  disabled={loading}
+                  onClick={handleButtonClick}
+                >
+                  {success
+                    ? `Predicted rent: ${predictRent}`
+                    : "Click button to Predict rent"}
+                </Button>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: green[500],
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px",
+                    }}
+                  />
+                )}
+              </Box>
             </Box>
             <Box sx={{ mb: 4 }}>
               <Typography variant="h6" sx={{ mt: 4, fontWeight: "bold" }}>
@@ -338,7 +395,7 @@ const SingleRoom = () => {
               </Card>
             </Box>
             <Divider />
-            <button onClick={clickedbtn}>Click here</button>
+            {/* <button onClick={clickedbtn}>Click here</button> */}
             <Box sx={{ my: 4 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 Roommates currently staying
