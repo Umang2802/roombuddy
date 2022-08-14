@@ -98,7 +98,7 @@ module.exports.personality = async (req, res) => {
         const sortedIDs = [];
         const foundUsers = [];
         for(let i = 0; i < roommateIDs.length; i++){
-          const user = await RoommateProfile.findOne({_id: roommateIDs[i]}).populate('user');
+          const user = await RoommateProfile.findOne({_id: roommateIDs[i]}).populate('user'); // check if populate works properly
           foundUsers.push(user);
         }
         
