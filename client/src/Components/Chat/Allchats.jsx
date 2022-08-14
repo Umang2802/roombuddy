@@ -14,25 +14,23 @@ const Allchats = ({ fetchAgain }) => {
 
   const { selectedChat, setSelectedChat, user, token, chats, setChats } = ChatState();
 
-  const fetchChats = async () => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await axios.post("/chat/fetch",{user}, config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("user_id")));
+    const fetchChats = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const { data } = await axios.post("/chat/fetch", { user }, config);
+        setChats(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchChats();
-  }, [fetchChats]);
+  }, [setChats, token, user]);
 
   return (
     <Paper
@@ -71,32 +69,33 @@ const Allchats = ({ fetchAgain }) => {
       >
         {chats ? (
           <Stack>
-            {chats.map((chat) => (
-              <Box
-                onClick={() => setSelectedChat(chat)}
-                sx={{
-                  cursor: "pointer",
-                  bgcolor: selectedChat === chat ? "#38B2AC" : "#E8E8E8",
-                  color: selectedChat === chat ? "white" : "black",
-                  p: "6px",
-                  mb: "7px",
-                  borderRadius: "5px",
-                }}
-                key={chat._id}
-              >
-                <Typography>
-                  {getSender(loggedUser, chat.users)}
-                </Typography>
-                {chat.latestMessage && (
-                  <Typography sx={{ fontSize: 12 }}>
-                    <b>{chat.latestMessage.sender.username} : </b>
-                    {chat.latestMessage.content.length > 50
-                      ? chat.latestMessage.content.substring(0, 51) + "..."
-                      : chat.latestMessage.content}
-                  </Typography>
-                )}
-              </Box>
-            ))}
+            {chats.map(
+              (chat) =>
+                chat.latestMessage && (
+                  <Box
+                    onClick={() => setSelectedChat(chat)}
+                    sx={{
+                      cursor: "pointer",
+                      bgcolor: selectedChat === chat ? "#38B2AC" : "#E8E8E8",
+                      color: selectedChat === chat ? "white" : "black",
+                      p: "6px",
+                      mb: "7px",
+                      borderRadius: "5px",
+                    }}
+                    key={chat._id}
+                  >
+                    <Typography>{getSender(loggedUser, chat.users)}</Typography>
+                    {chat.latestMessage && (
+                      <Typography sx={{ fontSize: 12 }}>
+                        <b>{chat.latestMessage.sender.username} : </b>
+                        {chat.latestMessage.content.length > 10
+                          ? chat.latestMessage.content.substring(0, 10) + "..."
+                          : chat.latestMessage.content}
+                      </Typography>
+                    )}
+                  </Box>
+                )
+            )}
           </Stack>
         ) : (
           <ChatLoading />

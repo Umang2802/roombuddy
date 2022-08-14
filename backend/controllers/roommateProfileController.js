@@ -24,7 +24,7 @@ module.exports.createRoommateProfile = async (req, res) => {
         upload_preset: "roombuddy",
       });
       const roommateProfileImage = {
-        url: uploaded.url,
+        url: uploaded.secure_url,
         filename: uploaded.public_id,
       };
       userprofile.image = roommateProfileImage;
@@ -128,7 +128,7 @@ module.exports.updateRoommateProfile = async (req, res) => {
           upload_preset: "roombuddy",
         });
         const roommateProfileImage = {
-          url: uploaded.url,
+          url: uploaded.secure_url,
           filename: uploaded.public_id,
         };
 

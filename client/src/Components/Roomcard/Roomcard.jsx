@@ -1,43 +1,26 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Backdrop, Button } from "@mui/material";
+import { Backdrop} from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PostChat from "../../Components/Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 export default function Roomcard({ props }) {
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+ 
   const {
     setSelectedChat,
     chats,
@@ -49,21 +32,6 @@ export default function Roomcard({ props }) {
   } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
-
-  const fetchChats = async () => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await axios.post("/chat/fetch", { user }, config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const accessChat = async (userId) => {
     console.log(chats);
@@ -98,9 +66,12 @@ export default function Roomcard({ props }) {
           Authorization: `Bearer ${usertoken}`,
         },
       };
-
+      const params = {
+        roomId: props._id,
+      };
+      console.log(params);
       axios
-        .post("/favoriteposts/addOrRemoveFavoritePost", props._id, config)
+        .post("/favoriteposts/addOrRemoveFavoritePost", params, config)
         .then((res) => {
           console.log(res.data);
         });
@@ -108,16 +79,25 @@ export default function Roomcard({ props }) {
       console.log(e);
     }
   };
-  // useEffect(() => {
-  //   fetchChats();
-  // }, [fetchChats]);
+
+  React.useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const { data } = await axios.post("/chat/fetch", { user }, config);
+        setChats(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchChats();
+  }, [setChats, token, user]);
   // if (props.props?.images?.length > 0) {
   // }
-  useEffect(() => {
-    fetchChats();
-  }, []);
-  //if (props.props?.images?.length > 0) {
-  //}
 
   return (
     <>
@@ -137,11 +117,12 @@ export default function Roomcard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ mt: 3, width: 330, minHeight: 425 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
             {props?.images?.length > 0 && (
               <CardHeader
+                sx={{ p: 1.3 }}
                 avatar={
                   <Avatar
                     sx={{ bgcolor: red[500] }}
@@ -159,7 +140,7 @@ export default function Roomcard({ props }) {
                 bgcolor: "#6177D4",
                 color: "white",
                 padding: ".5rem 1rem",
-                borderRadius: ".1rem",
+                borderRadius: ".5rem",
               }}
               variant="h7"
             >
@@ -176,28 +157,36 @@ export default function Roomcard({ props }) {
               alt="Paella dish"
             />
           )}
-          <CardContent>
+          <CardContent sx={{ paddingBottom: "0 !important" }}>
             <Typography variant="h7" color="text.primary" fontWeight="bolder">
               {props?.name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {props?.address}
+              {props?.address.length > 40
+                ? props.address.substring(0, 40) + "...."
+                : props.address}
+            </Typography>
+            <Typography mt={1} variant="body2" color="gray" fontWeight={"bold"}>
+              {props?.propertyType}
             </Typography>
           </CardContent>
         </Link>
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>
-              <IconButton
-                onClick={() => {
-                  setShowChat(true);
-                  //console.log(`onclick ${props?.user._id}`);
-                  accessChat(props?.user._id);
-                }}
-                aria-label="add to favorites"
-              >
-                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
-              </IconButton>
+              {user !== props?.user._id ? (
+                <IconButton
+                  onClick={() => {
+                    setShowChat(true);
+                    accessChat(props?.user._id);
+                  }}
+                  aria-label="add to favorites"
+                >
+                  <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+                </IconButton>
+              ) : (
+                <></>
+              )}
             </Grid>
             <Grid item xs={4}>
               <IconButton

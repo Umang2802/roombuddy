@@ -14,9 +14,9 @@ import { ChatState } from "../../Context/Provider";
 import CircularProgress from "@mui/material/CircularProgress";
 import { TextField } from "@material-ui/core";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button, Container, IconButton } from "@mui/material";
+import { Container, IconButton } from "@mui/material";
 
-const ENDPOINT = "http://localhost:5000"; // "https://roombuddy.herokuapp.com"; -> After deployment
+const ENDPOINT = "https://roombuddyindia.herokuapp.com/"; // "http://localhost:5000"; -> After deployment
 var socket, selectedChatCompare;
 
 const Singlechat = ({ fetchAgain, setFetchAgain }) => {

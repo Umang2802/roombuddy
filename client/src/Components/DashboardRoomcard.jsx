@@ -1,11 +1,9 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -13,27 +11,14 @@ import { red } from "@mui/material/colors";
 import { useSelector } from "react-redux";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Backdrop, Button } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import PostChat from "../../Components/Chat/PostChat";
-// import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 export default function DashboardRoomcard({ props }) {
   const userid = useSelector((state) => state.auth.user_id);
+
   const navigate = useNavigate();
   const deletepost = async () => {
     try {
@@ -57,36 +42,10 @@ export default function DashboardRoomcard({ props }) {
       console.log(e);
     }
   };
-  const editredirector = () => {
-    navigate("/roomdetailsform", { edit: true, roomdata: props });
-  };
-  const editHandler = async () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      console.log(usertoken);
-      const params = {
-        ...props,
-        rentPrice: 3000,
-        roomId: props._id,
-        userId: userid,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      axios.post("/rooms/updateRoom", params, config).then((res) => {
-        console.log(res.data);
-      });
 
-      console.log("working");
-    } catch (e) {
-      console.log(e);
-    }
-  };
   return (
     <>
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ mt: 3, maxWidth: 340, maxHeight: 450 }}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={8}>
             {props?.images?.length > 0 && (
@@ -132,6 +91,9 @@ export default function DashboardRoomcard({ props }) {
             <Typography variant="body2" color="text.secondary">
               {props?.address}
             </Typography>
+            <Typography mt={1} variant="body2" color="gray" fontWeight={"bold"}>
+              {props?.propertyType}
+            </Typography>
           </CardContent>
         </Link>
         <CardActions>
@@ -140,7 +102,13 @@ export default function DashboardRoomcard({ props }) {
               <IconButton
                 aria-label="edit"
                 onClick={() => {
-                  editredirector();
+                  navigate("/roomDetailsForm", {
+                    state: {
+                      id: props._id,
+                      payload: props,
+                      status: "edit",
+                    },
+                  });
                 }}
               >
                 <EditOutlinedIcon size="small" />

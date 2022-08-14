@@ -15,7 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { TextField } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ENDPOINT = "http://localhost:5000"; // "https://roombuddy.herokuapp.com"; -> After deployment
+const ENDPOINT = "https://roombuddyindia.herokuapp.com/"; // "https://roombuddy.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
 const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
@@ -205,7 +205,7 @@ const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
                       <Lottie
                         options={defaultOptions}
                         // height={50}
-                        width={70}
+                        width={50}
                         style={{ marginBottom: 15, marginLeft: 0 }}
                       />
                     </div>

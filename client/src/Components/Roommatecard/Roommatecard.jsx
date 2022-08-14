@@ -1,64 +1,36 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-import Container from "@mui/material/Container";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Backdrop, Button } from "@mui/material";
+import { Backdrop} from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PostChat from "../Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 export default function Roommatecard({ props }) {
   console.log("props", props);
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-  const { setSelectedChat, chats, setChats, user } = ChatState();
+  
+  const {
+    setSelectedChat,
+    chats,
+    setChats,
+    user,
+    token,
+  } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
-
-  const fetchChats = async () => {
-    //console.log(user._id);
-    const usertoken = JSON.parse(localStorage.getItem("userInfo"));
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      const { data } = await axios.get("/api/chat", config);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const accessChat = async (userId) => {
     console.log(chats);
@@ -67,10 +39,14 @@ export default function Roommatecard({ props }) {
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+      const { data } = await axios.post(
+        `/chat/access`,
+        { user, userId },
+        config
+      );
       console.log(data);
 
       if (!chats.find((c) => c._id === data._id)) {
@@ -81,12 +57,55 @@ export default function Roommatecard({ props }) {
       console.log(error);
     }
   };
+  const starredHandler = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      const params = {
+        roommateId: props._id,
+      };
+      console.log(params);
+      axios
+        .post(
+          "/starredRoommates/addOrRemoveStarredRoommateProfile",
+          params,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // useEffect(() => {
   //   fetchChats();
   // }, [fetchChats]);
   // if (props.props?.images?.length > 0) {
   // }
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const { data } = await axios.post("/chat/fetch", { user }, config);
+        setChats(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchChats();
+  }, [setChats, token, user]);
+
   return (
     <>
       {showChat ? (
@@ -101,7 +120,7 @@ export default function Roommatecard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ m: 3, maxWidth: 340, minHeight: 450 }}>
+      <Card sx={{ mt: 3, width: 330, minHeight: 425 }}>
         <Grid item xs={8}>
           {props?.image && (
             <CardHeader
@@ -150,7 +169,7 @@ export default function Roommatecard({ props }) {
               color="#6177D4"
               fontWeight="Bolder"
             >
-              BUDGET : {props?.budget}
+              Budget : {props?.budget}
             </Typography>
           </CardContent>
         </Link>
@@ -160,7 +179,7 @@ export default function Roommatecard({ props }) {
               <IconButton
                 onClick={() => {
                   setShowChat(true);
-                  accessChat("628273c939b9dd3b346ec13a");
+                  accessChat(props?.user);
                 }}
                 aria-label="add to favorites"
               >
@@ -168,7 +187,12 @@ export default function Roommatecard({ props }) {
               </IconButton>
             </Grid>
             <Grid item xs={4}>
-              <IconButton aria-label="share">
+              <IconButton
+                aria-label="share"
+                onClick={() => {
+                  starredHandler();
+                }}
+              >
                 <StarBorderOutlinedIcon size="small" />
               </IconButton>
             </Grid>
