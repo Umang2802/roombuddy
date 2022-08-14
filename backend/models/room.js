@@ -26,7 +26,16 @@ const roomSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    tenantDetails: [{"name": String, "bio": String}]
+    tenantDetails: [{"name": String, "bio": String}],
+    reports: [
+        {
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            message: String
+        }
+    ],
 });
 
 

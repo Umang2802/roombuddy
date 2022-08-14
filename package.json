@@ -14,7 +14,10 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "child_process": "^1.0.2",
+<<<<<<< HEAD:backend/package.json
+=======
     "childprocess": "^2.0.2",
+>>>>>>> b6968799b2d645756857272a777d910a3c46af1d:package.json
     "cloudinary": "^1.30.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",

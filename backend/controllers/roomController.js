@@ -216,3 +216,40 @@ module.exports.updateRoom = async (req, res) => {
     }
   });
 };
+
+module.exports.reportRoom = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token in reportRoom");
+    } else {
+      const { roomId, msg } = req.body;
+      const room = await Room.findById(roomId);
+      if(room.reports.length !== 0) {
+        let flag = false;
+        for (let i = 0; i < room.reports.length; i++) {
+          if(room.reports[i].user === authData.user._id) {
+            flag = true;
+            res.send("Already Reported!")
+            break;
+          }
+        }
+        if(flag === false) {
+          const roomReport = {
+            user: authData.user,
+            message: msg,
+          };
+          room.reports.push(roomReport);
+          await room.save();
+        }
+      } else {
+        const roomReport = {
+          user: authData.user,
+          message: msg,
+        };
+        room.reports.push(roomReport);
+        await room.save();
+      }
+      res.send(room);
+    }
+  });
+};

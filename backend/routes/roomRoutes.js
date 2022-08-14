@@ -11,5 +11,6 @@ router.get('/:id', verifyToken , rooms.showRoom);
 router.post('/', verifyToken, validateRoom, rooms.createRoom);
 router.post('/deleteRoom', verifyToken, rooms.deleteRoom);
 router.post('/updateRoom', verifyToken, rooms.updateRoom);
+router.post('/reportRoom', verifyToken, rooms.reportRoom);
 
 module.exports = router;
