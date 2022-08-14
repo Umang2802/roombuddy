@@ -125,6 +125,7 @@ const SingleRoom = () => {
     };
     axios.post("/model", data).then((res) => {
       console.log(res.data);
+      setPredictRent(res.data);
     });
   };
   return (
@@ -241,12 +242,12 @@ const SingleRoom = () => {
                 disableElevation={predictRent === null ? false : true}
                 disableRipple={predictRent === null ? false : true}
                 variant="contained"
-                sx={{ cursor: "default", bgcolor: "#6177D4" }}
+                sx={{ cursor: predictRent === null ? "pointer" : "default", bgcolor: "#6177D4" }}
                 onClick={predictRent === null ? clickedbtn : ""}
               >
                 {predictRent === null
                   ? "Click button to Predict rent"
-                  : `Predicted rent: &nbsp;${predictRent}`}
+                  : `Predicted rent: ${predictRent}`}
               </Button>
             </Box>
             <Box sx={{ mb: 4 }}>
