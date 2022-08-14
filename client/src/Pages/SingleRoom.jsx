@@ -47,7 +47,7 @@ const SingleRoom = () => {
   const [address, setAddress] = useState("");
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
-  const [predictRent, setPredictRent] = useState([]);
+  const [predictRent, setPredictRent] = useState();
 
   const navigate = useNavigate();
 
