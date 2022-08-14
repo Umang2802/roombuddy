@@ -47,6 +47,7 @@ const SingleRoom = () => {
   const [address, setAddress] = useState("");
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
+  const [predictRent, setPredictRent] = useState([]);
 
   const navigate = useNavigate();
 
@@ -113,6 +114,18 @@ const SingleRoom = () => {
   const handlelocationClick = (e) => {
     const { lat, lng } = e.latlng;
     console.log(lat, lng);
+  };
+
+  const clickedbtn = () => {
+    const data = {
+      location: "1st Block Jayanagar",
+      total_sqft: 7.536897,
+      bath: 1.098612,
+      bhk: 1.386294,
+    };
+    axios.post("/model", data).then((res) => {
+      console.log(res.data);
+    });
   };
   return (
     <>
@@ -225,12 +238,15 @@ const SingleRoom = () => {
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Button
-                disableElevation={true}
-                disableRipple={true}
+                disableElevation={predictRent === null ? false : true}
+                disableRipple={predictRent === null ? false : true}
                 variant="contained"
                 sx={{ cursor: "default", bgcolor: "#6177D4" }}
+                onClick={predictRent === null ? clickedbtn : ""}
               >
-                Predicted rent: &nbsp;$21
+                {predictRent === null
+                  ? "Click button to Predict rent"
+                  : `Predicted rent: &nbsp;${predictRent}`}
               </Button>
             </Box>
             <Box sx={{ mb: 4 }}>
