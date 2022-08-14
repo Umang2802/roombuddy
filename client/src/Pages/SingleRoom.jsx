@@ -47,7 +47,7 @@ const SingleRoom = () => {
   const [address, setAddress] = useState("");
   const [tenants, setTenants] = useState([]);
   const [images, setImages] = useState([]);
-  const [predictRent, setPredictRent] = useState();
+  const [predictRent, setPredictRent] = useState("");
 
   const navigate = useNavigate();
 
@@ -242,7 +242,10 @@ const SingleRoom = () => {
                 disableElevation={predictRent === null ? false : true}
                 disableRipple={predictRent === null ? false : true}
                 variant="contained"
-                sx={{ cursor: predictRent === null ? "pointer" : "default", bgcolor: "#6177D4" }}
+                sx={{
+                  cursor: predictRent === null ? "pointer" : "default",
+                  bgcolor: "#6177D4",
+                }}
                 onClick={predictRent === null ? clickedbtn : ""}
               >
                 {predictRent === null
@@ -335,6 +338,7 @@ const SingleRoom = () => {
               </Card>
             </Box>
             <Divider />
+            <button onClick={clickedbtn}>Click here</button>
             <Box sx={{ my: 4 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 Roommates currently staying
