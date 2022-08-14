@@ -17,7 +17,8 @@ const userSchema = new Schema({
     },
     imageURL: String,
     bio: String,
-    type: String
+    type: String,
+    response: [Number]
 });
 
 userSchema.pre("save", function (next) {

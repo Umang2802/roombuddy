@@ -1,5 +1,8 @@
 const User = require("../models/user");
+const RoommateProfile = require("../models/rommateProfile");
 const bcrypt = require("bcryptjs");
+
+const similarity = require('compute-cosine-similarity');
 
 const jwt = require("jsonwebtoken");
 
@@ -65,3 +68,50 @@ module.exports.login = async (req, res) => {
     }
   }
 };
+
+module.exports.survey = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token in survey");
+    }
+    else{ 
+          const { response } = req.body;
+          const user = await User.findOne(authData.user._id);
+          user.response = response;
+          await user.save();
+          res.send(user);
+    } 
+  });
+}
+
+module.exports.personality = async (req, res) => {
+  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+    if (err) {
+      res.send("error while verifying token in personality");
+    }
+    else{
+      const { roommateIDs } = req.body;
+      const response = authData.user.response;
+      if(response.length === 0 ){
+        res.send("Response field is empty"); //after getting this reponse, automatically route to survey from frontend
+      } else{
+        const sortedIDs = [];
+        const foundUsers = [];
+        for(let i = 0; i < roommateIDs.length; i++){
+          const user = await RoommateProfile.findOne({_id: roommateIDs[i]}).populate('user');
+          foundUsers.push(user);
+        }
+        
+        for(let i = 0; i < foundUsers.length; i++){
+          let cosine = similarity( response, foundUsers[i].user.response );
+          let userAndCosine = foundUsers[i];
+          userAndCosine.cosine = cosine;
+          sortedIDs.push(userAndCosine);
+        }
+
+        sortedIDs.sort((a, b) => (a.cosine > b.cosine) ? 1 : -1)
+        res.send(sortedIDs);
+      }  
+    }
+  });
+}
