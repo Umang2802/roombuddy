@@ -60,7 +60,6 @@ const Roompage = () => {
   //     },
   //   };
 
-
   // const deletepost = async () => {
   //   try {
   //     const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -118,12 +117,11 @@ const Roompage = () => {
   };
   return (
     <>
-    
-      <Navbar/>
+      <Navbar />
       <RoomAppbar handleChange={handleChange} />
-      
+
       <Box sx={{}}>
-        <Grid container spacing={4}>
+        <Grid justifyContent="center" container spacing={4}>
           {filteredrooms?.map((item, key) => (
             <Grid key={key} item xs={0}>
               <Roomcard props={item}></Roomcard>

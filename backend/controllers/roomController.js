@@ -224,16 +224,25 @@ module.exports.reportRoom = async (req, res) => {
     } else {
       const { roomId, msg } = req.body;
       const room = await Room.findById(roomId);
-      if(room.reports.length !== 0) {
+      if (room.reports.length !== 0) {
         let flag = false;
         for (let i = 0; i < room.reports.length; i++) {
-          if(room.reports[i].user === authData.user._id) {
+          console.log("entered for");
+          console.log("roomuser" + [i], JSON.stringify(room.reports[i].user));
+
+          console.log("authdata" + [i], JSON.stringify(authData.user._id));
+          console.log("");
+          if (
+            JSON.stringify(room.reports[i].user) ===
+            JSON.stringify(authData.user._id)
+          ) {
+            console.log("entered if");
             flag = true;
-            res.send("Already Reported!")
-            break;
+            res.send("Already Reported!");
+            return;
           }
         }
-        if(flag === false) {
+        if (flag === false) {
           const roomReport = {
             user: authData.user,
             message: msg,
