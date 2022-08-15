@@ -16,12 +16,19 @@ import {
   ImageListItem,
   Typography,
 } from "@mui/material";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import ReportIcon from "@mui/icons-material/Report";
+import Modal from "@mui/material/Modal";
 import Navbar from "../Components/Navbar/Navbar";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { useEffect } from "react";
 import { green } from "@mui/material/colors";
-import { MapContainer, TileLayer} from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { Popup } from "react-leaflet";
 import { Marker } from "react-leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
@@ -35,6 +42,17 @@ function srcset(image, size, rows = 1, cols = 1) {
     }&fit=crop&auto=format&dpr=2 2x`,
   };
 }
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const SingleRoom = () => {
   const params = useParams();
@@ -52,6 +70,8 @@ const SingleRoom = () => {
   const [predictRent, setPredictRent] = useState("");
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const [reportOption, setReportOption] = useState("Inappropriate Post");
+
   const timer = React.useRef();
 
   const navigate = useNavigate();
@@ -157,6 +177,49 @@ const SingleRoom = () => {
     };
   }, []);
 
+  const handleButtonClick = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      clickedbtn();
+      timer.current = window.setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+      }, 2000);
+    }
+  };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleChange = (event) => {
+    setReportOption(event.target.value);
+  };
+  const reportPost = async () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      const data = {
+        roomId: params.id,
+        msg: reportOption,
+      };
+      console.log(params.id);
+      axios
+        .post("/rooms/reportRoom", data, config)
+        .then((res) => {
+          console.log("response", res);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       {clicked ? (
@@ -409,6 +472,58 @@ const SingleRoom = () => {
                 ))}
               </Box>
             </Box>
+            <Button
+              sx={{ color: "#6177D4", border: "solid 1px #6177D4" }}
+              variant="outlined"
+              onClick={handleOpen}
+            >
+              <ReportIcon />
+              Report
+            </Button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="p">
+                  Report this post due to the following reason
+                </Typography>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={reportOption}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel
+                      value="Inappropriate Post"
+                      control={<Radio />}
+                      label="Inappropriate Post"
+                    />
+                    <FormControlLabel
+                      value="Noticed Vulgarity"
+                      control={<Radio />}
+                      label="Noticed Vulgarity"
+                    />
+                    <FormControlLabel
+                      value="Found as spam"
+                      control={<Radio />}
+                      label="Found as spam"
+                    />
+                    <FormControlLabel
+                      value="Bad experience in chatting"
+                      control={<Radio />}
+                      label="Bad experience in chatting"
+                    />
+                  </RadioGroup>
+                </FormControl>
+                <div style={{ textAlign: "right" }}>
+                  <Button onClick={reportPost}>Submit</Button>
+                </div>
+              </Box>
+            </Modal>
           </Container>
         </>
       )}

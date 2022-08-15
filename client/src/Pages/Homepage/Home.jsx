@@ -10,7 +10,6 @@ import recomendationicon from "../../Assets/recomendationicon.png";
 import Footer from "../../Components/Footer/Footer";
 import "./Home.css";
 const Home = () => {
-
   return (
     <div>
       <Navbar></Navbar>
@@ -23,19 +22,7 @@ const Home = () => {
         </div>
         <img className="backgroundbuilding" src={Backgroundbuilding} alt="" />
       </section>
-      <section className="featuredrooms">
-        <h1 className="heading1">FEATURED LOCATIONS</h1>
-        <div className="locations">
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-          <FeatItems image={backgroundimg}></FeatItems>
-        </div>
-      </section>
+
       <section className="roommate">
         <h1 className="heading1">FIND ROOMMATES</h1>
         <div className="contentgrid">
