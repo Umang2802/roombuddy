@@ -20,7 +20,6 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import ReportIcon from "@mui/icons-material/Report";
 import Modal from "@mui/material/Modal";
 import Navbar from "../Components/Navbar/Navbar";
@@ -152,7 +151,6 @@ const SingleRoom = () => {
     };
     axios.post("/model", data).then((res) => {
       console.log(res.data);
-      //setPredictRent(res.data);
     });
     setPredictRent(100);
     timer.current = window.setTimeout(() => {
@@ -177,17 +175,6 @@ const SingleRoom = () => {
     };
   }, []);
 
-  const handleButtonClick = () => {
-    if (!loading) {
-      setSuccess(false);
-      setLoading(true);
-      clickedbtn();
-      timer.current = window.setTimeout(() => {
-        setSuccess(true);
-        setLoading(false);
-      }, 2000);
-    }
-  };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -330,20 +317,6 @@ const SingleRoom = () => {
                 Rent: &nbsp;$22
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {/* <Button
-                disableElevation={predictRent === null ? false : true}
-                disableRipple={predictRent === null ? false : true}
-                variant="contained"
-                sx={{
-                  cursor: predictRent === null ? "pointer" : "default",
-                  bgcolor: "#6177D4",
-                }}
-                onClick={clickedbtn}
-              >
-                {predictRent === null
-                  ? "Click button to Predict rent"
-                  : `Predicted rent: ${predictRent}`}
-              </Button> */}
               <Box sx={{ m: 1, position: "relative" }}>
                 <Button
                   variant="contained"
@@ -454,7 +427,6 @@ const SingleRoom = () => {
               </Card>
             </Box>
             <Divider />
-            {/* <button onClick={clickedbtn}>Click here</button> */}
             <Box sx={{ my: 4 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 Roommates currently staying
