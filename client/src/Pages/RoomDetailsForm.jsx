@@ -34,6 +34,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import MuiAlert from "@mui/material/Alert";
+import Map from "./Map";
 
 const types = [
   {
@@ -113,6 +114,11 @@ var amenity = [
   },
 ];
 
+const center = {
+  lat: 12.995206472020364,
+  lng: 77.58819580078126,
+};
+
 const fileToDataUri = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -147,6 +153,7 @@ const RoomDetailsForm = () => {
   const [openError, setOpenError] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [position, setPosition] = useState(center);
 
   const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: "relative",
@@ -340,6 +347,13 @@ const RoomDetailsForm = () => {
       min: {
         value: 200,
         message: "Rent must be above 200",
+      },
+    },
+    totalsqft: {
+      required: "Total Sqft is Required",
+      min: {
+        value: 300,
+        message: "Sqft must be above 200",
       },
     },
     tname: {
@@ -537,6 +551,10 @@ const RoomDetailsForm = () => {
     setPics(pics.filter((pic) => pic !== item));
   };
 
+  useEffect(() => {
+    console.log(position);
+  });
+  
   return (
     <>
       <Navbar />
@@ -570,8 +588,12 @@ const RoomDetailsForm = () => {
               helperText={errors.name ? errors.name.message : ""}
             />
             <br />
-            <Typography sx={{ fontSize: 16, mb: 1 }}>
-              PROPERTY ADDRESS
+            <Typography sx={{ fontSize: 16, mb: 1, mt: 3 }}>
+              SEARCH AND MARK PROPERTY LOCATION
+            </Typography>
+            <Map position={position} setPosition={setPosition} />
+            <Typography sx={{ fontSize: 16, mb: 1, mt: 3 }}>
+              FULL PROPERTY ADDRESS
             </Typography>
             <TextField
               hiddenLabel
@@ -653,6 +675,18 @@ const RoomDetailsForm = () => {
                 </TextField>
               </Box>
             </Box>
+            <Typography sx={{ fontSize: 16, mb: 1 }}>TOTAL SQFT</Typography>
+            <TextField
+            hiddenLabel
+              name="totalsqft"
+              sx={{ mb: 3, p: 0, width: "30%", height: "50%" }}
+              size="small"
+              {...register("totalsqft", valOptions.totalsqft)}
+              rows={3}
+              variant="filled"
+              error={Boolean(errors.totalsqft)}
+              helperText={errors.totalsqft ? errors.totalsqft.message : ""}
+            />
           </Box>
 
           {/* PROPERTY RULES */}

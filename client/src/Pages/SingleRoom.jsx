@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import {
+  Backdrop,
   Box,
   Button,
   Card,
@@ -121,6 +122,8 @@ const SingleRoom = () => {
   };
 
   const clickedbtn = () => {
+    setSuccess(false);
+    setLoading(true);
     const data = {
       location: "1st Block Jayanagar",
       total_sqft: 7.536897,
@@ -129,36 +132,30 @@ const SingleRoom = () => {
     };
     axios.post("/model", data).then((res) => {
       console.log(res.data);
-      setPredictRent(res.data);
+      //setPredictRent(res.data);
     });
+    setPredictRent(100);
+    timer.current = window.setTimeout(() => {
+      setSuccess(true);
+      setLoading(false);
+    }, 2000);
   };
 
   const buttonSx = {
     ...(success && {
       bgcolor: green[500],
+      cursor: "default",
       "&:hover": {
         bgcolor: green[700],
       },
     }),
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       clearTimeout(timer.current);
     };
   }, []);
-
-  const handleButtonClick = () => {
-    if (!loading) {
-      setSuccess(false);
-      setLoading(true);
-      clickedbtn();
-      timer.current = window.setTimeout(() => {
-        setSuccess(true);
-        setLoading(false);
-      }, 2000);
-    }
-  };
 
   return (
     <>
@@ -288,26 +285,25 @@ const SingleRoom = () => {
                 <Button
                   variant="contained"
                   sx={buttonSx}
-                  disabled={loading}
-                  onClick={handleButtonClick}
+                  onClick={
+                    predictRent === "" ? clickedbtn : ""
+                  }
+                  disableElevation={predictRent === "" ? false : true}
+                  disableRipple={predictRent === "" ? false : true}
                 >
                   {success
                     ? `Predicted rent: ${predictRent}`
                     : "Click button to Predict rent"}
                 </Button>
-                {loading && (
-                  <CircularProgress
-                    size={24}
-                    sx={{
-                      color: green[500],
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      marginTop: "-12px",
-                      marginLeft: "-12px",
-                    }}
-                  />
-                )}
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={loading}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
               </Box>
             </Box>
             <Box sx={{ mb: 4 }}>
