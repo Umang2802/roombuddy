@@ -17,18 +17,13 @@ import { useEffect, useState } from "react";
 import PostChat from "../Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
+import ProfileModal from "../ProfileModal";
 
 export default function Roommatecard({ props }) {
   console.log("props", props);
-  
-  const {
-    setSelectedChat,
-    chats,
-    setChats,
-    user,
-    token,
-  } = ChatState();
+  const [open, setOpen] = React.useState(false);
+
+  const { setSelectedChat, chats, setChats, user, token } = ChatState();
 
   const [showChat, setShowChat] = useState(false);
 
@@ -83,11 +78,11 @@ export default function Roommatecard({ props }) {
     }
   };
 
-  // useEffect(() => {
-  //   fetchChats();
-  // }, [fetchChats]);
-  // if (props.props?.images?.length > 0) {
-  // }
+  useEffect(() => {
+    if (showChat) {
+      setOpen(false);
+    }
+  }, [showChat]);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -120,7 +115,10 @@ export default function Roommatecard({ props }) {
       ) : (
         <></>
       )}
-      <Card sx={{ mt: 3, width: 330, minHeight: 425 }}>
+      <Card
+        sx={{ mt: 3, width: 330, minHeight: 425 ,cursor: "pointer"}}
+        onClick={() => setOpen(true)}
+      >
         <Grid item xs={8}>
           {props?.image && (
             <CardHeader
@@ -135,44 +133,44 @@ export default function Roommatecard({ props }) {
             />
           )}
         </Grid>
-        <Link style={{ textDecoration: "none" }} to={"/room/" + props._id}>
-          {props?.image && (
-            <CardMedia
-              component="img"
-              height="194"
-              image={props?.image.url}
-              alt="Paella dish"
-            />
-          )}
-          <CardContent sx={{ padding: "16px 16px 0px 16px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              <Typography variant="h7" color="text.primary" fontWeight="bolder">
-                Age: {props?.age}
-              </Typography>
-              <Typography variant="h7" color="text.primary" fontWeight="Bolder">
-                Gender: {props?.gender}
-              </Typography>
-            </div>
-            <Typography mt={1} variant="body2" color="text.secondary">
-              <strong>Occupation: </strong>
-              {props?.occupation}
+        {/* <Button onClick={()=>setOpen(true)}> */}
+        {props?.image && (
+          <CardMedia
+            component="img"
+            height="194"
+            image={props?.image.url}
+            alt="Paella dish"
+          />
+        )}
+        <CardContent sx={{ padding: "16px 16px 0px 16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            <Typography variant="h7" color="text.primary" fontWeight="bolder">
+              Age: {props?.age}
             </Typography>
-            <Typography mt={1} variant="body2" color="text.secondary">
-              <strong>Looking in:</strong> {props?.lookingForRoomIn}
+            <Typography variant="h7" color="text.primary" fontWeight="Bolder">
+              Gender: {props?.gender}
             </Typography>
-            {/* <Typography mt={1} variant="body2" color="text.secondary">
+          </div>
+          <Typography mt={1} variant="body2" color="text.secondary">
+            <strong>Occupation: </strong>
+            {props?.occupation}
+          </Typography>
+          <Typography mt={1} variant="body2" color="text.secondary">
+            <strong>Looking in:</strong> {props?.lookingForRoomIn}
+          </Typography>
+          {/* <Typography mt={1} variant="body2" color="text.secondary">
               <strong>Looking from :</strong> {props?.lookingToMoveIn}
             </Typography> */}
-            <Typography
-              mt={1}
-              variant="body1"
-              color="#6177D4"
-              fontWeight="Bolder"
-            >
-              Budget : {props?.budget}
-            </Typography>
-          </CardContent>
-        </Link>
+          <Typography
+            mt={1}
+            variant="body1"
+            color="#6177D4"
+            fontWeight="Bolder"
+          >
+            Budget : {props?.budget}
+          </Typography>
+        </CardContent>
+        {/* </Button> */}
         <CardActions>
           <Grid container mt={0} align="center">
             <Grid item xs={4}>
@@ -204,6 +202,7 @@ export default function Roommatecard({ props }) {
           </Grid>
         </CardActions>
       </Card>
+      <ProfileModal item={props} setOpen={setOpen} open={open} />
     </>
   );
 }
