@@ -50,6 +50,7 @@ const Roompage = () => {
   }, []);
   const roommdata = useSelector((state) => state.roomdata.rooms);
   console.log(roommdata);
+  const userId = JSON.parse(localStorage.getItem("user_id"));
   //const userdata = useSelector((state) => state.auth.user_id);
 
   // const deletepost = () => {
@@ -120,13 +121,19 @@ const Roompage = () => {
       <Navbar />
       <RoomAppbar handleChange={handleChange} />
 
-      <Box sx={{}}>
+      <Box>
         <Grid justifyContent="center" container spacing={4}>
-          {filteredrooms?.map((item, key) => (
-            <Grid key={key} item xs={0}>
-              <Roomcard props={item}></Roomcard>
-            </Grid>
-          ))}
+          {filteredrooms?.map((item, key) => {
+            return (
+              <>
+                {userId !== item?.user._id && (
+                  <Grid key={key} item xs={0}>
+                    <Roomcard props={item}></Roomcard>
+                  </Grid>
+                )}
+              </>
+            );}
+          )}
         </Grid>
       </Box>
 

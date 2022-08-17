@@ -146,7 +146,6 @@ const RoomDetailsForm = () => {
   const [amenities, setAmenities] = useState(
     location.state.status === "post" ? amenity : ""
   );
-  //const [predictedRent, setPredictedRent] = useState("0");
   const [preferences, setPreferences] = useState([]);
   const [preferenceItem, setPreferenceItem] = useState("");
   const [open, setOpen] = useState(false);
@@ -229,7 +228,6 @@ const RoomDetailsForm = () => {
   });
 
   const onError = (errors) => {
-    console.log(errors);
     setErrorMessage("Please fill all fields correctly!");
     setOpenError(true);
     handleClose();
@@ -243,7 +241,6 @@ const RoomDetailsForm = () => {
         amenitydata.push(amenities[i].value);
       }
     }
-
 
     try {
       if (pics.length === 0) {
@@ -274,9 +271,9 @@ const RoomDetailsForm = () => {
           rentPrice: data.rent,
           images: pics,
           tenantDetails: data.tenantDetails,
+          totalSqft: data.totalSqft,
+          coordinates: position,
         };
-        console.log("new ", roomdata);
-        console.log("tenant ", roomdata.tenantDetails);
         dispatch(actionCreator.postRoomAction(roomdata));
         handleClose();
         setSuccessMessage("Room added successfully");
@@ -301,8 +298,9 @@ const RoomDetailsForm = () => {
           tenantDetails: data.tenantDetails,
           roomId: location.state.id,
           userId: location.state.payload.user._id,
+          totalSqft: data.totalSqft,
+          coordinates: position,
         };
-        console.log("update ",roomdata);
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
         const config = {
@@ -349,10 +347,10 @@ const RoomDetailsForm = () => {
         message: "Rent must be above 200",
       },
     },
-    totalsqft: {
+    totalSqft: {
       required: "Total Sqft is Required",
       min: {
-        value: 300,
+        value: 200,
         message: "Sqft must be above 200",
       },
     },
@@ -389,10 +387,12 @@ const RoomDetailsForm = () => {
       setValue("desc", data.description);
       setValue("address", data.address);
       setValue("rent", data.rentPrice);
+      setValue("totalSqft",data.totalSqft);
       setBath(data.bathroom);
       setBhk(data.bhk);
       setType(data.propertyType);
       setPreferences(data.preferences);
+      setPosition(data.position);
 
       // Rules
       const rul = [];
@@ -425,7 +425,6 @@ const RoomDetailsForm = () => {
       }
       setPics(img);
 
-      console.log(data.tenantDetails);
       reset({
         tenantDetails: data.tenantDetails,
       });
@@ -677,15 +676,15 @@ const RoomDetailsForm = () => {
             </Box>
             <Typography sx={{ fontSize: 16, mb: 1 }}>TOTAL SQFT</Typography>
             <TextField
-            hiddenLabel
-              name="totalsqft"
+              hiddenLabel
+              name="totalSqft"
               sx={{ mb: 3, p: 0, width: "30%", height: "50%" }}
               size="small"
-              {...register("totalsqft", valOptions.totalsqft)}
+              {...register("totalSqft", valOptions.totalSqft)}
               rows={3}
               variant="filled"
-              error={Boolean(errors.totalsqft)}
-              helperText={errors.totalsqft ? errors.totalsqft.message : ""}
+              error={Boolean(errors.totalSqft)}
+              helperText={errors.totalSqft ? errors.totalSqft.message : ""}
             />
           </Box>
 
@@ -837,7 +836,20 @@ const RoomDetailsForm = () => {
             <Box>
               {preferences.map((item) => (
                 <Box sx={{ width: "30%" }}>
-                  {item}
+                  <button
+                    style={{
+                      mr: 2,
+                      background: "#6177d4",
+                      border: "1px solid #6177d4",
+                      borderRadius: "35px",
+                      padding: "0.4rem 1.8rem",
+                      color: "white",
+                      fontSize: "1rem",
+                    }}
+                    key={item.value}
+                  >
+                    {item}
+                  </button>
                   <IconButton
                     aria-label="delete"
                     size="large"

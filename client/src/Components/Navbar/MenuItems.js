@@ -12,11 +12,7 @@ export const MenuItems = [
     link: "/roommates",
   },
   {
-    name: "About Us",
-    link: "/about",
-  },
-  {
-    name: "Contact Us",
+    name: "Dashboard",
     link: "/dashboard",
   },
 ];

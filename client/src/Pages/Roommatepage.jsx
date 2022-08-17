@@ -109,6 +109,8 @@ const Roommatepage = () => {
   const filteredRoommates = roommatedata.filter((roommate) => {
     return roommate.lookingForRoomIn.toLowerCase().includes(searchField.toLowerCase());
   });
+  
+  const userId = JSON.parse(localStorage.getItem("user_id"));
 
   const handleChange = (e) => {
     setSearchField(e.target.value);
@@ -120,11 +122,17 @@ const Roommatepage = () => {
       <RoommateAppbar handleChange={handleChange} />
 
       <Grid container spacing={0}>
-        {filteredRoommates?.map((item, key) => (
-          <Grid key={key} item xs={3}>
-            <Roommatecard props={item}></Roommatecard>
-          </Grid>
-        ))}
+        {filteredRoommates?.map((item, key) => {
+          return (
+            <>
+              {userId !== item?.user._id && (
+                <Grid key={key} item xs={3}>
+                  <Roommatecard props={item}></Roommatecard>
+                </Grid>
+              )}
+            </>
+          );
+        })}
       </Grid>
       {/* <button onClick={deletepost}>Delete</button>
       <button onClick={updatepost}>Update</button> */}

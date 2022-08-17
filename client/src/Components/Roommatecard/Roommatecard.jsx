@@ -116,7 +116,7 @@ export default function Roommatecard({ props }) {
         <></>
       )}
       <Card
-        sx={{ mt: 3, width: 330, minHeight: 425 ,cursor: "pointer"}}
+        sx={{ m: 3, width: 330, minHeight: 425 ,cursor: "pointer"}}
         onClick={() => setOpen(true)}
       >
         <Grid item xs={8}>

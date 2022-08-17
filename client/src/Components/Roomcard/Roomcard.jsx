@@ -96,8 +96,6 @@ export default function Roomcard({ props }) {
     };
     fetchChats();
   }, [setChats, token, user]);
-  // if (props.props?.images?.length > 0) {
-  // }
 
   return (
     <>
@@ -174,7 +172,6 @@ export default function Roomcard({ props }) {
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>
-              {user !== props?.user._id ? (
                 <IconButton
                   onClick={() => {
                     setShowChat(true);
@@ -184,9 +181,6 @@ export default function Roomcard({ props }) {
                 >
                   <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
                 </IconButton>
-              ) : (
-                <></>
-              )}
             </Grid>
             <Grid item xs={4}>
               <IconButton

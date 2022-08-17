@@ -148,7 +148,7 @@ const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            bgcolor: "#cfe8fc",
+            bgcolor: "#90A9FC",
             height: "80vh",
             p: 2,
             borderRadius: "5px",

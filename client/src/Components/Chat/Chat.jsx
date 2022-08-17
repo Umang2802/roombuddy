@@ -14,15 +14,15 @@ const Chat = () => {
     <div>
       <Container maxWidth="lg" sx={{ position: { md: "initial", sm: "none" } }}>
         <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          bgcolor: "#cfe8fc",
-          height: "80vh",
-          width: { md: "70vw", sm: "70vw"},
-          p: 2,
-        }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            bgcolor: "#90A9FC",
+            height: "80vh",
+            width: { md: "70vw", sm: "70vw" },
+            p: 2,
+          }}
         >
           {user && <Allchats fetchAgain={fetchAgain} />}
           {user && (

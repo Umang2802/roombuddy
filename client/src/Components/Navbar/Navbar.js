@@ -1,57 +1,39 @@
 import { MenuItems } from "./MenuItems";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import Logo from "../../Assets/logo.svg";
 import { useSelector } from "react-redux";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Navbar = () => {
-  const settings = [
-    { name: "Profile", link: "/profile" },
-    { name: "Dashboard", link: "/dashboard" },
-    { name: "Logout", link: "/logout" },
-  ];
-
   const userdata = useSelector((state) => state.auth.username);
   const navigate = useNavigate();
   const [show, setShow] = useState(true);
   const [uname, setUname] = useState();
-
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const [state, setState] = useState();
 
   useEffect(() => {
     if (userdata) {
       setShow(false);
       setUname(userdata);
     }
-  }, [show,userdata]);
+  }, [show, userdata]);
 
   return (
     <AppBar
@@ -60,46 +42,32 @@ const Navbar = () => {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box
-            sx={{
-              ml: 2,
-              display: { xs: "none", md: "flex" },
-            }}
-          >
-            <img src={Logo} alt="img" loading="lazy" width="80%" />
-          </Box>
+          {/* xs */}
+
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, my: 3 }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={() => setState(true)}
               sx={{ color: "black" }}
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+          </Box>
+          <Drawer anchor="left" open={state} onClose={() => setState(false)}>
+            <Box
               sx={{
-                display: { xs: "block", md: "none" },
+                width: 200,
               }}
+              role="presentation"
+              onClick={() => setState(false)}
+              onKeyDown={() => setState(false)}
             >
-              {MenuItems.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
+              <List>
+                {MenuItems.map((text, index) => (
+                  <ListItem key={index}>
                     <NavLink
                       style={({ isActive }) =>
                         isActive
@@ -116,16 +84,17 @@ const Navbar = () => {
                               fontFamily: "Inter, sans-serif",
                             }
                       }
-                      to={page.link}
+                      to={text.link}
                     >
-                      {" "}
-                      {page.name}{" "}
+                      <ListItemButton>
+                        <ListItemText primary={text.name} />
+                      </ListItemButton>
                     </NavLink>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </Drawer>
           <Box
             sx={{
               mr: 1,
@@ -133,9 +102,22 @@ const Navbar = () => {
               flexGrow: 1,
             }}
           >
-            <img src={Logo} alt="img" loading="lazy" />
+            <Link to="/">
+              <img src={Logo} alt="img" loading="lazy" width="100%" />
+            </Link>
           </Box>
 
+          {/* md */}
+          <Box
+            sx={{
+              ml: 2,
+              display: { xs: "none", md: "flex" },
+            }}
+          >
+            <Link to="/">
+              <img src={Logo} alt="img" loading="lazy" width="80%" />
+            </Link>
+          </Box>
           <Box
             sx={{
               flexGrow: 1,
@@ -146,7 +128,6 @@ const Navbar = () => {
             {MenuItems.map((page, index) => (
               <Button
                 key={index}
-                onClick={handleCloseNavMenu}
                 sx={{
                   my: 2,
                   mx: 3,
@@ -172,7 +153,6 @@ const Navbar = () => {
               </Button>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             {show ? (
               <Button
@@ -192,10 +172,7 @@ const Navbar = () => {
               </Button>
             ) : (
               <>
-                <IconButton
-                  onClick={handleOpenUserMenu}
-                  sx={{ p: 0, borderRadius: "4px" }}
-                >
+                <IconButton sx={{ p: 0, borderRadius: "4px" }}>
                   <Typography
                     sx={{
                       mx: 1,
@@ -213,39 +190,15 @@ const Navbar = () => {
                     alt="User"
                   ></Avatar>
                 </IconButton>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
+                <Button
+                  onClick={() => {
+                    localStorage.removeItem("user_id");
+                    localStorage.removeItem("token");
+                    navigate("/");
                   }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                      <Typography
-                        textAlign="center"
-                        component={NavLink}
-                        to={setting.link}
-                        style={{
-                          textDecoration: "none",
-                          color: "black",
-                          fontFamily: "Inter, sans-serif",
-                        }}
-                      >
-                        {setting.name}
-                      </Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
+                  <LogoutIcon />
+                </Button>
               </>
             )}
           </Box>

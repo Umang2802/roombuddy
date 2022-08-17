@@ -26,7 +26,6 @@ import Navbar from "../Components/Navbar/Navbar";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { useEffect } from "react";
-import { green } from "@mui/material/colors";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { Popup } from "react-leaflet";
 import { Marker } from "react-leaflet";
@@ -69,6 +68,7 @@ const SingleRoom = () => {
   const [predictRent, setPredictRent] = useState("");
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const [rent, setRent] = React.useState();
   const [reportOption, setReportOption] = useState("Inappropriate Post");
 
   const timer = React.useRef();
@@ -99,6 +99,7 @@ const SingleRoom = () => {
             setAddress(res.data.address);
             setTenants(res.data.tenantDetails);
             setImages(res.data.images);
+            setRent(res.data.rentPrice);
           })
           .catch((err) => {
             console.log("Error", err);
@@ -161,11 +162,8 @@ const SingleRoom = () => {
 
   const buttonSx = {
     ...(success && {
-      bgcolor: green[500],
+      bgcolor: "#6177D4",
       cursor: "default",
-      "&:hover": {
-        bgcolor: green[700],
-      },
     }),
   };
 
@@ -314,33 +312,29 @@ const SingleRoom = () => {
                 variant="contained"
                 sx={{ cursor: "default", bgcolor: "#6177D4" }}
               >
-                Rent: &nbsp;$22
+                Rent: &nbsp;{rent}
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Box sx={{ m: 1, position: "relative" }}>
-                <Button
-                  variant="contained"
-                  sx={buttonSx}
-                  onClick={
-                    predictRent === "" ? clickedbtn : ""
-                  }
-                  disableElevation={predictRent === "" ? false : true}
-                  disableRipple={predictRent === "" ? false : true}
-                >
-                  {success
-                    ? `Predicted rent: ${predictRent}`
-                    : "Click button to Predict rent"}
-                </Button>
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                  }}
-                  open={loading}
-                >
-                  <CircularProgress color="inherit" />
-                </Backdrop>
-              </Box>
+              <Button
+                variant="contained"
+                sx={buttonSx}
+                onClick={predictRent === "" ? clickedbtn : ""}
+                disableElevation={predictRent === "" ? false : true}
+                disableRipple={predictRent === "" ? false : true}
+              >
+                {success
+                  ? `Predicted rent: ${predictRent}`
+                  : "Click button to Predict rent"}
+              </Button>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={loading}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop>
             </Box>
             <Box sx={{ mb: 4 }}>
               <Typography variant="h6" sx={{ mt: 4, fontWeight: "bold" }}>
@@ -368,14 +362,20 @@ const SingleRoom = () => {
                 Preferences
               </Typography>
               {preferences.map((item) => (
-                <Typography
-                  variant="body1"
-                  sx={{ color: "#717171", mr: 10 }}
-                  component="span"
+                <button
+                  style={{
+                    mr:2,
+                    background: "#6177d4",
+                    border: "1px solid #6177d4",
+                    borderRadius: "35px",
+                    padding: "0.4rem 1.8rem",
+                    color: "white",
+                    fontSize: "1rem",
+                  }}
                   key={item.value}
                 >
                   {item}
-                </Typography>
+                </button>
               ))}
             </Box>
             <Divider />
@@ -383,9 +383,7 @@ const SingleRoom = () => {
               <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
                 Location
               </Typography>
-              <Card elevation={0} sx={{}}>
-                {/* <CardMedia component="img" height="350" image={Map} alt="map" /> */}
-
+              <Card elevation={0}>
                 <MapContainer
                   style={{ height: "50vh", width: "100%" }}
                   center={[12.972442, 77.580643]}

@@ -1,7 +1,6 @@
 import * as React from "react";
 import backgroundimg from "../../Assets/background.svg";
 import Backgroundbuilding from "../../Assets/buildingsbck.svg";
-import FeatItems from "../../Components/FeaturedItems/FeaturedItems.jsx";
 import Navbar from "../../Components/Navbar/Navbar";
 import Findroommate from "../../Assets/Findroommates.png";
 import houseicon from "../../Assets/houseicon.png";
@@ -9,6 +8,7 @@ import chaticon from "../../Assets/chaticon.png";
 import recomendationicon from "../../Assets/recomendationicon.png";
 import Footer from "../../Components/Footer/Footer";
 import "./Home.css";
+import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div>
@@ -18,7 +18,9 @@ const Home = () => {
         <div className="content1">
           <h1>ROOMBUDDY</h1>
           <h2>Find rooms and roommates at the tip of your fingers! </h2>
-          <button>Get Started</button>
+          <Link to="/room">
+            <button style={{ cursor: "pointer" }}>Get Started</button>
+          </Link>
         </div>
         <img className="backgroundbuilding" src={Backgroundbuilding} alt="" />
       </section>
@@ -33,7 +35,9 @@ const Home = () => {
               optio animi laboriosam nobis voluptas iusto assumenda id, eos
               fugiat similique.
             </p>
-            <button>Find Roommates</button>
+            <Link to="/roommates">
+              <button style={{ cursor: "pointer" }}>Find Roommates</button>
+            </Link>
           </div>
           <div className="roommateimage">
             <img src={Findroommate} alt="" />

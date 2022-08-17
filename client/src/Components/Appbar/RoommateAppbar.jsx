@@ -170,6 +170,7 @@ export default function RoommateAppbar({handleChange}) {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Button sx={{ bgcolor: "white", mr: 2 }}>Recomend Roommates</Button>
             <Button
               sx={{ bgcolor: "white", mr: 2 }}
               onClick={() =>
