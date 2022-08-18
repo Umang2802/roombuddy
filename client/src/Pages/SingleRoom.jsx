@@ -364,7 +364,7 @@ const SingleRoom = () => {
               {preferences.map((item) => (
                 <button
                   style={{
-                    mr:2,
+                    marginRight:"10px",
                     background: "#6177d4",
                     border: "1px solid #6177d4",
                     borderRadius: "35px",
