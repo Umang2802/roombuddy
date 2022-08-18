@@ -18,6 +18,8 @@ module.exports.validateRoom = (req, res, next) => {
     amenities,
     preferences,
     rentPrice,
+    coordinates,
+    total_sqft
   } = req.body;
 
   const { error } = roomSchema.validate({
@@ -35,6 +37,8 @@ module.exports.validateRoom = (req, res, next) => {
     amenities,
     preferences,
     rentPrice,
+    coordinates,
+    total_sqft
   });
   if (error) {
     res.send("JOI validation error for room");
