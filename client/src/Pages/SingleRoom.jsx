@@ -69,6 +69,8 @@ const SingleRoom = () => {
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [rent, setRent] = React.useState();
+  const [coordinates, setCoordinates] = React.useState();
+  const [total_sqft, setTotal_Sqft] = React.useState();
   const [reportOption, setReportOption] = useState("Inappropriate Post");
 
   const timer = React.useRef();
@@ -100,6 +102,8 @@ const SingleRoom = () => {
             setTenants(res.data.tenantDetails);
             setImages(res.data.images);
             setRent(res.data.rentPrice);
+            setCoordinates(res.data.coordinates);
+            setTotal_Sqft(res.data.total_sqft);
           })
           .catch((err) => {
             console.log("Error", err);
@@ -145,15 +149,15 @@ const SingleRoom = () => {
     setSuccess(false);
     setLoading(true);
     const data = {
-      location: "1st Block Jayanagar",
-      total_sqft: 7.536897,
-      bath: 1.098612,
-      bhk: 1.386294,
+      location: address,
+      total_sqft: total_sqft,
+      bath: bath,
+      bhk: bhk,
     };
     axios.post("/model", data).then((res) => {
       console.log(res.data);
+      setPredictRent(res.data);
     });
-    setPredictRent(100);
     timer.current = window.setTimeout(() => {
       setSuccess(true);
       setLoading(false);
@@ -386,7 +390,7 @@ const SingleRoom = () => {
               <Card elevation={0}>
                 <MapContainer
                   style={{ height: "50vh", width: "100%" }}
-                  center={[12.972442, 77.580643]}
+                  center={coordinates}
                   zoom={13}
                   scrollWheelZoom={false}
                   onClick={handlelocationClick}
@@ -397,7 +401,7 @@ const SingleRoom = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
                   <Marker
-                    position={[12.972442, 77.580643]}
+                    position={coordinates}
                     icon={
                       new Icon({
                         iconUrl: markerIconPng,
@@ -405,7 +409,6 @@ const SingleRoom = () => {
                         iconAnchor: [12, 41],
                       })
                     }
-                    draggable={true}
                   >
                     <Popup>
                       A pretty CSS3 popup. <br /> Easily customizable.
