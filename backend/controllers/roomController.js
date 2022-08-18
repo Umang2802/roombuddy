@@ -38,6 +38,8 @@ module.exports.createRoom = async (req, res) => {
           rentPrice,
           tenantDetails,
           images,
+          coordinates,
+          total_sqft
         } = req.body;
         const room = new Room({
           name,
@@ -55,6 +57,8 @@ module.exports.createRoom = async (req, res) => {
           preferences,
           rentPrice,
           tenantDetails,
+          coordinates,
+          total_sqft
         });
 
         room.user = authData.user;
@@ -152,6 +156,8 @@ module.exports.updateRoom = async (req, res) => {
         images,
         roomId,
         userId,
+        coordinates,
+        total_sqft
       } = req.body;
 
       if (authData.user._id === userId) {
@@ -182,6 +188,8 @@ module.exports.updateRoom = async (req, res) => {
             preferences,
             rentPrice,
             tenantDetails,
+            coordinates,
+            total_sqft
           },
           { new: true }
         );
