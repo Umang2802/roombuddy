@@ -26,11 +26,12 @@ import Navbar from "../Components/Navbar/Navbar";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { useEffect } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer ,useMap} from "react-leaflet";
 import { Popup } from "react-leaflet";
 import { Marker } from "react-leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from "leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -156,9 +157,11 @@ const SingleRoom = () => {
       bath: bath,
       bhk: bhk,
     };
+    console.log(data);
     axios.post("/model", data).then((res) => {
       console.log(res.data);
-      setPredictRent(res.data);
+      const value = ((res.data*100000*3)/100)/(tenantNo*100);
+      setPredictRent(value);
     });
     timer.current = window.setTimeout(() => {
       setSuccess(true);
@@ -178,6 +181,25 @@ const SingleRoom = () => {
       clearTimeout(timer.current);
     };
   }, []);
+
+  function ResetCenterView(props) {
+    const { selectPosition } = props;
+    const map = useMap();
+
+    useEffect(() => {
+      if (selectPosition) {
+        map.setView(
+          L.latLng(selectPosition[0], selectPosition[1]),
+          map.getZoom(),
+          {
+            animate: true,
+          }
+        );
+      }
+    }, [selectPosition, map]);
+
+    return null;
+  }
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -222,7 +244,10 @@ const SingleRoom = () => {
               top: "3%",
               bgcolor: "white",
             }}
-            onClick={() => {setClicked(false);setLoading(false);}}
+            onClick={() => {
+              setClicked(false);
+              setLoading(false);
+            }}
           >
             <ArrowBackIosRoundedIcon />
           </Fab>
@@ -301,7 +326,10 @@ const SingleRoom = () => {
                   }}
                   variant="extended"
                   aria-label="add"
-                  onClick={() => {setClicked(true);setLoading(true);}}
+                  onClick={() => {
+                    setClicked(true);
+                    setLoading(true);
+                  }}
                 >
                   <ViewCarouselIcon />
                   &nbsp;Show all photos
@@ -416,6 +444,7 @@ const SingleRoom = () => {
                       A pretty CSS3 popup. <br /> Easily customizable.
                     </Popup>
                   </Marker>
+                  <ResetCenterView selectPosition={coordinates} />
                 </MapContainer>
 
                 <CardContent

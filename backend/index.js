@@ -65,8 +65,8 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://roombuddyindia.herokuapp.com/",
-    //origin: "https://localhost:3000",
+    //origin: "https://roombuddyindia.herokuapp.com/",
+    origin: "https://localhost:3000",
     // credentials: true,
   },
 });

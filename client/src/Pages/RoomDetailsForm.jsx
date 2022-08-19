@@ -254,6 +254,7 @@ const RoomDetailsForm = () => {
       }
 
       if (location.state.status === "post") {
+        console.log(position);
         const roomdata = {
           name: data.name,
           address: data.address,
@@ -272,13 +273,14 @@ const RoomDetailsForm = () => {
           images: pics,
           tenantDetails: data.tenantDetails,
           total_sqft: data.totalSqft,
-          coordinates: [position.lat,position.lng],
+          coordinates: [position.lat, position.lng],
         };
         dispatch(actionCreator.postRoomAction(roomdata));
         handleClose();
         setSuccessMessage("Room added successfully");
         setOpenSuccess(true);
       } else {
+        console.log(position);
         const roomdata = {
           name: data.name,
           address: data.address,
@@ -299,7 +301,7 @@ const RoomDetailsForm = () => {
           roomId: location.state.id,
           userId: location.state.payload.user._id,
           total_sqft: data.totalSqft,
-          coordinates: [position.lat, position.lng],
+          coordinates: [position.lat,position.lng],
         };
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
@@ -392,7 +394,7 @@ const RoomDetailsForm = () => {
       setBhk(data.bhk);
       setType(data.propertyType);
       setPreferences(data.preferences);
-      setPosition(data.coordinates);
+      setPosition({lat:data.coordinates[0],lng:data.coordinates[1]});
 
       // Rules
       const rul = [];
