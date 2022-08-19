@@ -11,7 +11,7 @@ import { red } from "@mui/material/colors";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Backdrop} from "@mui/material";
+import { Backdrop } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import PostChat from "../../Components/Chat/PostChat";
@@ -20,7 +20,6 @@ import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 
 export default function Roomcard({ props }) {
- 
   const {
     setSelectedChat,
     chats,
@@ -142,7 +141,7 @@ export default function Roomcard({ props }) {
               }}
               variant="h7"
             >
-              {props.rentPrice}
+              {"₹" + props.rentPrice}
             </Typography>
           </Grid>
         </Grid>
@@ -172,15 +171,15 @@ export default function Roomcard({ props }) {
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>
-                <IconButton
-                  onClick={() => {
-                    setShowChat(true);
-                    accessChat(props?.user._id);
-                  }}
-                  aria-label="add to favorites"
-                >
-                  <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
-                </IconButton>
+              <IconButton
+                onClick={() => {
+                  setShowChat(true);
+                  accessChat(props?.user._id);
+                }}
+                aria-label="add to favorites"
+              >
+                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+              </IconButton>
             </Grid>
             <Grid item xs={4}>
               <IconButton

@@ -11,7 +11,7 @@ import { red } from "@mui/material/colors";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Backdrop} from "@mui/material";
+import { Backdrop } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PostChat from "../Chat/PostChat";
@@ -116,7 +116,7 @@ export default function Roommatecard({ props }) {
         <></>
       )}
       <Card
-        sx={{ m: 3, width: 330, minHeight: 425 ,cursor: "pointer"}}
+        sx={{ m: 3, width: 330, minHeight: 425, cursor: "pointer" }}
         onClick={() => setOpen(true)}
       >
         <Grid item xs={8}>
@@ -167,7 +167,7 @@ export default function Roommatecard({ props }) {
             color="#6177D4"
             fontWeight="Bolder"
           >
-            Budget : {props?.budget}
+            Budget : {"₹" + props?.budget}
           </Typography>
         </CardContent>
         {/* </Button> */}
