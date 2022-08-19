@@ -36,6 +36,8 @@ const roomSchema = new Schema({
             message: String
         }
     ],
+    coordinates: [Number],
+    total_sqft: Number
 });
 
 

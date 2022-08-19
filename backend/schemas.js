@@ -15,6 +15,8 @@ module.exports.roomSchema = Joi.object({
     amenities: Joi.array(),
     preferences: Joi.array(),
     rentPrice: Joi.number().required(),
+    coordinates: Joi.array(),
+    total_sqft: Joi.number().required(),
 });
 
 module.exports.roommateProfileSchema = Joi.object({

@@ -4,15 +4,8 @@ const mongoose = require("mongoose");
 const { cloudinary } = require("../cloudinary/index");
 
 module.exports.index = async (req, res) => {
-  console.log(req.token);
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
-    if (err) {
-      res.send("error while verifying token");
-    } else {
-      const rooms = await Room.find({}).populate("user", "username imageURL");
-      res.send(rooms);
-    }
-  });
+    const rooms = await Room.find({}).populate("user", "username imageURL");
+    res.send(rooms);
 };
 
 module.exports.createRoom = async (req, res) => {
@@ -38,6 +31,8 @@ module.exports.createRoom = async (req, res) => {
           rentPrice,
           tenantDetails,
           images,
+          coordinates,
+          total_sqft
         } = req.body;
         const room = new Room({
           name,
@@ -55,6 +50,8 @@ module.exports.createRoom = async (req, res) => {
           preferences,
           rentPrice,
           tenantDetails,
+          coordinates,
+          total_sqft
         });
 
         room.user = authData.user;
@@ -152,6 +149,8 @@ module.exports.updateRoom = async (req, res) => {
         images,
         roomId,
         userId,
+        coordinates,
+        total_sqft
       } = req.body;
 
       if (authData.user._id === userId) {
@@ -182,6 +181,8 @@ module.exports.updateRoom = async (req, res) => {
             preferences,
             rentPrice,
             tenantDetails,
+            coordinates,
+            total_sqft
           },
           { new: true }
         );

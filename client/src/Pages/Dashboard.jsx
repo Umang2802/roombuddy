@@ -17,7 +17,7 @@ import * as actionCreator2 from "../State/Actions/getroommateAction";
 import * as actionCreator3 from "../State/Actions/getstarredroommateAction";
 import * as actionCreator4 from "../State/Actions/getstarredroomsAction";
 import profileimage from "../Assets/profileicon.png";
-import { Grid } from "@mui/material";
+import { Grid, Snackbar } from "@mui/material";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -26,9 +26,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import MuiAlert from "@mui/material/Alert";
 
 import Chat from "../Components/Chat/Chat";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -62,7 +64,37 @@ function a11yProps(index) {
   };
 }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Dashboard() {
+  const user = JSON.parse(localStorage.getItem("user_id"));
+
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+    setOpenSuccess(false);
+  };
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user === null || user === undefined) {
+      setErrorMessage("you need to Login first");
+      setOpenError(true);
+      navigate("/");
+    }
+  }, [navigate,user])
+  
+
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
   //const [starredroommate, setStarredroommate] = useState([]);
@@ -93,7 +125,7 @@ export default function Dashboard() {
   const userdata = useSelector((state) => state.auth);
 
   const filteredroomdata = roomsdata.filter((rooms) => {
-    if (rooms.user._id === userdata.user_id) {
+    if (rooms.user._id === user) {
     return rooms;
     }
     else{
@@ -102,7 +134,7 @@ export default function Dashboard() {
   });
 
   const filteredroomatedata = profiledata.filter((profile) => {
-    if (profile.user === userdata.user_id) {
+    if (profile.user === user) {
       return profile;
     }
     else{
@@ -327,7 +359,9 @@ export default function Dashboard() {
           <Chat />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Typography>Posted Rooms</Typography>
+          <Typography>
+            <b>Rooms</b>
+          </Typography>
           <Grid container spacing={6}>
             {starredrooms?.map((item, key) => (
               <Grid key={key} item>
@@ -335,8 +369,10 @@ export default function Dashboard() {
               </Grid>
             ))}
           </Grid>
-          <Typography>Posted Rooms</Typography>
-          <Grid container spacing={0}>
+          <Typography sx={{ mt: 3 }}>
+            <b>Profiles</b>
+          </Typography>
+          <Grid container spacing={6}>
             {starredroommates?.map((item, key) => (
               <Grid key={key} item>
                 <Roommatecard props={item}></Roommatecard>
@@ -345,6 +381,32 @@ export default function Dashboard() {
           </Grid>
         </TabPanel>
       </Box>
+      <Snackbar
+        open={openError}
+        autoHideDuration={5000}
+        onClose={handleErrorClose}
+      >
+        <Alert
+          onClose={handleErrorClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={4000}
+        onClose={handleErrorClose}
+      >
+        <Alert
+          onClose={handleErrorClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

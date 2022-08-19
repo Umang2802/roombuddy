@@ -11,21 +11,45 @@ import { red } from "@mui/material/colors";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Backdrop } from "@mui/material";
+import { Backdrop, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PostChat from "../Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
+import MuiAlert from "@mui/material/Alert";
 import ProfileModal from "../ProfileModal";
 
 export default function Roommatecard({ props }) {
   console.log("props", props);
   const [open, setOpen] = React.useState(false);
 
-  const { setSelectedChat, chats, setChats, user, token } = ChatState();
+  const { setSelectedChat, chats, setChats, fetchAgain, setFetchAgain } =
+    ChatState();
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const user = JSON.parse(localStorage.getItem("user_id"));
+  const token = JSON.parse(localStorage.getItem("token"));
+  const [star, setStar] = useState(false);
+
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   const [showChat, setShowChat] = useState(false);
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+    setOpenSuccess(false);
+  };
 
   const accessChat = async (userId) => {
     console.log(chats);
@@ -49,12 +73,16 @@ export default function Roommatecard({ props }) {
       }
       setSelectedChat(data);
     } catch (error) {
-      console.log(error);
+      setErrorMessage("Failed to Load chat Box");
+      setOpenError(true);
     }
   };
   const starredHandler = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
+      if (usertoken === null || usertoken === undefined) {
+        throw new Error("You need to Login first");
+      }
       const config = {
         headers: {
           Authorization: `Bearer ${usertoken}`,
@@ -73,16 +101,29 @@ export default function Roommatecard({ props }) {
         .then((res) => {
           console.log(res.data);
         });
+      setSuccessMessage("Added to Starred in Dashboard");
+      setOpenSuccess(true);
     } catch (e) {
-      console.log(e);
+      setErrorMessage(e.message);
+      setOpenError(true);
     }
   };
 
   useEffect(() => {
+    if (token === null || token === undefined) {
+      if (open) {
+        setOpen(false);
+        console.log("hello");
+      }
+    }
     if (showChat) {
       setOpen(false);
     }
-  }, [showChat]);
+    if (star) {
+      setOpen(false);
+      setStar(false);
+    }
+  }, [showChat, star, token, open]);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -95,7 +136,8 @@ export default function Roommatecard({ props }) {
         const { data } = await axios.post("/chat/fetch", { user }, config);
         setChats(data);
       } catch (error) {
-        console.log(error);
+        setErrorMessage("Failed to fetch chats");
+        setOpenError(true);
       }
     };
     fetchChats();
@@ -109,7 +151,11 @@ export default function Roommatecard({ props }) {
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={showChat}
           >
-            <PostChat setShowChat={setShowChat} />
+            <PostChat
+              setShowChat={setShowChat}
+              fetchAgain={fetchAgain}
+              setFetchAgain={setFetchAgain}
+            />
           </Backdrop>
         </div>
       ) : (
@@ -117,7 +163,14 @@ export default function Roommatecard({ props }) {
       )}
       <Card
         sx={{ m: 3, width: 330, minHeight: 425, cursor: "pointer" }}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (token === null || token === undefined) {
+            setErrorMessage("You need to Login first");
+            setOpenError(true);
+          } else {
+            setOpen(true);
+          }
+        }}
       >
         <Grid item xs={8}>
           {props?.image && (
@@ -133,13 +186,13 @@ export default function Roommatecard({ props }) {
             />
           )}
         </Grid>
-        {/* <Button onClick={()=>setOpen(true)}> */}
         {props?.image && (
           <CardMedia
             component="img"
             height="194"
             image={props?.image.url}
-            alt="Paella dish"
+            alt="Room"
+            loading="lazy"
           />
         )}
         <CardContent sx={{ padding: "16px 16px 0px 16px" }}>
@@ -176,8 +229,13 @@ export default function Roommatecard({ props }) {
             <Grid item xs={4}>
               <IconButton
                 onClick={() => {
-                  setShowChat(true);
-                  accessChat(props?.user);
+                  if (user) {
+                    setShowChat(true);
+                    accessChat(props?.user);
+                  } else {
+                    setErrorMessage("You need to Login first");
+                    setOpenError(true);
+                  }
                 }}
                 aria-label="add to favorites"
               >
@@ -188,6 +246,7 @@ export default function Roommatecard({ props }) {
               <IconButton
                 aria-label="share"
                 onClick={() => {
+                  setStar(true);
                   starredHandler();
                 }}
               >
@@ -203,6 +262,32 @@ export default function Roommatecard({ props }) {
         </CardActions>
       </Card>
       <ProfileModal item={props} setOpen={setOpen} open={open} />
+      <Snackbar
+        open={openError}
+        autoHideDuration={5000}
+        onClose={handleErrorClose}
+      >
+        <Alert
+          onClose={handleErrorClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={4000}
+        onClose={handleErrorClose}
+      >
+        <Alert
+          onClose={handleErrorClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

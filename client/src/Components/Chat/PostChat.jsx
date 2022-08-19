@@ -34,8 +34,11 @@ const PostChat = ({ setShowChat, fetchAgain, setFetchAgain}) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const { selectedChat, user, notification, token, setNotification } =
+  const { selectedChat, notification, setNotification } =
     ChatState();
+
+    const user = JSON.parse(localStorage.getItem("user_id"));
+    const token = JSON.parse(localStorage.getItem("token"));
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
