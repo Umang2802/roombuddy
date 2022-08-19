@@ -69,6 +69,8 @@ const SingleRoom = () => {
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [rent, setRent] = React.useState();
+  const [coordinates, setCoordinates] = React.useState([12.972442, 77.580643]);
+  const [total_sqft, setTotal_Sqft] = React.useState();
   const [reportOption, setReportOption] = useState("Inappropriate Post");
 
   const timer = React.useRef();
@@ -78,6 +80,7 @@ const SingleRoom = () => {
   useEffect(() => {
     const tokentest = async () => {
       try {
+        setLoading(true);
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
         const config = {
@@ -100,6 +103,9 @@ const SingleRoom = () => {
             setTenants(res.data.tenantDetails);
             setImages(res.data.images);
             setRent(res.data.rentPrice);
+            setCoordinates(res.data.coordinates);
+            setTotal_Sqft(res.data.total_sqft);
+            setLoading(false);
           })
           .catch((err) => {
             console.log("Error", err);
@@ -145,15 +151,15 @@ const SingleRoom = () => {
     setSuccess(false);
     setLoading(true);
     const data = {
-      location: "1st Block Jayanagar",
-      total_sqft: 7.536897,
-      bath: 1.098612,
-      bhk: 1.386294,
+      location: address,
+      total_sqft: total_sqft,
+      bath: bath,
+      bhk: bhk,
     };
     axios.post("/model", data).then((res) => {
       console.log(res.data);
+      setPredictRent(res.data);
     });
-    setPredictRent(100);
     timer.current = window.setTimeout(() => {
       setSuccess(true);
       setLoading(false);
@@ -216,13 +222,13 @@ const SingleRoom = () => {
               top: "3%",
               bgcolor: "white",
             }}
-            onClick={() => setClicked(false)}
+            onClick={() => {setClicked(false);setLoading(false);}}
           >
             <ArrowBackIosRoundedIcon />
           </Fab>
           <Container maxWidth="lg" sx={{ p: 10 }}>
             <ImageList cols={1} gap={10}>
-              {images.map((item) => (
+              {images.map((item, index) => (
                 <ImageListItem key={item.url}>
                   <img
                     src={`${item.url}?fit=crop&auto=format`}
@@ -295,7 +301,7 @@ const SingleRoom = () => {
                   }}
                   variant="extended"
                   aria-label="add"
-                  onClick={() => setClicked(true)}
+                  onClick={() => {setClicked(true);setLoading(true);}}
                 >
                   <ViewCarouselIcon />
                   &nbsp;Show all photos
@@ -364,7 +370,7 @@ const SingleRoom = () => {
               {preferences.map((item) => (
                 <button
                   style={{
-                    mr:2,
+                    marginRight: "10px",
                     background: "#6177d4",
                     border: "1px solid #6177d4",
                     borderRadius: "35px",
@@ -386,18 +392,18 @@ const SingleRoom = () => {
               <Card elevation={0}>
                 <MapContainer
                   style={{ height: "50vh", width: "100%" }}
-                  center={[12.972442, 77.580643]}
+                  center={coordinates}
                   zoom={13}
                   scrollWheelZoom={false}
                   onClick={handlelocationClick}
                 >
                   {" "}
                   <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='<a href="https://www.https://roombuddyindia.herokuapp.com/">Roombuddy</a>'
+                    url="https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=5U24euf7DXZaEdPph9Ho"
                   />
                   <Marker
-                    position={[12.972442, 77.580643]}
+                    position={coordinates}
                     icon={
                       new Icon({
                         iconUrl: markerIconPng,
@@ -405,7 +411,6 @@ const SingleRoom = () => {
                         iconAnchor: [12, 41],
                       })
                     }
-                    draggable={true}
                   >
                     <Popup>
                       A pretty CSS3 popup. <br /> Easily customizable.

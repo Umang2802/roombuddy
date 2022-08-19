@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actionCreator from "../State/Actions/getroomAction";
 // import { deletePost } from "../Services/index.js";
 import RoomAppbar from "../Components/Appbar/RoomAppbar.jsx";
-import { Box } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 const Roompage = () => {
   const dispatch = useDispatch();
   // const [roomsdata, setRoomsdata] = useState([]);
@@ -48,11 +48,21 @@ const Roompage = () => {
     dispatch(actionCreator.getroomAction());
     // eslint-disable-next-line
   }, []);
+
+  const [loading, setLoading] = React.useState(true);
+
   const roommdata = useSelector((state) => state.roomdata.rooms);
   console.log(roommdata);
   const userId = JSON.parse(localStorage.getItem("user_id"));
+
   //const userdata = useSelector((state) => state.auth.user_id);
 
+
+  useEffect(() => {
+    if (roommdata.length !== 0) {
+      setLoading(false);
+    }
+  }, [roommdata]);
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
   //   const config = {
@@ -132,10 +142,19 @@ const Roompage = () => {
                   </Grid>
                 )}
               </>
-            );}
-          )}
+            );
+          })}
         </Grid>
       </Box>
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       {/* <button onClick={deletepost}>Delete</button>
       <button onClick={updatepost}>Update</button> */}

@@ -271,8 +271,8 @@ const RoomDetailsForm = () => {
           rentPrice: data.rent,
           images: pics,
           tenantDetails: data.tenantDetails,
-          totalSqft: data.totalSqft,
-          coordinates: position,
+          total_sqft: data.totalSqft,
+          coordinates: [position.lat,position.lng],
         };
         dispatch(actionCreator.postRoomAction(roomdata));
         handleClose();
@@ -298,8 +298,8 @@ const RoomDetailsForm = () => {
           tenantDetails: data.tenantDetails,
           roomId: location.state.id,
           userId: location.state.payload.user._id,
-          totalSqft: data.totalSqft,
-          coordinates: position,
+          total_sqft: data.totalSqft,
+          coordinates: [position.lat, position.lng],
         };
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
@@ -387,12 +387,12 @@ const RoomDetailsForm = () => {
       setValue("desc", data.description);
       setValue("address", data.address);
       setValue("rent", data.rentPrice);
-      setValue("totalSqft",data.totalSqft);
+      setValue("totalSqft",data.total_sqft);
       setBath(data.bathroom);
       setBhk(data.bhk);
       setType(data.propertyType);
       setPreferences(data.preferences);
-      setPosition(data.position);
+      setPosition(data.coordinates);
 
       // Rules
       const rul = [];
@@ -551,7 +551,7 @@ const RoomDetailsForm = () => {
   };
 
   useEffect(() => {
-    console.log(position);
+    console.log(position.lat,position.lng);
   });
   
   return (

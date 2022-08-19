@@ -6,6 +6,7 @@ import * as actionCreator from "../State/Actions/getroommateAction";
 // import { deletePost } from "../Services/index.js";
 import RoommateAppbar from "../Components/Appbar/RoommateAppbar.jsx";
 import Roommatecard from "../Components/Roommatecard/Roommatecard";
+import { Backdrop, CircularProgress } from "@mui/material";
 const Roommatepage = () => {
   const dispatch = useDispatch();
   // const [roommatedata, setRoommatedata] = useState([]);
@@ -46,10 +47,21 @@ const Roommatepage = () => {
     dispatch(actionCreator.getroommateAction());
     // eslint-disable-next-line
   }, []);
+  const [loading, setLoading] = React.useState(true);
+  //setLoading(true);
   const roommatedata = useSelector((state) => state.roommatedata.roommates);
+
+  useEffect(() => {
+    if (roommatedata.length !== 0) {
+      setLoading(false);
+    }
+   
+  },[roommatedata]);
+
   const userdata = useSelector((state) => state.auth.user_id);
   console.log("roommate data", roommatedata);
   console.log("roomid ", userdata);
+
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
   //   const config = {
@@ -107,9 +119,11 @@ const Roommatepage = () => {
   const [searchField, setSearchField] = useState("");
 
   const filteredRoommates = roommatedata.filter((roommate) => {
-    return roommate.lookingForRoomIn.toLowerCase().includes(searchField.toLowerCase());
+    return roommate.lookingForRoomIn
+      .toLowerCase()
+      .includes(searchField.toLowerCase());
   });
-  
+
   const userId = JSON.parse(localStorage.getItem("user_id"));
 
   const handleChange = (e) => {
@@ -125,7 +139,7 @@ const Roommatepage = () => {
         {filteredRoommates?.map((item, key) => {
           return (
             <>
-              {userId !== item?.user._id && (
+              {userId !== item?.user && (
                 <Grid key={key} item xs={3}>
                   <Roommatecard props={item}></Roommatecard>
                 </Grid>
@@ -134,6 +148,15 @@ const Roommatepage = () => {
           );
         })}
       </Grid>
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {/* <button onClick={deletepost}>Delete</button>
       <button onClick={updatepost}>Update</button> */}
     </>

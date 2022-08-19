@@ -1,11 +1,12 @@
 const initialState = {
-  user_id: localStorage.getItem("userid"),
+  user_id: localStorage.getItem("user_id"),
   token: localStorage.getItem("token"),
   username: "",
   error: null,
   imageURL: "",
   bio: "",
   type: "",
+  response: [],
 };
 
 const authReducer = (state = initialState, actions) => {
@@ -19,6 +20,8 @@ const authReducer = (state = initialState, actions) => {
         user_id: payload.user._id,
         imageURL: payload.user.imageURL,
         bio: payload.user.bio,
+        type: payload.user.type,
+        response: payload.user.response,
         error: null,
       };
     case "SIGNUP_FAIL":
@@ -34,6 +37,8 @@ const authReducer = (state = initialState, actions) => {
         user_id: payload.user._id,
         imageURL: payload.user.imageURL,
         bio: payload.user.bio,
+        type: payload.user.type,
+        response: payload.user.response,
         error: null,
       };
     case "LOGIN_FAILED":
@@ -48,6 +53,8 @@ const authReducer = (state = initialState, actions) => {
         user_id: null,
         imageURL: null,
         bio: null,
+        type: null,
+        response: null,
         error: null,
       };
 
