@@ -11,27 +11,42 @@ import { red } from "@mui/material/colors";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Backdrop} from "@mui/material";
+import { Backdrop, Box, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import PostChat from "../../Components/Chat/PostChat";
 import { ChatState } from "../../Context/Provider";
 import Grid from "@mui/material/Grid";
+import MuiAlert from "@mui/material/Alert";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Roomcard({ props }) {
- 
-  const {
-    setSelectedChat,
-    chats,
-    setChats,
-    user,
-    token,
-    fetchAgain,
-    setFetchAgain,
-  } = ChatState();
+  const { setSelectedChat, chats, setChats, fetchAgain, setFetchAgain } =
+    ChatState();
+
+      const Alert = React.forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+      });
+
+  const user = JSON.parse(localStorage.getItem("user_id"));
+  const token = JSON.parse(localStorage.getItem("token"));
 
   const [showChat, setShowChat] = useState(false);
+
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+    setOpenSuccess(false);
+  };
 
   const accessChat = async (userId) => {
     console.log(chats);
@@ -55,12 +70,17 @@ export default function Roomcard({ props }) {
       }
       setSelectedChat(data);
     } catch (error) {
-      console.log(error);
+      setErrorMessage("Failed to Load chat Box");
+      setOpenError(true);
     }
   };
+
   const starredHandler = async () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
+      if (usertoken === null || usertoken === undefined) {
+        throw new Error("You need to Login first");
+      }
       const config = {
         headers: {
           Authorization: `Bearer ${usertoken}`,
@@ -75,12 +95,16 @@ export default function Roomcard({ props }) {
         .then((res) => {
           console.log(res.data);
         });
+      setSuccessMessage("Added to Starred in Dashboard");
+      setOpenSuccess(true);
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
+      setErrorMessage(e.message);
+      setOpenError(true);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchChats = async () => {
       try {
         const config = {
@@ -91,7 +115,8 @@ export default function Roomcard({ props }) {
         const { data } = await axios.post("/chat/fetch", { user }, config);
         setChats(data);
       } catch (error) {
-        console.log(error);
+        setErrorMessage("Failed to fetch chats");
+        setOpenError(true);
       }
     };
     fetchChats();
@@ -146,41 +171,82 @@ export default function Roomcard({ props }) {
             </Typography>
           </Grid>
         </Grid>
-        <Link style={{ textDecoration: "none" }} to={"/room/" + props._id}>
-          {props?.images?.length > 0 && (
-            <CardMedia
-              component="img"
-              height="194"
-              image={props?.images[0].url}
-              alt="Paella dish"
-            />
-          )}
-          <CardContent sx={{ paddingBottom: "0 !important" }}>
-            <Typography variant="h7" color="text.primary" fontWeight="bolder">
-              {props?.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {props?.address.length > 40
-                ? props.address.substring(0, 40) + "...."
-                : props.address}
-            </Typography>
-            <Typography mt={1} variant="body2" color="gray" fontWeight={"bold"}>
-              {props?.propertyType}
-            </Typography>
-          </CardContent>
-        </Link>
+        {user === null || user === undefined ? (
+          <Box onClick={()=> {setErrorMessage("You need to Login first"); setOpenError(true);}}>
+            {props?.images?.length > 0 && (
+              <CardMedia
+                component="img"
+                height="194"
+                image={props?.images[0].url}
+                alt="Paella dish"
+              />
+            )}
+            <CardContent sx={{ paddingBottom: "0 !important" }}>
+              <Typography variant="h7" color="text.primary" fontWeight="bolder">
+                {props?.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {props?.address.length > 40
+                  ? props.address.substring(0, 40) + "...."
+                  : props.address}
+              </Typography>
+              <Typography
+                mt={1}
+                variant="body2"
+                color="gray"
+                fontWeight={"bold"}
+              >
+                {props?.propertyType}
+              </Typography>
+            </CardContent>
+          </Box>
+        ) : (
+          <Link style={{ textDecoration: "none" }} to={"/room/" + props._id}>
+            {props?.images?.length > 0 && (
+              <CardMedia
+                component="img"
+                height="194"
+                image={props?.images[0].url}
+                alt="Paella dish"
+              />
+            )}
+            <CardContent sx={{ paddingBottom: "0 !important" }}>
+              <Typography variant="h7" color="text.primary" fontWeight="bolder">
+                {props?.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {props?.address.length > 40
+                  ? props.address.substring(0, 40) + "...."
+                  : props.address}
+              </Typography>
+              <Typography
+                mt={1}
+                variant="body2"
+                color="gray"
+                fontWeight={"bold"}
+              >
+                {props?.propertyType}
+              </Typography>
+            </CardContent>
+          </Link>
+        )}
         <CardActions>
           <Grid container align="center">
             <Grid item xs={4}>
-                <IconButton
-                  onClick={() => {
+              <IconButton
+                onClick={() => {
+                  if (user) {
                     setShowChat(true);
                     accessChat(props?.user._id);
-                  }}
-                  aria-label="add to favorites"
-                >
-                  <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
-                </IconButton>
+                  } else {
+                    setErrorMessage("You need to Login first");
+                    setOpenError(true);
+                  }
+                }}
+                aria-label="add to favorites"
+              >
+                <ChatBubbleOutlineIcon sx={{ fontSize: "20px" }} />
+              </IconButton>
             </Grid>
             <Grid item xs={4}>
               <IconButton
@@ -200,6 +266,32 @@ export default function Roomcard({ props }) {
           </Grid>
         </CardActions>
       </Card>
+      <Snackbar
+        open={openError}
+        autoHideDuration={5000}
+        onClose={handleErrorClose}
+      >
+        <Alert
+          onClose={handleErrorClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={4000}
+        onClose={handleErrorClose}
+      >
+        <Alert
+          onClose={handleErrorClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

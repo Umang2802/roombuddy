@@ -12,7 +12,9 @@ import { ChatState } from "../../Context/Provider";
 const Allchats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
-  const { selectedChat, setSelectedChat, user, token, chats, setChats } = ChatState();
+  const { selectedChat, setSelectedChat, chats, setChats } = ChatState();
+  const user = JSON.parse(localStorage.getItem("user_id"));
+  const token = JSON.parse(localStorage.getItem("token"));
 
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("user_id")));

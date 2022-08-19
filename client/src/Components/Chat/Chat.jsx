@@ -3,12 +3,11 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Chatbox from "./Chatbox";
 import Allchats from "./Allchats";
-import { ChatState } from "../../Context/Provider";
 import { useState } from "react";
 
 const Chat = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
-  const { user} = ChatState();
+  const user = JSON.parse(localStorage.getItem("user_id"));
 
   return (
     <div>

@@ -69,7 +69,7 @@ const SingleRoom = () => {
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [rent, setRent] = React.useState();
-  const [coordinates, setCoordinates] = React.useState();
+  const [coordinates, setCoordinates] = React.useState([12.972442, 77.580643]);
   const [total_sqft, setTotal_Sqft] = React.useState();
   const [reportOption, setReportOption] = useState("Inappropriate Post");
 
@@ -80,6 +80,7 @@ const SingleRoom = () => {
   useEffect(() => {
     const tokentest = async () => {
       try {
+        setLoading(true);
         const usertoken = JSON.parse(localStorage.getItem("token"));
 
         const config = {
@@ -104,6 +105,7 @@ const SingleRoom = () => {
             setRent(res.data.rentPrice);
             setCoordinates(res.data.coordinates);
             setTotal_Sqft(res.data.total_sqft);
+            setLoading(false);
           })
           .catch((err) => {
             console.log("Error", err);
@@ -220,13 +222,13 @@ const SingleRoom = () => {
               top: "3%",
               bgcolor: "white",
             }}
-            onClick={() => setClicked(false)}
+            onClick={() => {setClicked(false);setLoading(false);}}
           >
             <ArrowBackIosRoundedIcon />
           </Fab>
           <Container maxWidth="lg" sx={{ p: 10 }}>
             <ImageList cols={1} gap={10}>
-              {images.map((item) => (
+              {images.map((item, index) => (
                 <ImageListItem key={item.url}>
                   <img
                     src={`${item.url}?fit=crop&auto=format`}
@@ -299,7 +301,7 @@ const SingleRoom = () => {
                   }}
                   variant="extended"
                   aria-label="add"
-                  onClick={() => setClicked(true)}
+                  onClick={() => {setClicked(true);setLoading(true);}}
                 >
                   <ViewCarouselIcon />
                   &nbsp;Show all photos
@@ -368,7 +370,7 @@ const SingleRoom = () => {
               {preferences.map((item) => (
                 <button
                   style={{
-                    marginRight:"10px",
+                    marginRight: "10px",
                     background: "#6177d4",
                     border: "1px solid #6177d4",
                     borderRadius: "35px",
@@ -397,8 +399,8 @@ const SingleRoom = () => {
                 >
                   {" "}
                   <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='<a href="https://www.https://roombuddyindia.herokuapp.com/">Roombuddy</a>'
+                    url="https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=5U24euf7DXZaEdPph9Ho"
                   />
                   <Marker
                     position={coordinates}
