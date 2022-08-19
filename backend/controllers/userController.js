@@ -76,7 +76,7 @@ module.exports.survey = async (req, res) => {
     }
     else{ 
           const { response } = req.body;
-          const user = await User.findOne(authData.user._id);
+          const user = await User.findOne({user: authData.user._id});
           user.response = response;
           await user.save();
           res.send(user);
