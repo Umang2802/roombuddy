@@ -12,5 +12,6 @@ router.post('/', verifyToken, validateRoom, rooms.createRoom);
 router.post('/deleteRoom', verifyToken, rooms.deleteRoom);
 router.post('/updateRoom', verifyToken, rooms.updateRoom);
 router.post('/reportRoom', verifyToken, rooms.reportRoom);
+router.post('/recommendRoom', rooms.roomRecommender)
 
 module.exports = router;

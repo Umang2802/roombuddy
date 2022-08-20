@@ -48,7 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function RoommateAppbar({ handleChange }) {
+export default function RoommateAppbar({ handleChange, personalitycheck }) {
   const navigate = useNavigate();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -83,7 +83,9 @@ export default function RoommateAppbar({ handleChange }) {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Button sx={{ bgcolor: "white", mr: 2 }}>Recommend Roommates</Button>
+            <Button onClick={personalitycheck} sx={{ bgcolor: "white", mr: 2 }}>
+              Recommend Roommates
+            </Button>
             <Button
               sx={{ bgcolor: "white", mr: 2 }}
               onClick={() => {

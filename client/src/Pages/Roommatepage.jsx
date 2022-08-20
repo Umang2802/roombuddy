@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar/Navbar.js";
 import { Grid } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+
 import * as actionCreator from "../State/Actions/getroommateAction";
 // import { deletePost } from "../Services/index.js";
 import RoommateAppbar from "../Components/Appbar/RoommateAppbar.jsx";
 import Roommatecard from "../Components/Roommatecard/Roommatecard";
 import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
 const Roommatepage = () => {
   const dispatch = useDispatch();
+  const [showrooms, setShowrooms] = useState([]);
+  const [setcost, setSetcost] = useState([]);
   // const [roommatedata, setRoommatedata] = useState([]);
   // const roommatedetails = async () => {
   //   try {
@@ -55,12 +59,13 @@ const Roommatepage = () => {
     if (roommatedata.length !== 0) {
       setLoading(false);
     }
-   
-  },[roommatedata]);
+  }, [roommatedata]);
+  useEffect(() => {
+    setShowrooms(roommatedata);
+  }, []);
 
   const userdata = useSelector((state) => state.auth.user_id);
-  console.log("roommate data", roommatedata);
-  console.log("roomid ", userdata);
+  const response = useSelector((state) => state.auth.response);
 
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -118,7 +123,7 @@ const Roommatepage = () => {
 
   const [searchField, setSearchField] = useState("");
 
-  const filteredRoommates = roommatedata.filter((roommate) => {
+  let filteredRoommates = roommatedata.filter((roommate) => {
     return roommate.lookingForRoomIn
       .toLowerCase()
       .includes(searchField.toLowerCase());
@@ -128,15 +133,51 @@ const Roommatepage = () => {
 
   const handleChange = (e) => {
     setSearchField(e.target.value);
+    setShowrooms(filteredRoommates);
   };
 
+  const personalitycheck = () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      const user_id = JSON.parse(localStorage.getItem("user_id"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+
+      console.log(response);
+
+      const data2 = {
+        roommateIDs: ["62fe95d373a52c57e8f545a2", "630010f697259a744cfb4271"],
+        response: response,
+      };
+      axios
+        .post("/personality", data2, config)
+        .then((res) => {
+          console.log("response", res.data);
+          let data3 = res.data.map((item) => {
+            return item.Roommateprofile;
+          });
+          setShowrooms(data3);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       <Navbar></Navbar>
-      <RoommateAppbar handleChange={handleChange} />
+      <RoommateAppbar
+        handleChange={handleChange}
+        personalitycheck={personalitycheck}
+      />
 
       <Grid container spacing={0}>
-        {filteredRoommates?.map((item, key) => {
+        {showrooms?.map((item, key) => {
           return (
             <>
               {userId !== item?.user && (

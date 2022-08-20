@@ -17,12 +17,12 @@ const style = {
   width: 700,
   bgcolor: "background.paper",
   borderRadius: "10px",
-  outline: "none"
+  outline: "none",
 };
 
 export default function ProfileModal(props) {
   const { item, setOpen, open } = props;
-  console.log(props);
+
   const handleClose = () => setOpen(false);
 
   return (
@@ -51,7 +51,7 @@ export default function ProfileModal(props) {
               alt="Live from space album cover"
             />
             <Box>
-              <CardContent sx={{ flex: "1 0 auto" ,p:3}}>
+              <CardContent sx={{ flex: "1 0 auto", p: 3 }}>
                 <Typography component="div" variant="h5">
                   {item?.name}
                 </Typography>
@@ -88,14 +88,15 @@ export default function ProfileModal(props) {
                     <b>{value}</b>&nbsp;&nbsp;
                   </Typography>
                 ))}
-                <br/><br/>
+                <br />
+                <br />
                 <Button
                   sx={{ color: "#6177D4", border: "solid 1px #6177D4" }}
                   variant="outlined"
                   size="small"
                   //   onClick={handleOpen}
                 >
-                  <ReportIcon fontSize="small"/>
+                  <ReportIcon fontSize="small" />
                   &nbsp; Report
                 </Button>
               </CardContent>

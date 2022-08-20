@@ -2,6 +2,7 @@ const Room = require("../models/room");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { cloudinary } = require("../cloudinary/index");
+const similarity = require("compute-cosine-similarity");
 
 module.exports.index = async (req, res) => {
     const rooms = await Room.find({}).populate("user", "username imageURL");
@@ -263,3 +264,41 @@ module.exports.reportRoom = async (req, res) => {
     }
   });
 };
+
+module.exports.roomRecommender = async (req, res) => {
+  const { roomIDs, response } = req.body;
+  if (response.length === 0) {
+    res.send("Response field is empty"); //after getting this reponse, automatically route to survey from frontend
+  }
+  else{
+    const sortedRooms = [];
+    const foundRooms = [];
+    for (let i = 0; i < roomIDs.length; i++) {
+      const room = await Room.findOne({
+        _id: roomIDs[i]
+      });
+      foundRooms.push(room);
+    }
+
+    for (let i = 0; i < foundRooms.length; i++) {
+      let total_sqft = foundRooms[i].total_sqft
+      let bathroom = foundRooms[i].bathroom
+      let bhk = foundRooms[i].bhk
+      let coord1 = foundRooms[i].coordinates[0]
+      let coord2 = foundRooms[i].coordinates[1]
+
+      let currentRoomValues = [total_sqft, bathroom, bhk, coord1, coord2]
+      let cosine = similarity(response, currentRoomValues);
+
+      let roomAndCosine = {
+        room: foundRooms[i],
+        cosine: cosine
+      };
+
+      sortedRooms.push(roomAndCosine);
+    }
+    sortedRooms.sort((a, b) => (a.cosine > b.cosine ? 1 : -1));
+    res.send(sortedRooms)
+  }
+
+}

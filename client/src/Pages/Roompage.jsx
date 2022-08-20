@@ -52,11 +52,10 @@ const Roompage = () => {
   const [loading, setLoading] = React.useState(true);
 
   const roommdata = useSelector((state) => state.roomdata.rooms);
-  console.log(roommdata);
+
   const userId = JSON.parse(localStorage.getItem("user_id"));
 
   //const userdata = useSelector((state) => state.auth.user_id);
-
 
   useEffect(() => {
     if (roommdata.length !== 0) {

@@ -39,10 +39,9 @@ export const LoginAction = (params, navigate) => (dispatch) => {
       });
     });
 };
-export const logout = (history) => (dispatch) => {
+export const logout = () => (dispatch) => {
   localStorage.removeItem("token");
   dispatch({
     type: "LOGOUT",
   });
-  history.push("/");
 };

@@ -13,7 +13,7 @@ import store from "./State/store";
 import Roommatepage from "./Pages/Roommatepage";
 import Dashboard from "./Pages/Dashboard";
 import Errorpage from "./Pages/Errorpage";
-
+import Survey from "./Pages/survey/Survey";
 const App = () => {
   return (
     <Provider store={store}>
@@ -33,6 +33,7 @@ const App = () => {
           <Route path="/roommates" element={<Roommatepage />} />
           <Route path="/dashboard" element={<Dashboard></Dashboard>} />
           <Route path="*" element={<Errorpage />} />
+          <Route path="/survey" element={<Survey />} />
         </Routes>
       </div>
     </Provider>

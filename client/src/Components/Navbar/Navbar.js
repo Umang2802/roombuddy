@@ -12,6 +12,8 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Logo from "../../Assets/logo.svg";
 import { useSelector } from "react-redux";
+import * as actionCreator from "../../State/Actions/authaction";
+import { useDispatch } from "react-redux";
 import {
   Drawer,
   List,
@@ -23,6 +25,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 const Navbar = () => {
   const userdata = useSelector((state) => state.auth.username);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [show, setShow] = useState(true);
   const [uname, setUname] = useState();
@@ -34,7 +37,9 @@ const Navbar = () => {
       setUname(userdata);
     }
   }, [show, userdata]);
-
+  const handleLogout = () => {
+    dispatch(actionCreator.logout());
+  };
   return (
     <AppBar
       style={{ background: "#EEF2FF", boxShadow: "none" }}
@@ -194,6 +199,7 @@ const Navbar = () => {
                   onClick={() => {
                     localStorage.removeItem("user_id");
                     localStorage.removeItem("token");
+                    handleLogout();
                     navigate("/");
                   }}
                 >

@@ -21,10 +21,10 @@ import MuiAlert from "@mui/material/Alert";
 import ProfileModal from "../ProfileModal";
 
 export default function Roommatecard({ props }) {
-  console.log("props", props);
   const [open, setOpen] = React.useState(false);
 
-  const { setSelectedChat, chats, setChats, fetchAgain, setFetchAgain } = ChatState();
+  const { setSelectedChat, chats, setChats, fetchAgain, setFetchAgain } =
+    ChatState();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -219,7 +219,7 @@ export default function Roommatecard({ props }) {
             color="#6177D4"
             fontWeight="Bolder"
           >
-            Budget : {props?.budget}
+            Budget : {"₹" + props?.budget}
           </Typography>
         </CardContent>
         {/* </Button> */}

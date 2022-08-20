@@ -25,9 +25,9 @@ export default function Roomcard({ props }) {
   const { setSelectedChat, chats, setChats, fetchAgain, setFetchAgain } =
     ChatState();
 
-      const Alert = React.forwardRef(function Alert(props, ref) {
-        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-      });
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
   const user = JSON.parse(localStorage.getItem("user_id"));
   const token = JSON.parse(localStorage.getItem("token"));
@@ -167,12 +167,17 @@ export default function Roomcard({ props }) {
               }}
               variant="h7"
             >
-              {props.rentPrice}
+              {"₹" + props.rentPrice}
             </Typography>
           </Grid>
         </Grid>
         {user === null || user === undefined ? (
-          <Box onClick={()=> {setErrorMessage("You need to Login first"); setOpenError(true);}}>
+          <Box
+            onClick={() => {
+              setErrorMessage("You need to Login first");
+              setOpenError(true);
+            }}
+          >
             {props?.images?.length > 0 && (
               <CardMedia
                 component="img"
