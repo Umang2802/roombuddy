@@ -6,24 +6,13 @@ import SignUpInfo from "./SignUpInfo";
 import PersonalInfo from "./PersonalInfo";
 import OtherInfo from "./OtherInfo";
 import Box from "@mui/material/Box";
-
+import { Container } from "@mui/material";
+import { height } from "@mui/system";
+import background from "../../Assets/background.svg";
 const Survey = () => {
   const [surveyResults, setSurveyResults] = useState([]);
-
-  const populateValue = () => {
-    // for (let i = 0; i < 25; i++) {
-    //   data.push(Math.floor(Math.random() * 5 + 1));
-    // }
-    const data = [
-      3, 4, 1, 2, 3, 4, 3, 1, 6, 3, 3, 2, 3, 1, 3, 4, 5, 2, 2, 3, 1, 5, 4, 1, 3,
-    ];
-    setSurveyResults(data);
-  };
-
-  const handleClick = () => {
-    populateValue();
-    console.log(surveyResults);
-  };
+  const [page, setPage] = useState(0);
+  const [formData, setFormData] = useState([]);
   const sendResponses = () => {
     try {
       const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -34,7 +23,8 @@ const Survey = () => {
         },
       };
       console.log(user_id);
-      const data1 = { user_id: user_id, response: surveyResults };
+      const data1 = { user_id: user_id, response: formData };
+      console.log(data1.response);
 
       axios
         .post("/survey", data1, config)
@@ -48,34 +38,7 @@ const Survey = () => {
       console.log(e);
     }
   };
-  const personalitycheck = () => {
-    try {
-      const usertoken = JSON.parse(localStorage.getItem("token"));
-      const user_id = JSON.parse(localStorage.getItem("user_id"));
-      const config = {
-        headers: {
-          Authorization: `Bearer ${usertoken}`,
-        },
-      };
-      console.log(user_id);
-      const data2 = {
-        roommateIDs: ["630010f697259a744cfb4271", "62fe95d373a52c57e8f545a2"],
-        response: surveyResults,
-      };
 
-      axios
-        .post("/personality", data2, config)
-        .then((res) => {
-          let data = res.data.reverse();
-          console.log("response", res);
-        })
-        .catch((err) => {
-          console.log("Error", err);
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  };
   const formQuestions = [
     "I start conversations",
     "I don't like to draw attention to myself",
@@ -103,8 +66,7 @@ const Survey = () => {
     "I spend time reflecting on things",
     "I have a rich vocabulary",
   ];
-  const [page, setPage] = useState(0);
-  const [formData, setFormData] = useState([]);
+
   const FormTitles = ["1", "2"];
   const PageDisplay = () => {
     return (
@@ -118,12 +80,25 @@ const Survey = () => {
   };
 
   return (
-    <>
-      <Button onClick={handleClick}>TRY</Button>
+    <Container
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+    >
+      <img
+        style={{ position: "absolute", left: "0", right: "0" }}
+        src={background}
+        alt=""
+      />
+      {/* <Button onClick={handleClick}>TRY</Button>
       <Button onClick={sendResponses}>SUBMIT</Button>
-      <Button onClick={personalitycheck}>CHECK</Button>
-      <Box
-        sx={{ display: "grid", justifyContent: "center", alignItems: "center" }}
+      <Button onClick={personalitycheck}>CHECK</Button> */}
+      <Container
+        sx={{
+          display: "grid",
+          justifyContent: "center",
+          alignItems: "center",
+
+          marginTop: "25vh",
+        }}
       >
         <div className="form">
           <div className="progressbar">
@@ -137,15 +112,15 @@ const Survey = () => {
             <div className="header">{/* <h1>{FormTitles[page]}</h1> */}</div>
             <div className="body">{PageDisplay()}</div>
             <div className="footer">
-              <button
+              <Button
                 disabled={page == 0}
                 onClick={() => {
                   setPage((currPage) => currPage - 1);
                 }}
               >
                 Prev
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   if (page === formQuestions.length - 1) {
                     sendResponses();
@@ -156,12 +131,12 @@ const Survey = () => {
                 }}
               >
                 {page === formQuestions.length - 1 ? "Submit" : "Next"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
-      </Box>
-    </>
+      </Container>
+    </Container>
   );
 };
 

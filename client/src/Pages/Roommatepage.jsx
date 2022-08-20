@@ -7,6 +7,7 @@ import * as actionCreator from "../State/Actions/getroommateAction";
 import RoommateAppbar from "../Components/Appbar/RoommateAppbar.jsx";
 import Roommatecard from "../Components/Roommatecard/Roommatecard";
 import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
 const Roommatepage = () => {
   const dispatch = useDispatch();
   // const [roommatedata, setRoommatedata] = useState([]);
@@ -55,12 +56,10 @@ const Roommatepage = () => {
     if (roommatedata.length !== 0) {
       setLoading(false);
     }
-   
-  },[roommatedata]);
+  }, [roommatedata]);
 
   const userdata = useSelector((state) => state.auth.user_id);
-  console.log("roommate data", roommatedata);
-  console.log("roomid ", userdata);
+  const response = useSelector((state) => state.auth.response);
 
   // const deletepost = () => {
   //   const usertoken = JSON.parse(localStorage.getItem("token"));
@@ -130,10 +129,45 @@ const Roommatepage = () => {
     setSearchField(e.target.value);
   };
 
+  const personalitycheck = () => {
+    try {
+      const usertoken = JSON.parse(localStorage.getItem("token"));
+      const user_id = JSON.parse(localStorage.getItem("user_id"));
+      const config = {
+        headers: {
+          Authorization: `Bearer ${usertoken}`,
+        },
+      };
+      const ids = roommatedata.map((item) => {
+        return item._id;
+      });
+      console.log("ids", ids);
+      console.log(response);
+
+      const data2 = {
+        roommateIDs: ids,
+        response: response,
+      };
+      axios
+        .post("/personality", data2, config)
+        .then((res) => {
+          console.log("response", res.data);
+          filteredRoommates = res.data.data;
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       <Navbar></Navbar>
-      <RoommateAppbar handleChange={handleChange} />
+      <RoommateAppbar
+        handleChange={handleChange}
+        personalitycheck={personalitycheck}
+      />
 
       <Grid container spacing={0}>
         {filteredRoommates?.map((item, key) => {

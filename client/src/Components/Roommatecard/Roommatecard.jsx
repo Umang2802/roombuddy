@@ -21,7 +21,6 @@ import MuiAlert from "@mui/material/Alert";
 import ProfileModal from "../ProfileModal";
 
 export default function Roommatecard({ props }) {
-  console.log("props", props);
   const [open, setOpen] = React.useState(false);
 
   const { setSelectedChat, chats, setChats, fetchAgain, setFetchAgain } =
