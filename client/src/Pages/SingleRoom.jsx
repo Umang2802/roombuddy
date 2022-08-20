@@ -161,7 +161,7 @@ const SingleRoom = () => {
     axios.post("/model", data).then((res) => {
       console.log(res.data);
       const value = (res.data*100000*0.002)/(tenantNo);
-      setPredictRent(value);
+      setPredictRent(parseInt(value));
     });
     timer.current = window.setTimeout(() => {
       setSuccess(true);
