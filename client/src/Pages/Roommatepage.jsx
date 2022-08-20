@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar/Navbar.js";
 import { Grid } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+
 import * as actionCreator from "../State/Actions/getroommateAction";
 // import { deletePost } from "../Services/index.js";
 import RoommateAppbar from "../Components/Appbar/RoommateAppbar.jsx";
@@ -10,6 +11,8 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import axios from "axios";
 const Roommatepage = () => {
   const dispatch = useDispatch();
+  const [showrooms, setShowrooms] = useState([]);
+  const [setcost, setSetcost] = useState([]);
   // const [roommatedata, setRoommatedata] = useState([]);
   // const roommatedetails = async () => {
   //   try {
@@ -57,6 +60,9 @@ const Roommatepage = () => {
       setLoading(false);
     }
   }, [roommatedata]);
+  useEffect(() => {
+    setShowrooms(roommatedata);
+  }, []);
 
   const userdata = useSelector((state) => state.auth.user_id);
   const response = useSelector((state) => state.auth.response);
@@ -117,7 +123,7 @@ const Roommatepage = () => {
 
   const [searchField, setSearchField] = useState("");
 
-  const filteredRoommates = roommatedata.filter((roommate) => {
+  let filteredRoommates = roommatedata.filter((roommate) => {
     return roommate.lookingForRoomIn
       .toLowerCase()
       .includes(searchField.toLowerCase());
@@ -127,6 +133,7 @@ const Roommatepage = () => {
 
   const handleChange = (e) => {
     setSearchField(e.target.value);
+    setShowrooms(filteredRoommates);
   };
 
   const personalitycheck = () => {
@@ -138,21 +145,21 @@ const Roommatepage = () => {
           Authorization: `Bearer ${usertoken}`,
         },
       };
-      const ids = roommatedata.map((item) => {
-        return item._id;
-      });
-      console.log("ids", ids);
+
       console.log(response);
 
       const data2 = {
-        roommateIDs: ids,
+        roommateIDs: ["62fe95d373a52c57e8f545a2", "630010f697259a744cfb4271"],
         response: response,
       };
       axios
         .post("/personality", data2, config)
         .then((res) => {
           console.log("response", res.data);
-          filteredRoommates = res.data.data;
+          let data3 = res.data.map((item) => {
+            return item.Roommateprofile;
+          });
+          setShowrooms(data3);
         })
         .catch((err) => {
           console.log("Error", err);
@@ -170,7 +177,7 @@ const Roommatepage = () => {
       />
 
       <Grid container spacing={0}>
-        {filteredRoommates?.map((item, key) => {
+        {showrooms?.map((item, key) => {
           return (
             <>
               {userId !== item?.user && (

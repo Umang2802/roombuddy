@@ -84,7 +84,6 @@ module.exports.survey = async (req, res) => {
       console.log(user);
       res.send(user);
     }
-
   });
 };
 

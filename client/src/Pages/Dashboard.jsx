@@ -92,8 +92,7 @@ export default function Dashboard() {
       setOpenError(true);
       navigate("/");
     }
-  }, [navigate,user])
-  
+  }, [navigate, user]);
 
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
@@ -126,21 +125,18 @@ export default function Dashboard() {
 
   const filteredroomdata = roomsdata.filter((rooms) => {
     if (rooms.user._id === user) {
-    return rooms;
-    }
-    else{
-        return null;
+      return rooms;
+    } else {
+      return null;
     }
   });
 
   const filteredroomatedata = profiledata.filter((profile) => {
     if (profile.user === user) {
       return profile;
+    } else {
+      return null;
     }
-    else{
-        return null;
-    }
-    
   });
 
   // const loadStarreddata = async () => {
@@ -241,18 +237,18 @@ export default function Dashboard() {
       <Navbar></Navbar>
       <Box sx={{ height: "20vh", backgroundColor: "#E1E7FF" }}>
         <div>
-          <Button onClick={handleClickOpen}>Edit profile</Button>
+          {/* <Button onClick={handleClickOpen}>Edit profile</Button> */}
           <BootstrapDialog
             onClose={handleClose}
             aria-labelledby="customized-dialog-title"
             open={open}
           >
-            <BootstrapDialogTitle
+            {/* <BootstrapDialogTitle
               id="customized-dialog-title"
               onClose={handleClose}
             >
               Edit Profile
-            </BootstrapDialogTitle>
+            </BootstrapDialogTitle> */}
             <DialogContent dividers>
               <Typography gutterBottom>
                 Cras mattis consectetur purus sit amet fermentum. Cras justo

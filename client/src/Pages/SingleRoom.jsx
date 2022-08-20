@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import {
   Backdrop,
@@ -31,6 +32,8 @@ import { Popup } from "react-leaflet";
 import { Marker } from "react-leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from "leaflet";
+import Grid from "@mui/material/Grid";
+import Roomcard from "../Components/Roomcard/Roomcard";
 import "leaflet/dist/leaflet.css";
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -72,11 +75,11 @@ const SingleRoom = () => {
   const [coordinates, setCoordinates] = React.useState([12.972442, 77.580643]);
   const [total_sqft, setTotal_Sqft] = React.useState();
   const [reportOption, setReportOption] = useState("Inappropriate Post");
-
+  const roommdata = useSelector((state) => state.roomdata.rooms);
   const timer = React.useRef();
 
   const navigate = useNavigate();
-
+  const [recrooms, setRectRooms] = useState([]);
   useEffect(() => {
     const tokentest = async () => {
       try {
@@ -178,7 +181,36 @@ const SingleRoom = () => {
       clearTimeout(timer.current);
     };
   }, []);
+  useEffect(() => {
+    try {
+      console.log(roommdata);
+      const ids = roommdata.map((item) => {
+        return item._id;
+      });
+      console.log("ids", ids);
+      const response = [total_sqft, bath, bhk, coordinates[0], coordinates[1]];
 
+      const data2 = {
+        roomIDs: ids,
+        response: response,
+      };
+
+      axios
+        .post("/rooms/recommendRoom", data2)
+        .then((res) => {
+          console.log("response", res.data);
+          let data2 = res.data.map((item) => {
+            return item.room;
+          });
+          setRectRooms(data2);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }, [roommdata]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -222,7 +254,10 @@ const SingleRoom = () => {
               top: "3%",
               bgcolor: "white",
             }}
-            onClick={() => {setClicked(false);setLoading(false);}}
+            onClick={() => {
+              setClicked(false);
+              setLoading(false);
+            }}
           >
             <ArrowBackIosRoundedIcon />
           </Fab>
@@ -301,7 +336,10 @@ const SingleRoom = () => {
                   }}
                   variant="extended"
                   aria-label="add"
-                  onClick={() => {setClicked(true);setLoading(true);}}
+                  onClick={() => {
+                    setClicked(true);
+                    setLoading(true);
+                  }}
                 >
                   <ViewCarouselIcon />
                   &nbsp;Show all photos
@@ -499,6 +537,20 @@ const SingleRoom = () => {
                 </div>
               </Box>
             </Modal>
+            <Box sx={{ marginTop: "4rem" }}>
+              <h2>Recommendations for you</h2>
+              <Grid justifyContent="center" container spacing={4}>
+                {recrooms?.map((item, key) => {
+                  return (
+                    <>
+                      <Grid key={key} item xs={0}>
+                        <Roomcard props={item}></Roomcard>
+                      </Grid>
+                    </>
+                  );
+                })}
+              </Grid>
+            </Box>
           </Container>
         </>
       )}
