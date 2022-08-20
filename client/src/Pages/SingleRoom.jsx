@@ -70,6 +70,7 @@ const SingleRoom = () => {
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [rent, setRent] = React.useState();
+  const [amenities, setAmenities] = React.useState([]);
   const [coordinates, setCoordinates] = React.useState([12.972442, 77.580643]);
   const [total_sqft, setTotal_Sqft] = React.useState();
   const [reportOption, setReportOption] = useState("Inappropriate Post");
@@ -106,6 +107,7 @@ const SingleRoom = () => {
             setRent(res.data.rentPrice);
             setCoordinates(res.data.coordinates);
             setTotal_Sqft(res.data.total_sqft);
+            setAmenities(res.data.amenities);
             setLoading(false);
           })
           .catch((err) => {
@@ -412,6 +414,30 @@ const SingleRoom = () => {
                 </button>
               ))}
             </Box>
+            <Divider />
+
+            <Box sx={{ my: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+                Amenities
+              </Typography>
+              {amenities.map((item) => (
+                <button
+                  style={{
+                    marginRight: "10px",
+                    background: "#6177d4",
+                    border: "1px solid #6177d4",
+                    borderRadius: "35px",
+                    padding: "0.4rem 1.8rem",
+                    color: "white",
+                    fontSize: "1rem",
+                  }}
+                  key={item.value}
+                >
+                  {item}
+                </button>
+              ))}
+            </Box>
+
             <Divider />
             <Box sx={{ my: 4 }}>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
