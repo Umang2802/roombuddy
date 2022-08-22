@@ -5,7 +5,7 @@
 /node_modules
 /client/build
 /.pnp
-/.env
+.env
 /backend/node_modules
 /backend/.env
 .pnp.js
