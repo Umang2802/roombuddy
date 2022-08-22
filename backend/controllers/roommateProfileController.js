@@ -10,13 +10,34 @@ module.exports.showAllRoommateProfiles = async (req, res) => {
 }
 
 module.exports.createRoommateProfile = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token");
     } else {
-      const { name, age, gender, occupation, lookingForRoomIn, lookingToMoveIn, preferredSize, budget, preferences, image } = req.body;
-      const userprofile = new roommateprofile({ name, age, gender, occupation, lookingForRoomIn, lookingToMoveIn, preferredSize, budget, preferences });
-      
+      const {
+        name,
+        age,
+        gender,
+        occupation,
+        lookingForRoomIn,
+        lookingToMoveIn,
+        preferredSize,
+        budget,
+        preferences,
+        image,
+      } = req.body;
+      const userprofile = new roommateprofile({
+        name,
+        age,
+        gender,
+        occupation,
+        lookingForRoomIn,
+        lookingToMoveIn,
+        preferredSize,
+        budget,
+        preferences,
+      });
+
       userprofile.user = authData.user;
 
       const fileStr = image;
@@ -36,16 +57,15 @@ module.exports.createRoommateProfile = async (req, res) => {
   });
 };
 module.exports.showRoommateProfile = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in showRoommateProfile");
     } else {
-      
       if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
         const userprofile = await roommateprofile.findOne({
           user: req.params.userId,
         });
-    
+
         if (!userprofile) {
           res.send("User profile not listed");
         } else {
@@ -59,17 +79,16 @@ module.exports.showRoommateProfile = async (req, res) => {
 };
 
 module.exports.deleteRoommateProfile = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in deleteRoommateProfile");
     } else {
       const { userId, roommateProfileId } = req.body;
       if (authData.user._id === userId) {
         const findProfile = await roommateprofile.findById(roommateProfileId);
-        if(!findProfile){
+        if (!findProfile) {
           res.send("Roommate profile doesn't exist !");
-        }
-        else{
+        } else {
           await cloudinary.uploader.destroy(findProfile.image.filename);
           const deletedProfile = await roommateprofile.findByIdAndDelete(
             roommateProfileId
@@ -84,7 +103,7 @@ module.exports.deleteRoommateProfile = async (req, res) => {
 };
 
 module.exports.updateRoommateProfile = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in updateRoommateProfile");
     } else {
@@ -100,10 +119,9 @@ module.exports.updateRoommateProfile = async (req, res) => {
         preferredSize,
         budget,
         preferences,
-        image
+        image,
       } = req.body;
       if (authData.user._id === userId) {
-
         const findProfile = await roommateprofile.findById(roommateProfileId);
         await cloudinary.uploader.destroy(findProfile.image.filename);
 

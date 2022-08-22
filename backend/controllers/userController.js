@@ -25,7 +25,7 @@ module.exports.signUp = async (req, res) => {
     console.log("Sign Up successfull !");
     console.log(user);
 
-    jwt.sign({ user: user }, "mysecretkey", (err, token) => {
+    jwt.sign({ user: user }, process.env.JWT_SECRET, (err, token) => {
       res.send({ token: token, user: user });
     });
     //res.send(user);
@@ -38,7 +38,7 @@ module.exports.login = async (req, res) => {
   if (type === "googlelogin") {
     const checkUser = await User.findOne({ email });
     if (checkUser) {
-      jwt.sign({ user: checkUser }, "mysecretkey", (err, token) => {
+      jwt.sign({ user: checkUser }, process.env.JWT_SECRET, (err, token) => {
         res.send({ token: token, user: checkUser });
       });
     } else {
@@ -58,9 +58,13 @@ module.exports.login = async (req, res) => {
         } else {
           console.log("Password matches!, Sign In successful !");
 
-          jwt.sign({ user: checkUser }, "mysecretkey", (err, token) => {
-            res.send({ token: token, user: checkUser });
-          });
+          jwt.sign(
+            { user: checkUser },
+            process.env.JWT_SECRET,
+            (err, token) => {
+              res.send({ token: token, user: checkUser });
+            }
+          );
         }
       });
     } else {
@@ -70,7 +74,7 @@ module.exports.login = async (req, res) => {
 };
 
 module.exports.survey = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in survey");
     } else {
@@ -88,7 +92,7 @@ module.exports.survey = async (req, res) => {
 };
 
 module.exports.personality = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in personality");
     } else {

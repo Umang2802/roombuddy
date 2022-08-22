@@ -10,7 +10,7 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.createRoom = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in create room");
     } else {
@@ -33,7 +33,7 @@ module.exports.createRoom = async (req, res) => {
           tenantDetails,
           images,
           coordinates,
-          total_sqft
+          total_sqft,
         } = req.body;
         const room = new Room({
           name,
@@ -52,7 +52,7 @@ module.exports.createRoom = async (req, res) => {
           rentPrice,
           tenantDetails,
           coordinates,
-          total_sqft
+          total_sqft,
         });
 
         room.user = authData.user;
@@ -81,7 +81,7 @@ module.exports.createRoom = async (req, res) => {
 };
 
 module.exports.showRoom = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in show room");
     } else {
@@ -101,7 +101,7 @@ module.exports.showRoom = async (req, res) => {
 };
 
 module.exports.deleteRoom = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in deleteRoom");
     } else {
@@ -127,7 +127,7 @@ module.exports.deleteRoom = async (req, res) => {
 };
 
 module.exports.updateRoom = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in updateRoom");
     } else {
@@ -151,7 +151,7 @@ module.exports.updateRoom = async (req, res) => {
         roomId,
         userId,
         coordinates,
-        total_sqft
+        total_sqft,
       } = req.body;
 
       if (authData.user._id === userId) {
@@ -183,7 +183,7 @@ module.exports.updateRoom = async (req, res) => {
             rentPrice,
             tenantDetails,
             coordinates,
-            total_sqft
+            total_sqft,
           },
           { new: true }
         );
@@ -220,7 +220,7 @@ module.exports.updateRoom = async (req, res) => {
 };
 
 module.exports.reportRoom = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in reportRoom");
     } else {

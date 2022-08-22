@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
 module.exports.addOrRemoveFavoritePost = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
       res.send("error while verifying token in addOrRemoveFavoritePost");
     } else {
@@ -40,7 +40,7 @@ module.exports.addOrRemoveFavoritePost = async (req, res) => {
 };
 
 module.exports.showUserFavoritePosts = async (req, res) => {
-  jwt.verify(req.token, "mysecretkey", async (err, authData) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     const userFavoritePosts = await FavoritePosts.findOne({
       user: authData.user._id,
     });
